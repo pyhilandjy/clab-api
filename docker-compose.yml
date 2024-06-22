@@ -1,0 +1,8 @@
+# version: "3.3"
+# services:
+#   fastapi:
+#     image: api
+#     restart: always
+#     ports:
+#       - "2456:2456"
+#     command: uvicorn app.main:app —host 0.0.0.0 —port 2456
