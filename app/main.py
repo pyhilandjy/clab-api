@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.db.query import SELECT_USERS
 from app.db.worker import execute_select_query
-from app.routers import audio, stt
+from app.routers import audio, report, stt
 
 app = FastAPI()
 
@@ -20,6 +20,7 @@ app.include_router(audio.router, prefix="/audio")
 # app.include_router(users.router, prefix="/users")
 # app.include_router(files.router, prefix="/files")
 app.include_router(stt.router, prefix="/stt")
+app.include_router(report.router, prefix="/report")
 
 # depends api key
 # app.include_router(audio.router, prefix="/audio", dependencies=[Depends(get_api_key)])

@@ -69,14 +69,14 @@ ORDER BY sr.text_order asc
 )
 
 
-SELECT_STT_RESULTS_FOR_IMAGE = text(
+SELECT_STT_DATA_BETWEEN_DATE = text(
     """
-    SELECT sr.*
-    FROM stt_results sr
-    JOIN files f ON sr.file_id = f.id
-    WHERE f.user_id = :user_id
+    SELECT *
+    FROM stt_data sr
+    JOIN audio_files af ON sr.file_id = af.id
+    WHERE af.user_id = :user_id
         AND sr.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
-    ORDER BY sr.created_at ASC, sr.index ASC
+    ORDER BY sr.created_at ASC, sr.text_order ASC
 
     """
 )

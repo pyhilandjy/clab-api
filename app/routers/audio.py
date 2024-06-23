@@ -1,15 +1,10 @@
 from fastapi import APIRouter, File, Form, HTTPException, UploadFile
 from pydantic import BaseModel
 
-from app.services.audio import (
-    create_file_name,
-    create_file_path,
-    delete_file,
-    get_files_by_user_id,
-    process_audio_metadata,
-    process_stt,
-    upload_to_s3,
-)
+from app.services.audio import (create_file_name, create_file_path,
+                                delete_file, get_files_by_user_id,
+                                process_audio_metadata, process_stt,
+                                upload_to_s3)
 
 router = APIRouter()
 
