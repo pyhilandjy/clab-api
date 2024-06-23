@@ -194,22 +194,15 @@ def save_wordcloud(wordcloud, image_path, speaker, font_prop):
         plt.close()
         img_data.seek(0)
 
-        return {
-            "message": "Wordcloud uploaded successfully",
-            "local_file_path": image_path,
-        }
+        return img_data
     except Exception as e:
         return {"error": str(e)}
 
 
-def create_wordcloud(stt_data, font_path, type, user_id, start_date, end_date):
+def create_wordcloud(stt_data, font_path):
     """워드클라우드 생성 및 파일로 저장"""
     if not isinstance(stt_data, pd.DataFrame):
         stt_data = pd.DataFrame(stt_data)
-
-    f_start_date = start_date.strftime("%Y-%m-%d")
-    f_end_date = end_date.strftime("%Y-%m-%d")
-    local_paths = []
 
     for speaker in stt_data["speaker_label"].unique():
         speaker_data = stt_data[stt_data["speaker_label"] == speaker]
@@ -219,32 +212,13 @@ def create_wordcloud(stt_data, font_path, type, user_id, start_date, end_date):
         mask = create_circle_mask()
         wordcloud = generate_wordcloud(word_counts, font_path, mask)
 
-        image_id = gen_image_file_id(user_id, speaker, f_start_date, f_end_date, type)
-
-        image_path = gen_image_file_path(image_id)
-
         # 워드클라우드 저장
-        response = save_wordcloud(
+        img_data = save_wordcloud(
             wordcloud,
-            image_path,
             speaker,
             font_prop,
         )
-        local_paths.append(image_path)
-    return response, local_paths
-
-
-# image file data
-def gen_image_file_id(
-    user_id: str, speaker: str, start_date: date, end_date: date, type: str
-) -> str:
-    """이미지 파일 아이디 생성"""
-    return f"{user_id}_{speaker}_{start_date}_{end_date}_{type}.png"
-
-
-def gen_image_file_path(image_id):
-    """이미지 파일경로 생성"""
-    return f"./app/image/{image_id}"
+    return img_data
 
 
 def create_image_metadata(
