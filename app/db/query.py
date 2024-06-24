@@ -201,20 +201,20 @@ COUNT_ACT_ID = text(
     """
 SELECT
     speech_acts.act_name,
-    stt_data.speaker_label,
+    stt_data.speaker,
     COUNT(stt_data.act_id) AS count
 FROM
     stt_data
 JOIN
     speech_acts ON stt_data.act_id = speech_acts.id
 JOIN
-    files f ON stt_data.file_id = f.id
+    audio_files f ON stt_data.file_id = f.id
 WHERE
     f.user_id = :user_id
     AND stt_data.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
 GROUP BY
     speech_acts.act_name,
-    stt_data.speaker_label;
+    stt_data.speaker;
 
 """
 )
@@ -228,25 +228,25 @@ LOGIN = text(
 )
 
 
-SENTENCE_LEN = text(
+SELECT_SENTENCE_LEN = text(
     """
     SELECT 
         MAX(LENGTH(text_edited)) as max_length,
         ROUND(AVG(LENGTH(text_edited))) as avg_length
-    FROM stt_results sr
-    JOIN files f ON sr.file_id = f.id
-    WHERE f.user_id = :user_id
+    FROM stt_data sr
+    JOIN audio_files af ON sr.file_id = af.id
+    WHERE af.user_id = :user_id
         AND sr.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
 
     """
 )
 
-SELECT_AUDIO = text(
+SELECT_RECORD_TIME = text(
     """
     SELECT record_time
-    FROM files
-    WHERE files.user_id = :user_id
-        AND files.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
+    FROM audio_files
+    WHERE audio_files.user_id = :user_id
+        AND audio_files.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
     """
 )
 
