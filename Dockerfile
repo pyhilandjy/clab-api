@@ -1,5 +1,5 @@
 # requirements-stage
-FROM python:3.9.19-bullseye as requirements-stage
+FROM python:3.12.3-bullseye as requirements-stage
 
 WORKDIR /tmp
 
@@ -44,7 +44,7 @@ ARG INSTALL_DEV=false
 RUN if [ "$INSTALL_DEV" = "true" ]; then poetry export -f requirements.txt --output requirements.txt --dev --without-hashes; else poetry export -f requirements.txt --output requirements.txt --without-hashes; fi
 
 
-FROM python:3.9.19-bullseye
+FROM python:3.12.3-bullseye
 
 RUN apt-get update && apt-get install -y \
     curl \
