@@ -26,7 +26,7 @@ class ReportModle(BaseModel):
 
 
 @router.post(
-    "/morphs-info",
+    "/morphs-info/",
     tags=["Report"],
     response_model=dict,
 )
@@ -62,7 +62,7 @@ def get_image(image_path: str):
 
 
 @router.post("/data/", tags=["Report"])
-async def morphs(report_model: ReportModle):
+async def report_data(report_model: ReportModle):
     """문장길이, 녹음시간 반환 앤드포인트"""
     report_data = create_report_data(**report_model.model_dump())
     return report_data
