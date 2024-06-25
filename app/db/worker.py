@@ -44,9 +44,11 @@ def execute_insert_update_query(
                 inserted_id = result.fetchone()[0]
         except Exception as e:
             db.rollback()
-            print(e)
+            print(f"Exception occurred: {e}")
             return 0
         else:
             db.commit()
-            if inserted_id:
+            if return_id:
                 return inserted_id
+            else:
+                return result.rowcount
