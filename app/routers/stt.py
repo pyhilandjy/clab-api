@@ -3,10 +3,16 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from app.services.stt import (add_row_stt_data, delete_row_stt_data,
-                              select_speech_act, select_stt_data_by_file_id,
-                              update_replace_speaker, update_replace_text_edit,
-                              update_speech_act, update_text_edit)
+from app.services.stt import (
+    add_row_stt_data,
+    delete_row_stt_data,
+    select_speech_act,
+    select_stt_data_by_file_id,
+    update_replace_speaker,
+    update_replace_text_edit,
+    update_speech_act,
+    update_text_edit,
+)
 
 router = APIRouter()
 
@@ -26,7 +32,7 @@ class EditTextModel(BaseModel):
     new_text: str
 
 
-@router.patch("/data/edit-text", tags=["STT"])
+@router.patch("/data/edit-text/", tags=["STT"])
 async def edit_text(text_edit_model: EditTextModel):
     update_text_edit(**text_edit_model.model_dump())
     return {
@@ -100,7 +106,7 @@ class EditSpeechActsModel(BaseModel):
     act_id: int
 
 
-@router.patch("/data/edit-speech-act", tags=["STT"])
+@router.patch("/data/edit-speech-act/", tags=["STT"])
 async def edit_speech_act(act_id_update: EditSpeechActsModel):
     print(act_id_update.model_dump())
     update_speech_act(**act_id_update.model_dump())
