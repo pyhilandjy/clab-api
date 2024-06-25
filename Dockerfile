@@ -17,7 +17,8 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     gettext \
     libc-dev \
-    ffmpeg
+    ffmpeg \
+    vim
 
 # MeCab Korean 설치
 RUN wget -qO- https://bitbucket.org/eunjeon/mecab-ko/downloads/mecab-0.996-ko-0.9.2.tar.gz | tar xz && \
@@ -42,7 +43,7 @@ RUN poetry self add poetry-plugin-export
 ARG INSTALL_DEV=false
 RUN if [ "$INSTALL_DEV" = "true" ]; then poetry export -f requirements.txt --output requirements.txt --dev --without-hashes; else poetry export -f requirements.txt --output requirements.txt --without-hashes; fi
 
-# final-stage
+
 FROM python:3.9.19-bullseye
 
 RUN apt-get update && apt-get install -y \
@@ -59,14 +60,14 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     gettext \
     libc-dev \
-    ffmpeg
+    ffmpeg\
+    vim
 
-# MeCab Korean 설치
-RUN wget -qO- https://bitbucket.org/eunjeon/mecab-ko/downloads/mecab-0.996-ko-0.9.2.tar.gz | tar xz && \
-    cd mecab-0.996-ko-0.9.2 && ./configure && make && make install
-
-RUN wget -qO- https://bitbucket.org/eunjeon/mecab-ko-dic/downloads/mecab-ko-dic-2.1.1-20180720.tar.gz | tar xz && \
-    cd mecab-ko-dic-2.1.1-20180720 && ./autogen.sh && ./configure && make && make install
+# MeCab 복사
+COPY --from=requirements-stage /usr/local/bin/mecab /usr/local/bin/mecab
+COPY --from=requirements-stage /usr/local/lib/mecab /usr/local/lib/mecab
+COPY --from=requirements-stage /usr/local/etc/mecab /usr/local/etc/mecab
+COPY --from=requirements-stage /usr/local/share/mecab /usr/local/share/mecab
 
 RUN ldconfig
 

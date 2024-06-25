@@ -26,7 +26,7 @@ class ReportModle(BaseModel):
 
 
 @router.post(
-    "/morphs_info",
+    "/morphs-info",
     tags=["Report"],
     response_model=dict,
 )
@@ -68,7 +68,7 @@ async def morphs(report_model: ReportModle):
     return report_data
 
 
-@router.post("/act_count/", tags=["Report"])
+@router.post("/act-count/", tags=["Report"])
 async def act_count(report_model: ReportModle):
     """화행 갯수 반환 앤드포인트"""
     act_count_data = select_act_count(**report_model.model_dump())

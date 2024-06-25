@@ -422,11 +422,11 @@ def select_act_count(user_id, start_date, end_date):
     }
 
     count_act_name = execute_select_query(query=COUNT_ACT_ID, params=params)
-    act_count_dict = act_count(count_act_name)
+    act_count_dict = process_act_count(count_act_name)
     return act_count_dict
 
 
-def act_count(count_act_name):
+def process_act_count(count_act_name):
     speaker_act_count_dict = {}
     for row in count_act_name:
         speaker = row["speaker"]
