@@ -1,25 +1,33 @@
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile, BackgroundTasks
 from pydantic import BaseModel
-
-from app.services.audio import (create_file_name, create_file_path,
-                                delete_file, get_files_by_user_id,
-                                process_audio_metadata, process_stt,
-                                upload_to_s3)
+import asyncio
+from app.services.audio import (
+    create_file_name,
+    create_file_path,
+    delete_file,
+    get_files_by_user_id,
+    process_audio_metadata,
+    process_stt,
+    upload_to_s3,
+)
 
 router = APIRouter()
 
-# 녹음페이지에서 오디오파일 업로드하면 백엔드로 전달함
-# 백엔드에서 로컬 스토리지에 임시로 저장
 
-# 클로바에 음성파일을 전달함
-# 클로바로부터 결과값을 받아서 DB에 저장
-
-# 음성파일 s3에 적재
-# 로컬의 임시 음성파일 제거
+async def process_and_cleanup(file_id: str, file_path: str):
+    try:
+        # process_stt와 upload_to_s3 작업을 병렬로 실행
+        await asyncio.gather(process_stt(file_id, file_path), upload_to_s3(file_path))
+        # 두 작업이 끝난 후 delete_file 실행
+        await delete_file(file_path)
+    except Exception as e:
+        # 예외 처리 로직 (필요 시)
+        raise e
 
 
 @router.post("/upload/", tags=["Audio"])
 async def create_upload_file(
+    background_tasks: BackgroundTasks,
     user_id: str = Form(...),
     file: UploadFile = File(...),
 ):
@@ -27,13 +35,13 @@ async def create_upload_file(
         file_name = create_file_name(user_id)
         file_path = create_file_path(file_name)
         file_id = await process_audio_metadata(file, user_id, file_name, file_path)
-        await process_stt(file_id, file_path)
-        await upload_to_s3(file_path)
-        delete_file(file_path)
+
+        # 백그라운드 작업 추가
+        background_tasks.add_task(process_and_cleanup, file_id, file_path)
 
         return {"message": "success"}
     except Exception as e:
-        raise e
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 class FileModel(BaseModel):
