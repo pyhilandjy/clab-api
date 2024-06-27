@@ -1,4 +1,4 @@
-name: build docker image
+name: build and deploy docker image
 
 on:
   push:
@@ -18,25 +18,22 @@ jobs:
       contents: read
       packages: write
 
-    outputs:
-      version: ${{ steps.version.outputs.version_tag}}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Log in to the Container registry
-        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        uses: docker/login-action@v1
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Set outputs
         id: vars
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Check outputs   
+      - name: Check outputs
         run: echo ${{ steps.vars.outputs.sha_short }}
 
       - name: Set version
@@ -45,15 +42,39 @@ jobs:
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        uses: docker/metadata-action@v1
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        uses: docker/build-push-action@v2
         with:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}-${{ steps.vars.outputs.sha_short }}
           labels: ${{ steps.meta.outputs.labels }}
-          env: ENV={{ env.BRANCH_NAME == dev && dev || prod }} VERSION={{ steps.meta.outputs.tags }}-{{ steps.vars.outputs.sha_short }}
+
+      - name: Add SSH Key
+        run: echo "${{ secrets.SSH_PRIVATE_KEY }}" > /tmp/deploy_key.pem
+        shell: bash
+
+      - name: Set key permissions
+        run: chmod 600 /tmp/deploy_key.pem
+        shell: bash
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key_path: /tmp/deploy_key.pem
+          script: |
+            echo "Pulling the latest Docker image"
+            docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version_tag }}
+
+            echo "Updating docker-compose.yml"
+            sed -i 's|image:.*|image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version_tag }}|' /home/ubuntu/clab/docker-compose.yml
+
+            echo "Restarting Docker Compose"
+            docker-compose -f /home/ubuntu/clab/docker-compose.yml down
+            docker-compose -f /home/ubuntu/clab/docker-compose.yml up -d
