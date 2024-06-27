@@ -88,6 +88,8 @@ RUN pip install mecab-python3 pandas
 
 COPY ./NanumFontSetup_TTF_GOTHIC /src/NanumFontSetup_TTF_GOTHIC
 COPY ./app /src/app/
+COPY ./app /image/
+COPY ./app /audio/
 # COPY ./.env.example /src/.env
 
 EXPOSE 2456
