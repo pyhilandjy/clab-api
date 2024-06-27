@@ -1,8 +1,10 @@
-# version: "3.3"
-# services:
-#   fastapi:
-#     image: api
-#     restart: always
-#     ports:
-#       - "2456:2456"
-#     command: uvicorn app.main:app —host 0.0.0.0 —port 2456
+version: "3.3"
+services:
+  fastapi:
+    image: ghcr.io/connects-lab/clab-api:main-faf1391
+    restart: always
+    ports:
+      - "2456:2456"
+    env_file:
+      - /home/ubuntu/clab/.env
+    command: uvicorn app.main:app --host 0.0.0.0 --port 2456
