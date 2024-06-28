@@ -76,7 +76,7 @@ def build_pos_summary(
     #     len(unique_words) for unique_words in pos_unique_lists.values()
     # )
     summary = {
-        pos: f"{len(words)} 개, {round(len(words) / total_words * 100, 1)}%"
+        pos: f"{round(len(words) / total_words * 100, 1)}%, {len(words)}개"
         for pos, words in pos_lists.items()
     }
     summary["총단어 수"] = total_words
@@ -390,8 +390,8 @@ def record_time(record_time):
     return f"{sum_record_time['분']}분 {sum_record_time['초']}초"
 
 
-def create_report_data(user_id, start_date, end_date):
-    """품사비율 반환 앤드포인트"""
+def create_sentence_len(user_id, start_date, end_date):
+    """문장 길이 반환"""
 
     params = {
         "user_id": user_id,
@@ -400,20 +400,40 @@ def create_report_data(user_id, start_date, end_date):
     }
 
     select__stt_results = execute_select_query(query=SELECT_SENTENCE_LEN, params=params)
+
+    sentence_len = {}
+
+    for result in select__stt_results:
+        speaker = result["speaker"]
+        sentence_len[speaker] = {
+            "가장 긴 문장": result["max_length"],
+            "평균 문장 길이": int(result["avg_length"]),
+        }
+    # return speech_data
+    return sentence_len
+
+
+def create_audio_record_time(user_id, start_date, end_date):
+    """문장 길이 반환"""
+
+    params = {
+        "user_id": user_id,
+        "start_date": start_date,
+        "end_date": end_date,
+    }
+
     select_record_time = execute_select_query(query=SELECT_RECORD_TIME, params=params)
     record_time_report = record_time(select_record_time)
 
-    report_data = {
-        "가장 긴 문장": select__stt_results[0]["max_length"],
-        "평균 문장 길이": int(select__stt_results[0]["avg_length"]),
+    r_time = {
         "녹음시간": record_time_report,
     }
     # return speech_data
-    return report_data
+    return r_time
 
 
 def select_act_count(user_id, start_date, end_date):
-    """품사비율 반환 앤드포인트"""
+    """화행 갯수 카운트"""
 
     params = {
         "user_id": user_id,

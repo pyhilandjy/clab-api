@@ -219,25 +219,26 @@ GROUP BY
 """
 )
 
-LOGIN = text(
-    """
-    SELECT id, pw, role_id 
-    FROM users 
-    WHERE id = :id
-    """
-)
+# LOGIN = text(
+#     """
+#     SELECT id, pw, role_id
+#     FROM users
+#     WHERE id = :id
+#     """
+# )
 
 
 SELECT_SENTENCE_LEN = text(
     """
     SELECT 
-        MAX(LENGTH(text_edited)) as max_length,
-        ROUND(AVG(LENGTH(text_edited))) as avg_length
-    FROM stt_data sr
-    JOIN audio_files af ON sr.file_id = af.id
+        sd.speaker,
+        MAX(LENGTH(sd.text_edited)) as max_length,
+        ROUND(AVG(LENGTH(sd.text_edited))) as avg_length
+    FROM stt_data sd
+    JOIN audio_files af ON sd.file_id = af.id
     WHERE af.user_id = :user_id
-        AND sr.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
-
+        AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
+    GROUP BY sd.speaker
     """
 )
 

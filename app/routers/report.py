@@ -12,8 +12,9 @@ from app.services.report import (
     create_morphs_data,
     create_wordcoud,
     create_violinplot,
-    create_report_data,
+    create_sentence_len,
     select_act_count,
+    create_audio_record_time,
 )
 
 router = APIRouter()
@@ -61,11 +62,18 @@ def get_image(image_path: str):
     return FileResponse(file_path)
 
 
-@router.post("/data/", tags=["Report"])
-async def report_data(report_model: ReportModle):
+@router.post("/sentence_len/", tags=["Report"])
+async def sentence_len(report_model: ReportModle):
     """문장길이, 녹음시간 반환 앤드포인트"""
-    report_data = create_report_data(**report_model.model_dump())
-    return report_data
+    sentence_len = create_sentence_len(**report_model.model_dump())
+    return sentence_len
+
+
+@router.post("/audio_record_time/", tags=["Report"])
+async def sentence_len(report_model: ReportModle):
+    """문장길이, 녹음시간 반환 앤드포인트"""
+    audio_record_time = create_audio_record_time(**report_model.model_dump())
+    return audio_record_time
 
 
 @router.post("/act-count/", tags=["Report"])
