@@ -5,7 +5,7 @@ import pandas as pd
 from datetime import date
 from typing import List
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile, BackgroundTasks
 from fastapi.responses import FileResponse, StreamingResponse
 
 from pydantic import BaseModel
@@ -18,7 +18,13 @@ from app.services.report import (
     select_act_count,
     create_audio_record_time,
     create_report_date,
+    create_file_path,
+    gen_report_file_metadata,
+    insert_report_metadata,
+    update_report_id,
+    save_report_file_s3,
 )
+
 
 router = APIRouter()
 
@@ -86,7 +92,7 @@ async def record_time(report_model: ReportModel):
     return audio_record_time
 
 
-@router.post("/generate-csv/", tags=["Report"])
+@router.post("/csv/", tags=["Report"])
 async def generate_csv(report_model: ReportModel):
     try:
         morps_data = create_morphs_data(**report_model.model_dump())
@@ -104,21 +110,62 @@ async def generate_csv(report_model: ReportModel):
         )
         merged_df = merged_df.join(df_morphs, lsuffix="_merged", rsuffix="_morphs")
 
-        # Add the record_time_data and report_date_data to each row
-        merged_df["녹음시간"] = record_time_data["녹음시간"]
         merged_df["녹음기간"] = report_date_data["녹음기간"]
+        merged_df["녹음시간"] = record_time_data["녹음시간"]
 
-        # Move the "녹음기간" and "보고기간" columns to the front
-        columns = ["녹음기간", "녹음시간"] + [
-            col for col in merged_df.columns if col not in ["녹음시간", "녹음기간"]
-        ]
-        merged_df = merged_df[columns]
+        sentence_len_cols = df_sentence_len.columns.tolist()
+        morps_data_cols = df_morphs.columns.tolist()
+        act_count_data_cols = df_act_count.columns.tolist()
 
-        output = io.StringIO()
-        merged_df.to_csv(output, index=True)
+        desired_columns_order = (
+            ["녹음기간", "녹음시간"]
+            + sentence_len_cols
+            + morps_data_cols
+            + act_count_data_cols
+        )
+        merged_df = merged_df[desired_columns_order]
+
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+            merged_df.to_excel(writer, index=True, sheet_name="Report")
         output.seek(0)
 
-        headers = {"Content-Disposition": 'attachment; filename="report.csv"'}
-        return StreamingResponse(output, headers=headers, media_type="text/csv")
+        headers = {"Content-Disposition": 'attachment; filename="report.xlsx"'}
+        return StreamingResponse(
+            output,
+            headers=headers,
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+class ReportFileModel(BaseModel):
+    file: UploadFile = File(...)
+    user_id: str
+    start_date: date
+    end_date: date
+
+
+@router.post("/upload/pdf/", tags=["Report"])
+async def upload_report_pdf(
+    file: UploadFile = File(...),
+    user_id: str = Form(...),
+    start_date: date = Form(...),
+    end_date: date = Form(...),
+):
+    try:
+        title = file.filename[:-4]
+        file_path = create_file_path(user_id, title)
+        metadata = gen_report_file_metadata(user_id, title, file_path)
+        id = insert_report_metadata(metadata)
+        update_report_id(id, user_id, start_date, end_date)
+        save_report_file_s3(file, file_path)
+        return {"message": id}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/pdf/", tags=["Report"])
+async def select_report_pdf(report_model: ReportModel):
+    pass

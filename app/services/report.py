@@ -1,5 +1,6 @@
 import io
 import os
+import boto3
 from datetime import date
 
 import mecab_ko as MeCab
@@ -13,15 +14,17 @@ from collections import OrderedDict
 
 import seaborn as sns
 
-from fastapi import HTTPException
 
 
+from app.config import settings
 from app.db.query import (
     SELECT_STT_DATA_BETWEEN_DATE,
     INSERT_IMAGE_FILES_META_DATA,
     SELECT_SENTENCE_LEN,
     SELECT_RECORD_TIME,
     COUNT_ACT_ID,
+    INSERT_REPORT_META_DATA,
+    UPDATE_REPORT_ID,
 )
 from app.db.worker import execute_select_query, execute_insert_update_query
 
@@ -40,6 +43,15 @@ POS_TAG_TO_KOREAN = {
     "VA": "형용사",
     "MAG": "부사",
 }
+
+session = boto3.Session(
+    aws_access_key_id=settings.aws_access_key_id,
+    aws_secret_access_key=settings.aws_secret_access_key,
+)
+
+bucket_name = settings.bucket_name
+
+s3 = session.client("s3")
 
 
 # 형태소 분석
@@ -468,6 +480,50 @@ def process_act_count(count_act_name):
 def create_report_date(user_id, start_date, end_date):
     """녹음 기간 반환"""
     start_date_str = start_date.strftime("%Y/%m/%d")
-    end_date_str = f"{end_date.strftime('%d')}"  # MM/DD 형식으로 변환
+    end_date_str = f"{end_date.strftime("%Y/%m/%d")}"  # MM/DD 형식으로 변환
     report_date = {"녹음기간": f"{start_date_str} ~ {end_date_str}"}
     return report_date
+
+
+def create_file_path(user_id, title):
+    """S3 파일 경로 생성"""
+    return f"app/report/{user_id}_{title}.pdf"
+
+
+def gen_report_file_metadata(user_id: str, title: str, file_path: str):
+    """리포트 파일 메타데이터 생성"""
+    return {
+        "user_id": user_id,
+        "title": title,
+        "file_path": file_path,
+    }
+
+def insert_report_metadata(metadata: dict):
+    """오디오 파일 메타데이터 db적재"""
+    return execute_insert_update_query(
+        query=INSERT_REPORT_META_DATA,
+        params=metadata,
+        return_id=True,
+    )
+
+
+def update_report_id(id, user_id, start_date, end_date):
+    """오디오 파일 메타데이터 db적재"""
+    return execute_insert_update_query(
+        query=UPDATE_REPORT_ID,
+        params={"new_report_id" : id,
+                "user_id" : user_id,
+                "start_date" : start_date,
+                "end_date" : end_date},
+    )
+
+
+def save_report_file_s3(file, file_path: str):
+    """m4a 파일을 S3에 저장"""
+    try:
+        file.file.seek(0)
+        s3.upload_fileobj(file.file, bucket_name, file_path)
+
+        return {"message": "File uploaded successfully", "file_path": file_path}
+    except Exception as e:
+        return {"error": str(e)}

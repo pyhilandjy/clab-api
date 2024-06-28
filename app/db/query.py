@@ -199,23 +199,49 @@ WHERE id = :id;
 
 COUNT_ACT_ID = text(
     """
+WITH all_acts AS (
+    SELECT act_name, id as act_id FROM speech_acts ORDER BY id
+),
+all_speakers AS (
+    SELECT DISTINCT speaker FROM stt_data
+),
+all_combinations AS (
+    SELECT
+        a.act_name,
+        a.act_id,
+        s.speaker
+    FROM
+        all_acts a
+    CROSS JOIN
+        all_speakers s
+)
 SELECT
-    speech_acts.act_name,
-    stt_data.speaker,
-    COUNT(stt_data.act_id) AS count
+    ac.act_name,
+    ac.speaker,
+    COALESCE(cnt.count, 0) AS count
 FROM
-    stt_data
-JOIN
-    speech_acts ON stt_data.act_id = speech_acts.id
-JOIN
-    audio_files f ON stt_data.file_id = f.id
-WHERE
-    f.user_id = :user_id
-    AND stt_data.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
-GROUP BY
-    speech_acts.act_name,
-    stt_data.speaker;
-
+    all_combinations ac
+LEFT JOIN (
+    SELECT
+        sa.act_name,
+        sd.speaker,
+        COUNT(sd.act_id) AS count
+    FROM
+        stt_data sd
+    JOIN
+        speech_acts sa ON sd.act_id = sa.id
+    JOIN
+        audio_files f ON sd.file_id = f.id
+    WHERE
+        f.user_id = :user_id
+        AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
+    GROUP BY
+        sa.act_name,
+        sd.speaker
+) cnt ON ac.act_name = cnt.act_name AND ac.speaker = cnt.speaker
+ORDER BY
+    ac.act_id,
+    ac.speaker;
 """
 )
 
@@ -256,5 +282,25 @@ SELECT_USERS = text(
     """
     SELECT DISTINCT user_id
     FROM audio_files;
+    """
+)
+
+INSERT_REPORT_META_DATA = text(
+    """
+    INSERT INTO report_files (user_id, title, file_path) VALUES 
+    (
+        :user_id,
+        :title,
+        :file_path
+    ) RETURNING id
+    """
+)
+
+UPDATE_REPORT_ID = text(
+    """
+    UPDATE audio_files
+    SET report_id = :new_report_id
+    WHERE user_id = :user_id
+    AND created_at BETWEEN :start_date AND :end_date;
     """
 )
