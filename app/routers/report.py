@@ -5,7 +5,7 @@ import pandas as pd
 from datetime import date
 from typing import List
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile, BackgroundTasks
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile, Body
 from fastapi.responses import FileResponse, StreamingResponse
 
 from pydantic import BaseModel
@@ -23,6 +23,9 @@ from app.services.report import (
     insert_report_metadata,
     update_report_id,
     save_report_file_s3,
+    get_report_title,
+    get_report_file_path,
+    get_report,
 )
 
 
@@ -140,13 +143,6 @@ async def generate_csv(report_model: ReportModel):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-class ReportFileModel(BaseModel):
-    file: UploadFile = File(...)
-    user_id: str
-    start_date: date
-    end_date: date
-
-
 @router.post("/upload/pdf/", tags=["Report"])
 async def upload_report_pdf(
     file: UploadFile = File(...),
@@ -166,6 +162,17 @@ async def upload_report_pdf(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/pdf/", tags=["Report"])
-async def select_report_pdf(report_model: ReportModel):
-    pass
+@router.get("/title/", tags=["Report"])
+async def select_title(user_id):
+    report_title = get_report_title(user_id)
+    return report_title
+
+
+class ReportFileModel(BaseModel):
+    title: str
+
+
+@router.post("/pdf/", tags=["Report"])
+async def select_report_pdf(report_file_model: ReportFileModel):
+    file_path = get_report_file_path(report_file_model.title)
+    return get_report(file_path)

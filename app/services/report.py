@@ -11,6 +11,7 @@ from wordcloud import WordCloud
 from matplotlib import font_manager
 import matplotlib.pyplot as plt
 from collections import OrderedDict
+from fastapi import Response
 
 import seaborn as sns
 
@@ -25,6 +26,8 @@ from app.db.query import (
     COUNT_ACT_ID,
     INSERT_REPORT_META_DATA,
     UPDATE_REPORT_ID,
+    SELECT_REPORT_TITLE,
+    SELECT_REPORT_FILE_PATH,
 )
 from app.db.worker import execute_select_query, execute_insert_update_query
 
@@ -527,3 +530,35 @@ def save_report_file_s3(file, file_path: str):
         return {"message": "File uploaded successfully", "file_path": file_path}
     except Exception as e:
         return {"error": str(e)}
+
+def get_report_title(user_id):
+    report_title = execute_select_query(query=SELECT_REPORT_TITLE, params={"user_id": user_id})
+    return report_title
+
+def get_report_file_path(title: str) -> str:
+    result = execute_select_query(query=SELECT_REPORT_FILE_PATH, params={"title": title})
+    if isinstance(result, list) and len(result) > 0 and 'file_path' in result[0]:
+        return result[0]['file_path']
+    else:
+        print("e")
+
+
+def get_report(file_path: str):
+    try:
+        # S3에서 PDF 파일 불러오기
+        pdf_file = s3.get_object(Bucket=bucket_name, Key=file_path)
+        pdf_content = pdf_file['Body'].read()
+        file_name = file_path.split('/')[-1]
+
+        # PDF 내용을 BytesIO 객체에 쓰기
+        buffer = io.BytesIO(pdf_content)
+        
+        headers = {'Content-Disposition': f'inline; filename={file_name}'}
+        
+        # BytesIO 객체의 시작 위치를 0으로 되돌립니다.
+        buffer.seek(0)
+        
+        # PDF 파일을 Response로 반환
+        return Response(content=buffer.read(), headers=headers, media_type='application/pdf')
+    except Exception as e:
+        raise e

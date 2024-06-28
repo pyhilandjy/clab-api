@@ -304,3 +304,18 @@ UPDATE_REPORT_ID = text(
     AND created_at BETWEEN :start_date AND :end_date;
     """
 )
+
+SELECT_REPORT_TITLE = text(
+    """
+    SELECT title
+    FROM report_files;
+    """
+)
+
+SELECT_REPORT_FILE_PATH = text(
+    """
+    SELECT file_path
+    FROM report_files
+    where title = :title;
+    """
+)
