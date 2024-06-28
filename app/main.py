@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.db.query import SELECT_USERS
 from app.db.worker import execute_select_query
 from app.routers import audio, report, stt
+from app.services.api_key import get_api_key
 
 app = FastAPI()
 
