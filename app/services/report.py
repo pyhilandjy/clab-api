@@ -9,6 +9,7 @@ from collections import Counter
 from wordcloud import WordCloud
 from matplotlib import font_manager
 import matplotlib.pyplot as plt
+from collections import OrderedDict
 
 import seaborn as sns
 
@@ -80,6 +81,9 @@ def build_pos_summary(
         for pos, words in pos_lists.items()
     }
     summary["총단어 수"] = total_words
+    summary = OrderedDict(
+        [("총단어 수", summary.pop("총단어 수"))] + list(summary.items())
+    )
     return summary
 
 
@@ -459,3 +463,11 @@ def process_act_count(count_act_name):
         speaker_act_count_dict[speaker][act_name] = count
 
     return speaker_act_count_dict
+
+
+def create_report_date(user_id, start_date, end_date):
+    """녹음 기간 반환"""
+    start_date_str = start_date.strftime("%Y/%m/%d")
+    end_date_str = f"{end_date.strftime('%d')}"  # MM/DD 형식으로 변환
+    report_date = {"녹음기간": f"{start_date_str} ~ {end_date_str}"}
+    return report_date
