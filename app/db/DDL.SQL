@@ -14,6 +14,7 @@ create table
     user_id varchar(255) not null,
     file_path int not null ,
     record_time int ,
+    report_id varchar(255)
     created_at timestamp not null default current_timestamp,
     primary key (id)
   );
@@ -31,6 +32,16 @@ create table
     confidence float not null,
     speaker varchar(255) not null,
     text_edited varchar(255),
+    created_at timestamp not null default current_timestamp,
+    primary key (id)
+  );
+
+  create table
+  report_files (
+    id UUID DEFAULT gen_random_uuid() not null,
+    user_id varchar(255) not null,
+    file_path varchar(255) not null ,
+    title varchar(255) not null,
     created_at timestamp not null default current_timestamp,
     primary key (id)
   );
