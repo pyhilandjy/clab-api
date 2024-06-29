@@ -488,9 +488,9 @@ def create_report_date(user_id, start_date, end_date):
     return report_date
 
 
-def create_file_path(user_id, title):
+def create_file_path(user_id):
     """S3 파일 경로 생성"""
-    return f"app/report/{user_id}_{title}.pdf"
+    return f"app/report/.pdf"
 
 
 def gen_report_file_metadata(user_id: str, title: str, file_path: str):
@@ -535,8 +535,8 @@ def get_report_title(user_id):
     report_title = execute_select_query(query=SELECT_REPORT_TITLE, params={"user_id": user_id})
     return report_title
 
-def get_report_file_path(title: str) -> str:
-    result = execute_select_query(query=SELECT_REPORT_FILE_PATH, params={"title": title})
+def get_report_file_path(title: str, user_id: str) -> str:
+    result = execute_select_query(query=SELECT_REPORT_FILE_PATH, params={"title": title, "user_id": user_id})
     if isinstance(result, list) and len(result) > 0 and 'file_path' in result[0]:
         return result[0]['file_path']
     else:

@@ -152,7 +152,7 @@ async def upload_report_pdf(
 ):
     try:
         title = file.filename[:-4]
-        file_path = create_file_path(user_id, title)
+        file_path = create_file_path(user_id)
         metadata = gen_report_file_metadata(user_id, title, file_path)
         id = insert_report_metadata(metadata)
         update_report_id(id, user_id, start_date, end_date)
@@ -170,9 +170,10 @@ async def select_title(user_id):
 
 class ReportFileModel(BaseModel):
     title: str
+    user_id: str
 
 
 @router.post("/pdf/", tags=["Report"])
 async def select_report_pdf(report_file_model: ReportFileModel):
-    file_path = get_report_file_path(report_file_model.title)
+    file_path = get_report_file_path(report_file_model.title, report_file_model.user_id)
     return get_report(file_path)

@@ -316,6 +316,6 @@ SELECT_REPORT_FILE_PATH = text(
     """
     SELECT file_path
     FROM report_files
-    where title = :title;
+    where title = :title and user_id = :user_id;
     """
 )
