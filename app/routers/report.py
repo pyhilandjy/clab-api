@@ -18,7 +18,9 @@ from app.services.report import (
     select_act_count,
     create_audio_record_time,
     create_report_date,
+    create_tmp_file_path,
     create_file_path,
+    update_file_path,
     gen_report_file_metadata,
     insert_report_metadata,
     update_report_id,
@@ -152,12 +154,15 @@ async def upload_report_pdf(
 ):
     try:
         title = file.filename[:-4]
-        file_path = create_file_path(user_id)
-        metadata = gen_report_file_metadata(user_id, title, file_path)
+        tmp_file_path = create_tmp_file_path(user_id)
+        metadata = gen_report_file_metadata(user_id, title, tmp_file_path)
         id = insert_report_metadata(metadata)
+        # file_path temp->report_id update
+        file_path = create_file_path(user_id, id)
+        update_file_path(id, file_path)
         update_report_id(id, user_id, start_date, end_date)
         save_report_file_s3(file, file_path)
-        return {"message": id}
+        return {"message": "success"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

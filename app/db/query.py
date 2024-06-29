@@ -319,3 +319,12 @@ SELECT_REPORT_FILE_PATH = text(
     where title = :title and user_id = :user_id;
     """
 )
+
+
+INSERT_FILE_PATH_REPORT_ID = text(
+    """
+    UPDATE report_files
+    SET file_path = :file_path
+    WHERE id = :id
+    """
+)
