@@ -29,6 +29,7 @@ from app.db.query import (
     SELECT_REPORT_TITLE,
     SELECT_REPORT_FILE_PATH,
     INSERT_FILE_PATH_REPORT_ID,
+    SELECT_AUDIO_FILES_BETWEEN_DATE,
 )
 from app.db.worker import execute_select_query, execute_insert_update_query
 
@@ -574,3 +575,31 @@ def get_report(file_path: str):
         return Response(content=buffer.read(), headers=headers, media_type='application/pdf')
     except Exception as e:
         raise e
+
+def select_audio_id_stt_data(user_id, start_date, end_date):
+    """file_id별로 stt result를 가져오는 엔드포인트"""
+    params = {
+        "user_id": user_id,
+        "start_date": start_date,
+        "end_date": end_date,
+    }
+    file_ids = execute_select_query(query=SELECT_AUDIO_FILES_BETWEEN_DATE, params=params)
+    stt_data = execute_select_query(query=SELECT_STT_DATA_BETWEEN_DATE, params=params)
+    return file_ids, stt_data
+
+def group_stt_data_by_file_name(file_ids, stt_data):
+    grouped_data = {}
+    for file in file_ids:
+        file_name = file['file_name']
+        grouped_data[file_name] = [data for data in stt_data if data['file_id'] == file['id']]
+    return grouped_data
+
+def export_to_excel(grouped_data):
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+        for file_name, data in grouped_data.items():
+            df = pd.DataFrame(data)
+            df.to_excel(writer, sheet_name=file_name, index=False)
+    output.seek(0)
+    return output
+

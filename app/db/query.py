@@ -81,6 +81,17 @@ SELECT_STT_DATA_BETWEEN_DATE = text(
     """
 )
 
+SELECT_AUDIO_FILES_BETWEEN_DATE = text(
+    """
+    SELECT file_name, id
+    FROM  audio_files
+    WHERE user_id = :user_id
+        AND created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
+    ORDER BY created_at ASC
+    """
+)
+
+
 SELECT_IMAGE_FILES = text(
     """
 SELECT image_path

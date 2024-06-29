@@ -28,8 +28,12 @@ from app.services.report import (
     get_report_title,
     get_report_file_path,
     get_report,
+    select_audio_id_stt_data,
+    group_stt_data_by_file_name,
+    export_to_excel,
 )
 
+from app.services.audio import get_files_by_user_id
 
 router = APIRouter()
 
@@ -182,3 +186,21 @@ class ReportFileModel(BaseModel):
 async def select_report_pdf(report_file_model: ReportFileModel):
     file_path = get_report_file_path(report_file_model.title, report_file_model.user_id)
     return get_report(file_path)
+
+
+@router.post("/stt/data/between_date/", tags=["Report"])
+async def get_data(report_model: ReportModel):
+    """file_ids의 stt result를 가져오는 엔드포인트"""
+    try:
+        file_ids, stt_data = select_audio_id_stt_data(**report_model.dict())
+        grouped_data = group_stt_data_by_file_name(file_ids, stt_data)
+        output = export_to_excel(grouped_data)
+
+        headers = {"Content-Disposition": 'attachment; filename="stt_results.xlsx"'}
+        return StreamingResponse(
+            output,
+            headers=headers,
+            media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
