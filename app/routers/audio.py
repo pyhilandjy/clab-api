@@ -9,6 +9,7 @@ from app.services.audio import (
     process_audio_metadata,
     process_stt,
     upload_to_s3,
+    create_convert_file_path,
 )
 
 router = APIRouter()
@@ -33,11 +34,11 @@ async def create_upload_file(
 ):
     try:
         file_name = create_file_name(user_id)
-        file_path = create_file_path(file_name)
-        file_id = await process_audio_metadata(file, user_id, file_name, file_path)
+        m4a_path = create_file_path(file_name).replace(".webm", ".m4a")
+        file_id = await process_audio_metadata(file, user_id, file_name, m4a_path)
 
         # 백그라운드 작업 추가
-        background_tasks.add_task(process_and_cleanup, file_id, file_path)
+        background_tasks.add_task(process_and_cleanup, file_id, m4a_path)
 
         return {"message": "success"}
     except Exception as e:

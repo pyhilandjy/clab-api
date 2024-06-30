@@ -34,7 +34,11 @@ def create_file_name(user_id):
 
 def create_file_path(file_name):
     """파일 경로 생성"""
-    return f"./app/audio/{file_name}.mp3"
+    return f"./app/audio/{file_name}.webm"
+
+
+def create_convert_file_path(file_name):
+    return f"./app/audio/{file_name}.m4a"
 
 
 def save_audio(file: UploadFile, file_path: str):
@@ -48,27 +52,32 @@ def save_audio(file: UploadFile, file_path: str):
 
 
 async def process_audio_metadata(
-    file: UploadFile, user_id: str, file_name: str, file_path: str
+    file: UploadFile, user_id: str, file_name: str, m4a_path: str
 ):
     """오디오 파일 메타데이터 처리"""
-    file_bytes = await file.read()
-    file.file.seek(0)
-    save_audio(file, file_path)
     try:
-        record_time = await get_record_time(file_bytes)
-        metadata = create_audio_metadata(user_id, file_name, file_path, record_time)
+        file_bytes = await file.read()
+        file.file.seek(0)
+        m4a_path = convert_to_m4a(file_bytes, m4a_path)
+        record_time = get_record_time(m4a_path)
+        metadata = create_audio_metadata(user_id, file_name, m4a_path, record_time)
         file_id = insert_audio_metadata(metadata)
-    except Exception as e:
-        raise e
-    else:
         logger.info(f"Audio file metadata inserted: {file_id}")
         return file_id
+    except Exception as e:
+        logger.error(f"Error processing metadata: {e}")
+        raise e
 
 
-async def get_record_time(file_bytes):
-    audio = AudioSegment.from_file(io.BytesIO(file_bytes), format="m4a")
-    duration_seconds = len(audio) / 1000.0
-    return round(duration_seconds)
+def get_record_time(m4a_path: str):
+    """M4A 파일의 재생 시간을 가져옴"""
+    try:
+        audio = AudioSegment.from_file(m4a_path, format="m4a")
+        duration_seconds = len(audio) / 1000.0
+        return round(duration_seconds)
+    except Exception as e:
+        logger.error(f"Error getting record time: {e}")
+        raise Exception("Failed to get record time")
 
 
 def create_audio_metadata(
@@ -121,20 +130,30 @@ async def upload_to_s3(file_path: str):
         return {"message": "File uploaded successfully"}
 
 
-def convert_to_m4a(file_path):
-    file_path = Path(file_path)
-    m4a_path = file_path.with_suffix(".m4a")
+def convert_to_m4a(file_bytes: bytes, output_path: str):
+    """WebM 파일을 M4A로 변환"""
+    input_path = output_path.replace(".m4a", ".webm")
+    with open(input_path, "wb") as buffer:
+        buffer.write(file_bytes)
+
     command = [
         "ffmpeg",
+        "-y",
         "-i",
-        str(file_path),
+        input_path,
         "-acodec",
-        "aac",  # Correct codec name
+        "aac",
         "-b:a",
         "192k",
-        str(m4a_path),
+        output_path,
     ]
-    subprocess.run(command, check=True)
+    try:
+        subprocess.run(command, check=True)
+        os.remove(input_path)  # Remove the original webm file after conversion
+        return output_path
+    except subprocess.CalledProcessError as e:
+        logger.error(f"FFmpeg conversion error: {e}")
+        raise Exception("Failed to convert file to M4A")
 
 
 def insert_audio_file_metadata(metadata: dict):
