@@ -24,6 +24,7 @@ seaborn = "^0.13.2"
 mecab-ko = "^1.0.1"
 wordcloud = "^1.9.3"
 xlsxwriter = "^3.2.0"
+supabase = "^2.5.1"
 
 
 [tool.poetry.group.dev.dependencies]

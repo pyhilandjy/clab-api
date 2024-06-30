@@ -26,7 +26,7 @@ from app.db.query import (
     COUNT_ACT_ID,
     INSERT_REPORT_META_DATA,
     UPDATE_REPORT_ID,
-    SELECT_REPORT_TITLE,
+    SELECT_REPORT_METADATA,
     SELECT_REPORT_FILE_PATH,
     INSERT_FILE_PATH_REPORT_ID,
     SELECT_AUDIO_FILES_BETWEEN_DATE,
@@ -544,12 +544,12 @@ def save_report_file_s3(file, file_path: str):
     except Exception as e:
         return {"error": str(e)}
 
-def get_report_title(user_id):
-    report_title = execute_select_query(query=SELECT_REPORT_TITLE, params={"user_id": user_id})
-    return report_title
+def get_report_metadata(user_id):
+    report_metadata = execute_select_query(query=SELECT_REPORT_METADATA, params={"user_id": user_id})
+    return report_metadata
 
-def get_report_file_path(title: str, user_id: str) -> str:
-    result = execute_select_query(query=SELECT_REPORT_FILE_PATH, params={"title": title, "user_id": user_id})
+def get_report_file_path(report: str) -> str:
+    result = execute_select_query(query=SELECT_REPORT_FILE_PATH, params={"id": report})
     if isinstance(result, list) and len(result) > 0 and 'file_path' in result[0]:
         return result[0]['file_path']
     else:

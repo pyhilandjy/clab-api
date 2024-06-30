@@ -316,10 +316,11 @@ UPDATE_REPORT_ID = text(
     """
 )
 
-SELECT_REPORT_TITLE = text(
+SELECT_REPORT_METADATA = text(
     """
-    SELECT title
-    FROM report_files;
+    SELECT id, title, created_at
+    FROM report_files
+    WHERE user_id = :user_id;
     """
 )
 
@@ -327,7 +328,7 @@ SELECT_REPORT_FILE_PATH = text(
     """
     SELECT file_path
     FROM report_files
-    where title = :title and user_id = :user_id;
+    where id = :id
     """
 )
 
