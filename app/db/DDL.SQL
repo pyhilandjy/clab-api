@@ -10,11 +10,11 @@
 
 create table
   audio_files (
-    id UUID DEFAULT gen_random_uuid() not null,
+    id uuid default gen_random_uuid () not null,
     user_id varchar(255) not null,
-    file_path int not null ,
-    record_time int ,
-    report_id varchar(255)
+    file_path varchar(255) not null,
+    record_time int,
+    report_id varchar(255),
     created_at timestamp not null default current_timestamp,
     primary key (id)
   );
