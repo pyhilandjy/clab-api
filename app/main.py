@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.db.query import SELECT_USERS
 from app.db.worker import execute_select_query
-from app.routers import audio, reports, stt, user
+from app.routers import audio, reports, stt, users
 from app.services.api_key import get_api_key
 import requests
 from app.config import settings
@@ -20,7 +20,7 @@ app.add_middleware(
 )
 
 app.include_router(audio.router, prefix="/audio")
-app.include_router(user.router, prefix="/users")
+app.include_router(users.router, prefix="/users")
 # app.include_router(files.router, prefix="/files")
 app.include_router(stt.router, prefix="/stt")
 app.include_router(reports.router)

@@ -5,7 +5,7 @@ import pandas as pd
 from datetime import date
 from typing import List
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile, Body
+from fastapi import APIRouter, File, Form, HTTPException, UploadFile, Header
 from fastapi.responses import FileResponse, StreamingResponse
 
 from pydantic import BaseModel
@@ -33,7 +33,7 @@ from app.services.report import (
     export_to_excel,
 )
 
-from app.services.audio import get_files_by_user_id
+from app.services.users import get_user_info_from_token
 
 router = APIRouter()
 
@@ -171,8 +171,17 @@ async def upload_report_pdf(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/reports/", tags=["Report"])
+@router.get("/admin/reports/", tags=["Report"])
 async def select_report_metadata(user_id: str):
+    report_metadata = get_report_metadata(user_id)
+    return report_metadata
+
+
+@router.get("/reports/", tags=["Report"])
+async def select_report_metadata(authorization: str = Header(...)):
+    token = authorization.split(" ")[1]
+    payload = get_user_info_from_token(token)
+    user_id = payload.get("sub")
     report_metadata = get_report_metadata(user_id)
     return report_metadata
 

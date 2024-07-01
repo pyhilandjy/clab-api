@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     supabase_url: str
     supabase_key: str
     supabase_service_key: str
+    supabase_jwt_key: str
     model_config = SettingsConfigDict(env_file=".env")
 
 
