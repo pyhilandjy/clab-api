@@ -72,11 +72,11 @@ ORDER BY sr.text_order asc
 SELECT_STT_DATA_BETWEEN_DATE = text(
     """
     SELECT *
-    FROM stt_data sr
-    JOIN audio_files af ON sr.file_id = af.id
+    FROM stt_data sd
+    JOIN audio_files af ON sd.file_id = af.id
     WHERE af.user_id = :user_id
-        AND sr.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
-    ORDER BY sr.created_at ASC, sr.text_order ASC
+        AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
+    ORDER BY sd.created_at ASC, sd.text_order ASC
 
     """
 )
