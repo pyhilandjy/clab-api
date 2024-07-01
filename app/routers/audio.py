@@ -1,4 +1,12 @@
-from fastapi import APIRouter, File, Header, HTTPException, UploadFile, BackgroundTasks
+from fastapi import (
+    APIRouter,
+    File,
+    Form,
+    Header,
+    HTTPException,
+    UploadFile,
+    BackgroundTasks,
+)
 from pydantic import BaseModel
 import asyncio
 from app.services.audio import (
@@ -44,6 +52,24 @@ async def create_upload_file(
         # 백그라운드 작업 추가
         background_tasks.add_task(process_and_cleanup, file_id, m4a_path)
 
+        return {"message": "success"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/admin/upload/", tags=["Audio"])
+async def create_upload_file(
+    background_tasks: BackgroundTasks,
+    user_id: str = Form(...),
+    file: UploadFile = File(...),
+):
+    try:
+        file_name = create_file_name(user_id)
+        m4a_path = create_file_path(file_name).replace(".webm", ".m4a")
+        file_id = await process_audio_metadata(file, user_id, file_name, m4a_path)
+
+        # 백그라운드 작업 추가
+        background_tasks.add_task(process_and_cleanup, file_id, m4a_path)
         return {"message": "success"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
