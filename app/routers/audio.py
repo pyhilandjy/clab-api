@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile, BackgroundTasks
+from fastapi import APIRouter, File, Header, HTTPException, UploadFile, BackgroundTasks
 from pydantic import BaseModel
 import asyncio
 from app.services.audio import (
@@ -9,8 +9,8 @@ from app.services.audio import (
     process_audio_metadata,
     process_stt,
     upload_to_s3,
-    create_convert_file_path,
 )
+from app.services.users import get_user_info_from_token
 
 router = APIRouter()
 
@@ -26,16 +26,20 @@ async def process_and_cleanup(file_id: str, file_path: str):
         raise e
 
 
-@router.post("/upload/", tags=["Audio"])
+@router.post("/", tags=["Audio"])
 async def create_upload_file(
     background_tasks: BackgroundTasks,
-    user_id: str = Form(...),
-    file: UploadFile = File(...),
+    authorization: str = Header(...),
+    audio: UploadFile = File(...),
 ):
     try:
+        token = authorization.split(" ")[1]
+        payload = get_user_info_from_token(token)
+        user_id = payload.get("sub")
+
         file_name = create_file_name(user_id)
         m4a_path = create_file_path(file_name).replace(".webm", ".m4a")
-        file_id = await process_audio_metadata(file, user_id, file_name, m4a_path)
+        file_id = await process_audio_metadata(audio, user_id, file_name, m4a_path)
 
         # 백그라운드 작업 추가
         background_tasks.add_task(process_and_cleanup, file_id, m4a_path)
