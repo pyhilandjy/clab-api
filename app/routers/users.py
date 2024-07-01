@@ -4,7 +4,6 @@ import uuid
 import jwt
 
 from fastapi import APIRouter, HTTPException
-from fastapi.responses import FileResponse, StreamingResponse
 
 import supabase
 from supabase import create_client, Client
@@ -16,13 +15,21 @@ router = APIRouter()
 supabase: Client = create_client(settings.supabase_url, settings.supabase_service_key)
 
 
-@router.get("/all_users")
+@router.get("/users/", tags=["users"])
 def get_all_users():
     try:
-        # Supabase Auth API를 사용하여 유저 정보 가져오기
         response = supabase.auth.admin.list_users()
         users = response
-        return users
+        user_list = []
+        for user in users:
+            user_info = {
+                "id": user.id,
+                "name": user.user_metadata.get("name", ""),
+                "email": user.email,
+            }
+            user_list.append(user_info)
+
+        return user_list
     except Exception as e:
         return {"error": str(e)}
 
