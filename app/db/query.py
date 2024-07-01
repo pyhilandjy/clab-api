@@ -312,7 +312,7 @@ UPDATE_REPORT_ID = text(
     UPDATE audio_files
     SET report_id = :new_report_id
     WHERE user_id = :user_id
-    AND created_at BETWEEN :start_date AND :end_date;
+    AND created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day';
     """
 )
 
