@@ -4,7 +4,6 @@ import jwt
 from fastapi import APIRouter, HTTPException
 
 from supabase import create_client, Client
-from jwt import ExpiredSignatureError, InvalidTokenError, InvalidAudienceError
 
 from app.config import settings
 
@@ -24,17 +23,11 @@ JWT_AUDIENCE = "authenticated"
 
 
 def get_user_info_from_token(token: str) -> str:
-    try:
-        payload = jwt.decode(
-            token,
-            settings.supabase_jwt_key,
-            algorithms=["HS256"],
-            audience=JWT_AUDIENCE,
-        )
-        return payload  # "id" 필드에서 사용자 ID를 가져옴
-    except ExpiredSignatureError:
-        raise ExpiredSignatureError("Token has expired")
-    except InvalidTokenError:
-        raise InvalidTokenError("Invalid token")
-    except InvalidAudienceError:
-        raise InvalidAudienceError("Invalid audience")
+
+    payload = jwt.decode(
+        token,
+        settings.supabase_jwt_key,
+        algorithms=["HS256"],
+        audience=JWT_AUDIENCE,
+    )
+    return payload
