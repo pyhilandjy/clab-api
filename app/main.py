@@ -32,16 +32,6 @@ app.include_router(reports.router)
 # app.include_router(stt.router, prefix="/stt", dependencies=[Depends(get_api_key)])
 
 
-# @app.get("/users/", tags=["Files"])
-# async def get_users():
-#     user_ids = get_all_users()
-#     return user_ids
-
-
-# def get_all_users():
-#     return execute_select_query(query=SELECT_USERS)
-
-
 @app.get("/")
 async def home():
     return {"status": "ok"}
