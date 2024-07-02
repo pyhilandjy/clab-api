@@ -85,11 +85,10 @@ RUN pip install --no-cache-dir --upgrade -r /src/requirements.txt
 
 # mecab-python3와 pandas 설치
 RUN pip install mecab-python3 pandas
+RUN mkdir -p /src/app/audio /src/app/image
 
 COPY ./NanumFontSetup_TTF_GOTHIC /src/NanumFontSetup_TTF_GOTHIC
 COPY ./app /src/app/
-COPY ./app /image/
-COPY ./app /audio/
 # COPY ./.env.example /src/.env
 
 EXPOSE 2456
