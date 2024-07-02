@@ -44,9 +44,9 @@ async def create_upload_file(
         token = authorization.split(" ")[1]
         payload = get_user_info_from_token(token)
         user_id = payload.get("sub")
-
-        file_name = create_file_name(user_id)
-        m4a_path = create_file_path(file_name).replace(".webm", ".m4a")
+        user_name = payload.get("user_metadata")["full_name"]
+        file_name = create_file_name(user_name)
+        m4a_path = create_file_path(user_id).replace(".webm", ".m4a")
         file_id = await process_audio_metadata(audio, user_id, file_name, m4a_path)
 
         # 백그라운드 작업 추가

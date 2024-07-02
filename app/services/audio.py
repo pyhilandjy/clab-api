@@ -27,14 +27,14 @@ bucket_name = settings.bucket_name
 s3 = session.client("s3")
 
 
-def create_file_name(user_id):
+def create_file_name(user_name):
     """파일 이름 생성"""
-    return datetime.now().strftime("%y%m%d%H%M%S") + "_" + user_id
+    return datetime.now().strftime("%y%m%d%H%M%S") + "_" + user_name
 
 
-def create_file_path(file_name):
+def create_file_path(user_id):
     """파일 경로 생성"""
-    return f"./app/audio/{file_name}.webm"
+    return f"./app/audio/{user_id}.webm"
 
 
 def create_convert_file_path(file_name):
