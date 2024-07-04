@@ -31,6 +31,7 @@ from app.services.report import (
     select_audio_id_stt_data,
     group_stt_data_by_file_name,
     export_to_excel,
+    select_talk_more_count,
 )
 
 from app.services.users import get_user_info_from_token
@@ -94,6 +95,13 @@ async def act_count(report_model: ReportModel):
     return act_count_data
 
 
+@router.post("/report/talk-more-count/", tags=["Report"])
+async def talk_more_count(report_model: ReportModel):
+    """화행 갯수 반환 앤드포인트"""
+    talk_more_count_data = select_talk_more_count(**report_model.model_dump())
+    return talk_more_count_data
+
+
 @router.post("/report/audio_record_time/", tags=["Report"])
 async def record_time(report_model: ReportModel):
     """문장길이, 녹음시간 반환 앤드포인트"""
@@ -109,15 +117,20 @@ async def generate_csv(report_model: ReportModel):
         sentence_len = create_sentence_len(**report_model.model_dump())
         record_time_data = create_audio_record_time(**report_model.model_dump())
         report_date_data = create_report_date(**report_model.model_dump())
+        talk_more_count_data = select_talk_more_count(**report_model.model_dump())
 
         df_morphs = pd.DataFrame(morps_data).T
         df_act_count = pd.DataFrame(act_count_data).T
+        df_talk_more_count = pd.DataFrame(talk_more_count_data).T
         df_sentence_len = pd.DataFrame(sentence_len).T
 
         merged_df = df_sentence_len.join(
-            df_act_count, lsuffix="_sentence", rsuffix="_act"
+            df_act_count, how="outer", lsuffix="_sentence", rsuffix="_act"
         )
-        merged_df = merged_df.join(df_morphs, lsuffix="_merged", rsuffix="_morphs")
+        merged_df = merged_df.join(
+            df_morphs, how="outer", lsuffix="_merged", rsuffix="_morphs"
+        )
+        merged_df = merged_df.join(df_talk_more_count, how="outer", rsuffix="_t")
 
         merged_df["녹음기간"] = report_date_data["녹음기간"]
         merged_df["녹음시간"] = record_time_data["녹음시간"]
@@ -125,14 +138,21 @@ async def generate_csv(report_model: ReportModel):
         sentence_len_cols = df_sentence_len.columns.tolist()
         morps_data_cols = df_morphs.columns.tolist()
         act_count_data_cols = df_act_count.columns.tolist()
+        talk_more_count_data_cols = [col for col in df_talk_more_count.columns.tolist()]
 
         desired_columns_order = (
             ["녹음기간", "녹음시간"]
             + sentence_len_cols
             + morps_data_cols
             + act_count_data_cols
+            + talk_more_count_data_cols
         )
-        merged_df = merged_df[desired_columns_order]
+
+        final_columns = [
+            col for col in desired_columns_order if col in merged_df.columns
+        ]
+
+        merged_df = merged_df[final_columns]
 
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine="xlsxwriter") as writer:

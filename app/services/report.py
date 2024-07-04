@@ -30,6 +30,7 @@ from app.db.query import (
     SELECT_REPORT_FILE_PATH,
     INSERT_FILE_PATH_REPORT_ID,
     SELECT_AUDIO_FILES_BETWEEN_DATE,
+    COUNT_TALK_MORE_ID,
 )
 from app.db.worker import execute_select_query, execute_insert_update_query
 
@@ -466,7 +467,6 @@ def select_act_count(user_id, start_date, end_date):
     act_count_dict = process_act_count(count_act_name)
     return act_count_dict
 
-
 def process_act_count(count_act_name):
     speaker_act_count_dict = {}
     for row in count_act_name:
@@ -480,6 +480,35 @@ def process_act_count(count_act_name):
         speaker_act_count_dict[speaker][act_name] = count
 
     return speaker_act_count_dict
+
+
+def select_talk_more_count(user_id, start_date, end_date):
+    """화행 갯수 카운트"""
+
+    params = {
+        "user_id": user_id,
+        "start_date": start_date,
+        "end_date": end_date,
+    }
+
+    count_talk_more_name = execute_select_query(query=COUNT_TALK_MORE_ID, params=params)
+    talk_more_count_dict = process_talk_more_count(count_talk_more_name)
+    return talk_more_count_dict
+
+def process_talk_more_count(count_talk_more):
+    speaker_talk_more_count_dict = {}
+    for row in count_talk_more:
+        speaker = row["speaker"]
+        talk_more = row["talk_more"]
+        count = row["count"]
+
+        if speaker not in speaker_talk_more_count_dict:
+            speaker_talk_more_count_dict[speaker] = {}
+
+        speaker_talk_more_count_dict[speaker][talk_more] = count
+
+    return speaker_talk_more_count_dict
+
 
 
 def create_report_date(user_id, start_date, end_date):

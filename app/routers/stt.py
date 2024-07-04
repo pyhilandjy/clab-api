@@ -12,6 +12,8 @@ from app.services.stt import (
     update_replace_text_edit,
     update_speech_act,
     update_text_edit,
+    update_talk_more,
+    select_talk_more,
 )
 
 router = APIRouter()
@@ -30,8 +32,10 @@ class EditTextModel(BaseModel):
     id: str
     file_id: str
     new_text: str
+    new_speaker: str
 
 
+# speaker 추가
 @router.patch("/data/edit-text/", tags=["STT"])
 async def edit_text(text_edit_model: EditTextModel):
     update_text_edit(**text_edit_model.model_dump())
@@ -108,8 +112,29 @@ class EditSpeechActsModel(BaseModel):
 
 @router.patch("/data/edit-speech-act/", tags=["STT"])
 async def edit_speech_act(act_id_update: EditSpeechActsModel):
-    print(act_id_update.model_dump())
     update_speech_act(**act_id_update.model_dump())
+    return {
+        "message": "STT data updated successfully",
+    }
+
+
+@router.get("/talk_more/", tags=["STT"], response_model=List[dict])
+async def get_talk_more():
+    """speech act의 목록을 가져오는 엔드포인트"""
+    act = select_talk_more()
+    if not act:
+        raise HTTPException(status_code=404, detail="talk_more not found")
+    return act
+
+
+class EditSpeechTalkMoresModel(BaseModel):
+    id: str
+    talk_more_id: int
+
+
+@router.patch("/data/edit-talk-more/", tags=["STT"])
+async def edit_talk_more_id(talk_more_id_update: EditSpeechTalkMoresModel):
+    update_talk_more(**talk_more_id_update.model_dump())
     return {
         "message": "STT data updated successfully",
     }
