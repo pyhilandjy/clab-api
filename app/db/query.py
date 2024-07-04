@@ -230,7 +230,11 @@ WITH all_acts AS (
     SELECT act_name, id as act_id FROM speech_acts ORDER BY id
 ),
 all_speakers AS (
-    SELECT DISTINCT speaker FROM stt_data
+    SELECT DISTINCT speaker
+    FROM stt_data sd
+    JOIN audio_files f ON sd.file_id = f.id
+    WHERE f.user_id = :user_id
+    AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
 ),
 all_combinations AS (
     SELECT
@@ -269,8 +273,10 @@ LEFT JOIN (
 ORDER BY
     ac.act_id,
     ac.speaker;
+
 """
 )
+
 
 COUNT_TALK_MORE_ID = text(
     """
@@ -278,7 +284,11 @@ WITH all_talk_mores AS (
     SELECT talk_more, id as talk_more_id FROM talk_more ORDER BY id
 ),
 all_speakers AS (
-    SELECT DISTINCT speaker FROM stt_data
+    SELECT DISTINCT speaker
+    FROM stt_data sd
+    JOIN audio_files f ON sd.file_id = f.id
+    WHERE f.user_id = :user_id
+    AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
 ),
 all_combinations AS (
     SELECT
@@ -319,6 +329,7 @@ ORDER BY
     ac.speaker;
 """
 )
+
 
 # LOGIN = text(
 #     """
