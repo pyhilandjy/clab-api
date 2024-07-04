@@ -131,9 +131,9 @@ UPDATE_REPLACE_SPEAKER = text(
 UPDATE_TEXT_EDITED = text(
     """
     UPDATE stt_data
-    SET text_edited = :new_text
+    SET text_edited = :new_text, speaker = :new_speaker
     WHERE file_id = :file_id AND id = :id;
-"""
+    """
 )
 
 UPDATE_INCREASE_TEXT_ORDER = text(
@@ -200,6 +200,13 @@ FROM speech_acts
     """
 )
 
+SELECT_TALK_MORE = text(
+    """
+SELECT talk_more, *
+FROM talk_more
+    """
+)
+
 UPDATE_SPEECH_ACT = text(
     """
 UPDATE stt_data
@@ -207,6 +214,15 @@ SET act_id = :act_id
 WHERE id = :id;
 """
 )
+
+UPDATE_TALK_MORE = text(
+    """
+UPDATE stt_data
+SET talk_more_id = :talk_more_id
+WHERE id = :id;
+"""
+)
+
 
 COUNT_ACT_ID = text(
     """
@@ -252,6 +268,54 @@ LEFT JOIN (
 ) cnt ON ac.act_name = cnt.act_name AND ac.speaker = cnt.speaker
 ORDER BY
     ac.act_id,
+    ac.speaker;
+"""
+)
+
+COUNT_TALK_MORE_ID = text(
+    """
+WITH all_talk_mores AS (
+    SELECT talk_more, id as talk_more_id FROM talk_more ORDER BY id
+),
+all_speakers AS (
+    SELECT DISTINCT speaker FROM stt_data
+),
+all_combinations AS (
+    SELECT
+        tm.talk_more,
+        tm.talk_more_id,
+        s.speaker
+    FROM
+        all_talk_mores tm
+    CROSS JOIN
+        all_speakers s
+)
+SELECT
+    ac.talk_more,
+    ac.speaker,
+    COALESCE(cnt.count, 0) AS count
+FROM
+    all_combinations ac
+LEFT JOIN (
+    SELECT
+        tm.talk_more,
+        sd.speaker,
+        COUNT(sd.talk_more_id) AS count
+    FROM
+        stt_data sd
+    JOIN
+        talk_more tm ON sd.talk_more_id = tm.id
+    JOIN
+        audio_files f ON sd.file_id = f.id
+    WHERE
+        f.user_id = :user_id
+        AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
+    GROUP BY
+        tm.talk_more,
+        sd.speaker
+) cnt ON ac.talk_more = cnt.talk_more AND ac.speaker = cnt.speaker
+ORDER BY
+    ac.talk_more_id,
     ac.speaker;
 """
 )
