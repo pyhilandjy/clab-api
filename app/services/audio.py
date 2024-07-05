@@ -5,6 +5,7 @@ import shutil
 import subprocess
 from datetime import datetime
 from pathlib import Path
+from io import BytesIO
 
 import boto3
 from botocore.exceptions import ClientError, NoCredentialsError
@@ -34,11 +35,8 @@ def create_file_name(user_name):
 
 def create_file_path(user_id):
     """파일 경로 생성"""
-    return f"./app/audio/{user_id}.webm"
+    return f"./app/audio/{datetime.now().strftime("%y%m%d%H%M%S")}_{user_id}.webm"
 
-
-def create_convert_file_path(file_name):
-    return f"./app/audio/{file_name}.m4a"
 
 
 def save_audio(file: UploadFile, file_path: str):
@@ -49,21 +47,32 @@ def save_audio(file: UploadFile, file_path: str):
         convert_to_m4a(file_path)
     except Exception as e:
         raise e
+    
+async def download_and_process_file(file_path: str, user_id: str, file_name: str):
+    """S3에서 파일 다운로드 및 처리"""
 
+    try:
+        # S3에서 파일 다운로드
+        s3.download_file(settings.bucket_name, file_path[2:], file_path)
+        m4a_path, file_id = await process_audio_metadata(file_path, user_id, file_name)
+        await process_stt(str(file_id), m4a_path)
+        await delete_file(m4a_path)
+    except Exception as e:
+        logger.error(f"Error during file processing: {e}")
+        raise e
+    
 
-async def process_audio_metadata(
-    file: UploadFile, user_id: str, file_name: str, m4a_path: str
-):
+async def process_audio_metadata(file_path: str, user_id: str, file_name: str):
     """오디오 파일 메타데이터 처리"""
     try:
-        file_bytes = await file.read()
-        file.file.seek(0)
-        m4a_path = convert_to_m4a(file_bytes, m4a_path)
+        with open(file_path, "rb") as f:
+            file_bytes = f.read()
+        m4a_path = convert_to_m4a(file_bytes, file_path)
         record_time = get_record_time(m4a_path)
-        metadata = create_audio_metadata(user_id, file_name, m4a_path, record_time)
+        metadata = create_audio_metadata(user_id, file_name, file_path[2:], record_time)
         file_id = insert_audio_metadata(metadata)
         logger.info(f"Audio file metadata inserted: {file_id}")
-        return file_id
+        return m4a_path, file_id
     except Exception as e:
         logger.error(f"Error processing metadata: {e}")
         raise e
@@ -101,10 +110,10 @@ def insert_audio_metadata(metadata: dict):
     )
 
 
-async def process_stt(file_id, file_path):
+async def process_stt(file_id, m4a_path):
     """음성파일 stt"""
     try:
-        segments = get_stt_results(file_path)
+        segments = get_stt_results(m4a_path)
         rename_segments = rename_keys(segments)
         explode_segments = explode(rename_segments, "textEdited")
         insert_stt_segments(explode_segments, file_id)
@@ -114,11 +123,14 @@ async def process_stt(file_id, file_path):
         logger.info(f"STT segments inserted: {file_id}")
 
 
-async def upload_to_s3(file_path: str):
+async def upload_to_s3(audio: UploadFile, file_path):
     """m4a 파일을 S3에 저장"""
     try:
-        with open(file_path, "rb") as file:
-            s3.upload_fileobj(file, settings.bucket_name, file_path[2:])
+        audio_content = await audio.read()
+        audio_stream = BytesIO(audio_content)
+        
+        # S3에 업로드
+        s3.upload_fileobj(audio_stream, settings.bucket_name, file_path)
     except NoCredentialsError:
         return {"error": "Credentials not available"}
     except ClientError as e:
@@ -130,9 +142,9 @@ async def upload_to_s3(file_path: str):
         return {"message": "File uploaded successfully"}
 
 
-def convert_to_m4a(file_bytes: bytes, output_path: str):
+def convert_to_m4a(file_bytes: bytes, input_path: str):
     """WebM 파일을 M4A로 변환"""
-    input_path = output_path.replace(".m4a", ".webm")
+    output_path = input_path.replace(".webm", ".m4a")
     with open(input_path, "wb") as buffer:
         buffer.write(file_bytes)
 
@@ -316,14 +328,14 @@ def rename_keys(segments):
     return output
 
 
-async def delete_file(file_path):
+async def delete_file(m4a_path):
     try:
-        if os.path.exists(file_path):
-            os.remove(file_path)
+        if os.path.exists(m4a_path):
+            os.remove(m4a_path)
     except Exception as e:
         logger.error(f"An error occurred while trying to delete the file: {str(e)}")
     else:
-        logger.info(f"File deleted: {file_path}")
+        logger.info(f"File deleted: {m4a_path}")
 
 
 def get_files_by_user_id(user_id):
