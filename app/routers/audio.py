@@ -1,7 +1,7 @@
 from fastapi import (
     APIRouter,
     File,
-    Form,
+    Depends,
     Header,
     HTTPException,
     UploadFile,
@@ -24,18 +24,25 @@ from app.services.users import get_user_info_from_token
 router = APIRouter()
 
 
-@router.post("/", tags=["Audio"])
-async def create_upload_file(
-    background_tasks: BackgroundTasks,
-    authorization: str = Header(...),
-    audio: UploadFile = File(...),
-):
+async def get_current_user(authorization: str = Header(...)):
     try:
         token = authorization.split(" ")[1]
         payload = get_user_info_from_token(token)
-        user_id = payload.get("sub")
+        return payload
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
+
+@router.post("/", tags=["Audio"])
+async def create_upload_file(
+    background_tasks: BackgroundTasks,
+    current_user: dict = Depends(get_current_user),
+    audio: UploadFile = File(...),
+):
+    try:
+        user_id = current_user.get("sub")
         file_path = create_file_path(user_id)
-        user_name = payload.get("user_metadata")["full_name"]
+        user_name = current_user.get("user_metadata")["full_name"]
         file_name = create_file_name(user_name)
         await upload_to_s3(audio, file_path[2:])
         # 백그라운드 테스크 add
