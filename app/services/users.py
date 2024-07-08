@@ -1,9 +1,8 @@
 from typing import Dict
+
 import jwt
-
 from fastapi import APIRouter
-
-from supabase import create_client, Client
+from supabase import Client, create_client
 
 from app.config import settings
 

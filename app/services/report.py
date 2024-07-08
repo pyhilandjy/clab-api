@@ -1,38 +1,28 @@
 import io
 import os
-import boto3
+from collections import Counter, OrderedDict
 from datetime import date
 
-import mecab_ko as MeCab
-import pandas as pd
-import numpy as np
-from collections import Counter
-from wordcloud import WordCloud
-from matplotlib import font_manager
+import boto3
 import matplotlib.pyplot as plt
-from collections import OrderedDict
-from fastapi import Response
-
+import mecab_ko as MeCab
+import numpy as np
+import pandas as pd
 import seaborn as sns
-
-
+from fastapi import Response
+from matplotlib import font_manager
+from wordcloud import WordCloud
 
 from app.config import settings
-from app.db.query import (
-    SELECT_STT_DATA_BETWEEN_DATE,
-    INSERT_IMAGE_FILES_META_DATA,
-    SELECT_SENTENCE_LEN,
-    SELECT_RECORD_TIME,
-    COUNT_ACT_ID,
-    INSERT_REPORT_META_DATA,
-    UPDATE_REPORT_ID,
-    SELECT_REPORT_METADATA,
-    SELECT_REPORT_FILE_PATH,
-    INSERT_FILE_PATH_REPORT_ID,
-    SELECT_AUDIO_FILES_BETWEEN_DATE,
-    COUNT_TALK_MORE_ID,
-)
-from app.db.worker import execute_select_query, execute_insert_update_query
+from app.db.query import (COUNT_ACT_ID, COUNT_TALK_MORE_ID,
+                          INSERT_FILE_PATH_REPORT_ID,
+                          INSERT_IMAGE_FILES_META_DATA,
+                          INSERT_REPORT_META_DATA,
+                          SELECT_AUDIO_FILES_BETWEEN_DATE, SELECT_RECORD_TIME,
+                          SELECT_REPORT_FILE_PATH, SELECT_REPORT_METADATA,
+                          SELECT_SENTENCE_LEN, SELECT_STT_DATA_BETWEEN_DATE,
+                          UPDATE_REPORT_ID)
+from app.db.worker import execute_insert_update_query, execute_select_query
 
 FONT_PATH = os.path.abspath("./NanumFontSetup_TTF_GOTHIC/NanumGothic.ttf")
 font_prop = font_manager.FontProperties(fname=FONT_PATH)
@@ -467,6 +457,7 @@ def select_act_count(user_id, start_date, end_date):
     act_count_dict = process_act_count(count_act_name)
     return act_count_dict
 
+
 def process_act_count(count_act_name):
     speaker_act_count_dict = {}
     for row in count_act_name:
@@ -495,6 +486,7 @@ def select_talk_more_count(user_id, start_date, end_date):
     talk_more_count_dict = process_talk_more_count(count_talk_more_name)
     return talk_more_count_dict
 
+
 def process_talk_more_count(count_talk_more):
     speaker_talk_more_count_dict = {}
     for row in count_talk_more:
@@ -510,7 +502,6 @@ def process_talk_more_count(count_talk_more):
     return speaker_talk_more_count_dict
 
 
-
 def create_report_date(user_id, start_date, end_date):
     """녹음 기간 반환"""
     # 수정필요함
@@ -524,9 +515,11 @@ def create_tmp_file_path(user_id):
     """임시 경로 생성"""
     return f"app/report/{user_id}/temp.pdf"
 
+
 def create_file_path(user_id, id):
     """S3 파일 경로 생성"""
     return f"app/report/{user_id}/{id}.pdf"
+
 
 def update_file_path(id, file_path):
     return execute_insert_update_query(
@@ -543,6 +536,7 @@ def gen_report_file_metadata(user_id: str, title: str, tmp_file_path: str):
         "file_path": tmp_file_path,
     }
 
+
 def insert_report_metadata(metadata: dict):
     """오디오 파일 메타데이터 db적재"""
     return execute_insert_update_query(
@@ -556,10 +550,12 @@ def update_report_id(id, user_id, start_date, end_date):
     """오디오 파일 메타데이터 db적재"""
     return execute_insert_update_query(
         query=UPDATE_REPORT_ID,
-        params={"new_report_id" : id,
-                "user_id" : user_id,
-                "start_date" : start_date,
-                "end_date" : end_date},
+        params={
+            "new_report_id": id,
+            "user_id": user_id,
+            "start_date": start_date,
+            "end_date": end_date,
+        },
     )
 
 
@@ -573,14 +569,18 @@ def save_report_file_s3(file, file_path: str):
     except Exception as e:
         return {"error": str(e)}
 
+
 def get_report_metadata(user_id):
-    report_metadata = execute_select_query(query=SELECT_REPORT_METADATA, params={"user_id": user_id})
+    report_metadata = execute_select_query(
+        query=SELECT_REPORT_METADATA, params={"user_id": user_id}
+    )
     return report_metadata
+
 
 def get_report_file_path(report: str) -> str:
     result = execute_select_query(query=SELECT_REPORT_FILE_PATH, params={"id": report})
-    if isinstance(result, list) and len(result) > 0 and 'file_path' in result[0]:
-        return result[0]['file_path']
+    if isinstance(result, list) and len(result) > 0 and "file_path" in result[0]:
+        return result[0]["file_path"]
     else:
         print("e")
 
@@ -589,21 +589,24 @@ def get_report(file_path: str):
     try:
         # S3에서 PDF 파일 불러오기
         pdf_file = s3.get_object(Bucket=bucket_name, Key=file_path)
-        pdf_content = pdf_file['Body'].read()
-        file_name = file_path.split('/')[-1]
+        pdf_content = pdf_file["Body"].read()
+        file_name = file_path.split("/")[-1]
 
         # PDF 내용을 BytesIO 객체에 쓰기
         buffer = io.BytesIO(pdf_content)
-        
-        headers = {'Content-Disposition': f'inline; filename={file_name}'}
-        
+
+        headers = {"Content-Disposition": f"inline; filename={file_name}"}
+
         # BytesIO 객체의 시작 위치를 0으로 되돌립니다.
         buffer.seek(0)
-        
+
         # PDF 파일을 Response로 반환
-        return Response(content=buffer.read(), headers=headers, media_type='application/pdf')
+        return Response(
+            content=buffer.read(), headers=headers, media_type="application/pdf"
+        )
     except Exception as e:
         raise e
+
 
 def select_audio_id_stt_data(user_id, start_date, end_date):
     """file_id별로 stt result를 가져오는 엔드포인트"""
@@ -612,16 +615,22 @@ def select_audio_id_stt_data(user_id, start_date, end_date):
         "start_date": start_date,
         "end_date": end_date,
     }
-    file_ids = execute_select_query(query=SELECT_AUDIO_FILES_BETWEEN_DATE, params=params)
+    file_ids = execute_select_query(
+        query=SELECT_AUDIO_FILES_BETWEEN_DATE, params=params
+    )
     stt_data = execute_select_query(query=SELECT_STT_DATA_BETWEEN_DATE, params=params)
     return file_ids, stt_data
+
 
 def group_stt_data_by_file_name(file_ids, stt_data):
     grouped_data = {}
     for file in file_ids:
-        file_name = file['file_name']
-        grouped_data[file_name] = [data for data in stt_data if data['file_id'] == file['id']]
+        file_name = file["file_name"]
+        grouped_data[file_name] = [
+            data for data in stt_data if data["file_id"] == file["id"]
+        ]
     return grouped_data
+
 
 def export_to_excel(grouped_data):
     output = io.BytesIO()
@@ -631,4 +640,3 @@ def export_to_excel(grouped_data):
             df.to_excel(writer, sheet_name=file_name, index=False)
     output.seek(0)
     return output
-

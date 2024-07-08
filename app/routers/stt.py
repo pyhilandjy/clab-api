@@ -3,18 +3,11 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from app.services.stt import (
-    add_row_stt_data,
-    delete_row_stt_data,
-    select_speech_act,
-    select_stt_data_by_file_id,
-    update_replace_speaker,
-    update_replace_text_edit,
-    update_speech_act,
-    update_text_edit,
-    update_talk_more,
-    select_talk_more,
-)
+from app.services.stt import (add_row_stt_data, delete_row_stt_data,
+                              select_speech_act, select_stt_data_by_file_id,
+                              select_talk_more, update_replace_speaker,
+                              update_replace_text_edit, update_speech_act,
+                              update_talk_more, update_text_edit)
 
 router = APIRouter()
 

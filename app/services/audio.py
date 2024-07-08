@@ -1,5 +1,6 @@
 import io
 import json
+import logging
 import os
 import shutil
 import subprocess
@@ -13,11 +14,11 @@ from loguru import logger
 from pydub import AudioSegment
 
 from app.config import settings
-from app.db.query import INSERT_AUDIO_META_DATA, INSERT_STT_DATA, SELECT_FILES, SELECT_AUDIO_FILES, UPDATE_RECORD_TIME, UPDATE_AUDIO_STATUS
+from app.db.query import (INSERT_AUDIO_META_DATA, INSERT_STT_DATA,
+                          SELECT_AUDIO_FILES, SELECT_FILES,
+                          UPDATE_AUDIO_STATUS, UPDATE_RECORD_TIME)
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.services.clova import ClovaApiClient
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +42,6 @@ def create_file_path(user_id):
     return f"./app/audio/{datetime.now().strftime("%y%m%d%H%M%S")}_{user_id}.webm"
 
 
-
 def save_audio(file: UploadFile, file_path: str):
     """m4a 파일 저장"""
     with open(file_path, "wb") as buffer:
@@ -50,7 +50,8 @@ def save_audio(file: UploadFile, file_path: str):
         convert_to_m4a(file_path)
     except Exception as e:
         raise e
-    
+
+
 async def download_and_process_file():
     """S3에서 파일 다운로드 및 처리"""
     try:
@@ -69,10 +70,11 @@ async def download_and_process_file():
     except Exception as e:
         logger.error(f"Error during file processing: {e}")
         raise e
-    
+
+
 def select_audio_ready():
     results = execute_select_query(query=SELECT_AUDIO_FILES)
-    return  results
+    return results
 
 
 async def convert_file_update_record_time(local_path: str, file_id):
@@ -90,9 +92,13 @@ async def convert_file_update_record_time(local_path: str, file_id):
         logger.error(f"Error processing metadata: {e}")
         raise e
 
+
 def insert_record_time(record_time, file_id):
     """record_time update"""
-    execute_insert_update_query(query=UPDATE_RECORD_TIME, params={"record_time": record_time, "file_id": file_id})
+    execute_insert_update_query(
+        query=UPDATE_RECORD_TIME,
+        params={"record_time": record_time, "file_id": file_id},
+    )
 
 
 def get_record_time(m4a_path: str):
@@ -106,9 +112,7 @@ def get_record_time(m4a_path: str):
         raise Exception("Failed to get record time")
 
 
-def create_audio_metadata(
-    user_id: str, file_name: str, file_path: str
-):
+def create_audio_metadata(user_id: str, file_name: str, file_path: str):
     """오디오 파일 메타데이터 생성"""
     return {
         "user_id": user_id,
@@ -124,8 +128,11 @@ def insert_audio_metadata(metadata: dict):
         params=metadata,
     )
 
+
 def update_audio_status(file_id, status):
-    execute_insert_update_query(query=UPDATE_AUDIO_STATUS, params={"file_id": file_id, "status": status})
+    execute_insert_update_query(
+        query=UPDATE_AUDIO_STATUS, params={"file_id": file_id, "status": status}
+    )
 
 
 async def process_stt(file_id, m4a_path):
@@ -150,13 +157,12 @@ async def process_stt(file_id, m4a_path):
         logger.info(f"STT segments inserted: {file_id}")
 
 
-
 async def upload_to_s3(audio: UploadFile, file_path):
     """m4a 파일을 S3에 저장"""
     try:
         audio_content = await audio.read()
         audio_stream = BytesIO(audio_content)
-        
+
         # S3에 업로드
         s3.upload_fileobj(audio_stream, settings.bucket_name, file_path)
     except NoCredentialsError:

@@ -1,11 +1,12 @@
 import logging
+from contextlib import asynccontextmanager
+
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
 from app.routers import audio, reports, stt, users
 from app.services.audio import download_and_process_file
-
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

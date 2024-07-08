@@ -1,39 +1,25 @@
-import os
 import io
-import pandas as pd
-
+import os
 from datetime import date
 from typing import List
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile, Header
+import pandas as pd
+from fastapi import APIRouter, File, Form, Header, HTTPException, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
-
 from pydantic import BaseModel
 
-from app.services.report import (
-    create_morphs_data,
-    create_wordcoud,
-    create_violinplot,
-    create_sentence_len,
-    select_act_count,
-    create_audio_record_time,
-    create_report_date,
-    create_tmp_file_path,
-    create_file_path,
-    update_file_path,
-    gen_report_file_metadata,
-    insert_report_metadata,
-    update_report_id,
-    save_report_file_s3,
-    get_report_metadata,
-    get_report_file_path,
-    get_report,
-    select_audio_id_stt_data,
-    group_stt_data_by_file_name,
-    export_to_excel,
-    select_talk_more_count,
-)
-
+from app.services.report import (create_audio_record_time, create_file_path,
+                                 create_morphs_data, create_report_date,
+                                 create_sentence_len, create_tmp_file_path,
+                                 create_violinplot, create_wordcoud,
+                                 export_to_excel, gen_report_file_metadata,
+                                 get_report, get_report_file_path,
+                                 get_report_metadata,
+                                 group_stt_data_by_file_name,
+                                 insert_report_metadata, save_report_file_s3,
+                                 select_act_count, select_audio_id_stt_data,
+                                 select_talk_more_count, update_file_path,
+                                 update_report_id)
 from app.services.users import get_user_info_from_token
 
 router = APIRouter()
