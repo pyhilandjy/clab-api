@@ -2,15 +2,37 @@ from sqlalchemy import text
 
 INSERT_AUDIO_META_DATA = text(
     """
-    INSERT INTO audio_files (user_id, file_name, file_path, created_at, record_time) VALUES 
+    INSERT INTO audio_files (user_id, file_name, file_path, created_at) VALUES 
     (
         :user_id,
         :file_name,
         :file_path,
-        current_timestamp,
-        :record_time
-    ) RETURNING id
+        current_timestamp
+    )
     """
+)
+
+UPDATE_AUDIO_STATUS = text(
+    """
+    UPDATE audio_files
+    SET status = :status
+    WHERE id = :file_id
+    """
+)
+
+UPDATE_RECORD_TIME = text(
+    """
+    UPDATE audio_files
+    SET record_time = :record_time
+    WHERE id = :file_id
+    """
+)
+
+SELECT_AUDIO_FILES = text(
+    """
+    SELECT * FROM audio_files
+    WHERE audio_files.status = 'ready'
+"""
 )
 
 INSERT_IMAGE_FILES_META_DATA = text(

@@ -1,15 +1,26 @@
-from fastapi import Depends, FastAPI
+import logging
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-
-from app.db.query import SELECT_USERS
-from app.db.worker import execute_select_query
+from contextlib import asynccontextmanager
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from app.routers import audio, reports, stt, users
-from app.services.api_key import get_api_key
-import requests
-from app.config import settings
+from app.services.audio import download_and_process_file
 
-app = FastAPI()
 
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    scheduler = AsyncIOScheduler(timezone=f"Asia/Seoul")
+    scheduler.add_job(func=download_and_process_file, trigger="interval", minutes=10)
+    scheduler.start()
+    yield
+
+
+# FastAPI 앱 생성
+app = FastAPI(lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

@@ -15,6 +15,7 @@ create table
     file_path varchar(255) not null,
     record_time int,
     report_id varchar(255),
+    status varchar(255) default 'ready',
     created_at timestamp not null default current_timestamp,
     primary key (id)
   );
@@ -25,6 +26,7 @@ create table
     id uuid DEFAULT gen_random_uuid() not null,
     file_id varchar(255) not null,
     act_id int not null default 1,
+    talk_more_id int not null default 1,
     text_order int not null,
     start_time int not null,
     end_time int not null,

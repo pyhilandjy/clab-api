@@ -4,7 +4,6 @@ import os
 import shutil
 import subprocess
 from datetime import datetime
-from pathlib import Path
 from io import BytesIO
 
 import boto3
@@ -14,9 +13,13 @@ from loguru import logger
 from pydub import AudioSegment
 
 from app.config import settings
-from app.db.query import INSERT_AUDIO_META_DATA, INSERT_STT_DATA, SELECT_FILES
+from app.db.query import INSERT_AUDIO_META_DATA, INSERT_STT_DATA, SELECT_FILES, SELECT_AUDIO_FILES, UPDATE_RECORD_TIME, UPDATE_AUDIO_STATUS
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.services.clova import ClovaApiClient
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 session = boto3.Session(
     aws_access_key_id=settings.aws_access_key_id,
@@ -48,34 +51,48 @@ def save_audio(file: UploadFile, file_path: str):
     except Exception as e:
         raise e
     
-async def download_and_process_file(file_path: str, user_id: str, file_name: str):
+async def download_and_process_file():
     """S3에서 파일 다운로드 및 처리"""
-
     try:
-        # S3에서 파일 다운로드
-        s3.download_file(settings.bucket_name, file_path[2:], file_path)
-        m4a_path, file_id = await process_audio_metadata(file_path, user_id, file_name)
-        await process_stt(str(file_id), m4a_path)
-        await delete_file(m4a_path)
+        logger.info("Starting download_and_process_file task")
+        ready_files = select_audio_ready()
+        for file_record in ready_files:
+            file_path = file_record.file_path
+            local_path = f"./{file_path}"
+            file_id = str(file_record.id)
+            # S3에서 파일 다운로드
+            s3.download_file(settings.bucket_name, file_path, local_path)
+            m4a_path = await convert_file_update_record_time(local_path, file_id)
+            await process_stt(file_id, m4a_path)
+            await delete_file(m4a_path)
+        logger.info("Completed download_and_process_file task")
     except Exception as e:
         logger.error(f"Error during file processing: {e}")
         raise e
     
+def select_audio_ready():
+    results = execute_select_query(query=SELECT_AUDIO_FILES)
+    return  results
 
-async def process_audio_metadata(file_path: str, user_id: str, file_name: str):
+
+async def convert_file_update_record_time(local_path: str, file_id):
     """오디오 파일 메타데이터 처리"""
     try:
-        with open(file_path, "rb") as f:
+        with open(local_path, "rb") as f:
             file_bytes = f.read()
-        m4a_path = convert_to_m4a(file_bytes, file_path)
+        m4a_path = convert_to_m4a(file_bytes, local_path)
         record_time = get_record_time(m4a_path)
-        metadata = create_audio_metadata(user_id, file_name, file_path[2:], record_time)
-        file_id = insert_audio_metadata(metadata)
-        logger.info(f"Audio file metadata inserted: {file_id}")
-        return m4a_path, file_id
+        insert_record_time(record_time, file_id)
+        logger.info(f"Audio file metadata inserted: {m4a_path}")
+        return m4a_path
     except Exception as e:
+        update_audio_status(file_id, "convert_error")
         logger.error(f"Error processing metadata: {e}")
         raise e
+
+def insert_record_time(record_time, file_id):
+    """record_time update"""
+    execute_insert_update_query(query=UPDATE_RECORD_TIME, params={"record_time": record_time, "file_id": file_id})
 
 
 def get_record_time(m4a_path: str):
@@ -90,14 +107,13 @@ def get_record_time(m4a_path: str):
 
 
 def create_audio_metadata(
-    user_id: str, file_name: str, file_path: str, record_time: int
+    user_id: str, file_name: str, file_path: str
 ):
     """오디오 파일 메타데이터 생성"""
     return {
         "user_id": user_id,
         "file_name": file_name,
         "file_path": file_path,
-        "record_time": record_time,
     }
 
 
@@ -106,21 +122,33 @@ def insert_audio_metadata(metadata: dict):
     return execute_insert_update_query(
         query=INSERT_AUDIO_META_DATA,
         params=metadata,
-        return_id=True,
     )
+
+def update_audio_status(file_id, status):
+    execute_insert_update_query(query=UPDATE_AUDIO_STATUS, params={"file_id": file_id, "status": status})
 
 
 async def process_stt(file_id, m4a_path):
-    """음성파일 stt"""
+    """음성파일 STT"""
     try:
         segments = get_stt_results(m4a_path)
+        if not segments:
+            logger.error(f"No segments found for file: {file_id}")
+            update_audio_status(file_id, "stt_error")
+            delete_file(m4a_path)
+            return
+
         rename_segments = rename_keys(segments)
         explode_segments = explode(rename_segments, "textEdited")
         insert_stt_segments(explode_segments, file_id)
+        update_audio_status(file_id, "done")
     except Exception as e:
+        update_audio_status(file_id, "stt_error")
+        delete_file(m4a_path)
         raise e
     else:
         logger.info(f"STT segments inserted: {file_id}")
+
 
 
 async def upload_to_s3(audio: UploadFile, file_path):

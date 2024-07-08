@@ -5,19 +5,15 @@ from fastapi import (
     Header,
     HTTPException,
     UploadFile,
-    BackgroundTasks,
 )
 from pydantic import BaseModel
-import asyncio
 from app.services.audio import (
     create_file_name,
     create_file_path,
-    delete_file,
+    create_audio_metadata,
     get_files_by_user_id,
-    process_audio_metadata,
-    process_stt,
+    insert_audio_metadata,
     upload_to_s3,
-    download_and_process_file,
 )
 from app.services.users import get_user_info_from_token
 
@@ -35,7 +31,6 @@ async def get_current_user(authorization: str = Header(...)):
 
 @router.post("/", tags=["Audio"])
 async def create_upload_file(
-    background_tasks: BackgroundTasks,
     current_user: dict = Depends(get_current_user),
     audio: UploadFile = File(...),
 ):
@@ -44,12 +39,9 @@ async def create_upload_file(
         file_path = create_file_path(user_id)
         user_name = current_user.get("user_metadata")["full_name"]
         file_name = create_file_name(user_name)
+        metadata = create_audio_metadata(user_id, file_name, file_path[2:])
+        insert_audio_metadata(metadata)
         await upload_to_s3(audio, file_path[2:])
-        # 백그라운드 테스크 add
-        background_tasks.add_task(
-            download_and_process_file, file_path, user_id, file_name
-        )
-        # local file 정리
 
         return {"message": "success"}
     except Exception as e:
