@@ -3,11 +3,18 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from app.services.stt import (add_row_stt_data, delete_row_stt_data,
-                              select_speech_act, select_stt_data_by_file_id,
-                              select_talk_more, update_replace_speaker,
-                              update_replace_text_edit, update_speech_act,
-                              update_talk_more, update_text_edit)
+from app.services.stt import (
+    add_row_stt_data,
+    delete_row_stt_data,
+    select_speech_act,
+    select_stt_data_by_file_id,
+    select_talk_more,
+    update_replace_speaker,
+    update_replace_text_edit,
+    update_speech_act,
+    update_talk_more,
+    update_text_edit,
+)
 
 router = APIRouter()
 
@@ -34,6 +41,20 @@ async def edit_text(text_edit_model: EditTextModel):
     update_text_edit(**text_edit_model.model_dump())
     return {
         "message": "STT data updated successfully",
+    }
+
+
+@router.post("/data/batch-edit/", tags=["STT"])
+async def batch_edit(text_edit_models: List[EditTextModel]):
+    for text_edit_model in text_edit_models:
+        try:
+            update_text_edit(**text_edit_model.model_dump())
+        except HTTPException as e:
+            raise HTTPException(
+                status_code=404, detail=f"Row with id {text_edit_model.id} not found"
+            )
+    return {
+        "message": "All STT data updated successfully",
     }
 
 

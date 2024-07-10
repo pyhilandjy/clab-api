@@ -1,10 +1,18 @@
 from app.db.connection import postgresql_connection
-from app.db.query import (DELETE_ROW, INSERT_COPIED_DATA, SELECT_SPEECH_ACTS,
-                          SELECT_STT_DATA, SELECT_TALK_MORE,
-                          UPDATE_DECREASE_TEXT_ORDER,
-                          UPDATE_INCREASE_TEXT_ORDER, UPDATE_REPLACE_SPEAKER,
-                          UPDATE_REPLACE_TEXT_EDITED, UPDATE_SPEECH_ACT,
-                          UPDATE_TALK_MORE, UPDATE_TEXT_EDITED)
+from app.db.query import (
+    DELETE_ROW,
+    INSERT_COPIED_DATA,
+    SELECT_SPEECH_ACTS,
+    SELECT_STT_DATA,
+    SELECT_TALK_MORE,
+    UPDATE_DECREASE_TEXT_ORDER,
+    UPDATE_INCREASE_TEXT_ORDER,
+    UPDATE_REPLACE_SPEAKER,
+    UPDATE_REPLACE_TEXT_EDITED,
+    UPDATE_SPEECH_ACT,
+    UPDATE_TALK_MORE,
+    UPDATE_TEXT_EDITED,
+)
 from app.db.worker import execute_insert_update_query, execute_select_query
 
 
