@@ -1,9 +1,15 @@
 from fastapi import APIRouter, Depends, File, Header, HTTPException, UploadFile
 from pydantic import BaseModel
 
-from app.services.audio import (create_audio_metadata, create_file_name,
-                                create_file_path, get_files_by_user_id,
-                                insert_audio_metadata, upload_to_s3)
+from app.services.audio import (
+    create_audio_metadata,
+    create_file_name,
+    create_file_path,
+    get_files_by_user_id,
+    insert_audio_metadata,
+    upload_to_s3,
+    select_audio_file,
+)
 from app.services.users import get_user_info_from_token
 
 router = APIRouter()
@@ -50,3 +56,9 @@ async def get_files(user_id: str):
     if not file_ids:
         raise HTTPException(status_code=404, detail="Files not found")
     return file_ids
+
+
+@router.get("/webm/{id}", tags=["Audio"])
+async def get_audio_file(id: str):
+    """file_id 별 audio_files 가져오는 앤드포인트"""
+    return select_audio_file(id)

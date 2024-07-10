@@ -10,13 +10,14 @@ from io import BytesIO
 import boto3
 from botocore.exceptions import ClientError, NoCredentialsError
 from fastapi import UploadFile
+from fastapi.responses import StreamingResponse
 from loguru import logger
 from pydub import AudioSegment
 
 from app.config import settings
 from app.db.query import (INSERT_AUDIO_META_DATA, INSERT_STT_DATA,
                           SELECT_AUDIO_FILES, SELECT_FILES,
-                          UPDATE_AUDIO_STATUS, UPDATE_RECORD_TIME)
+                          UPDATE_AUDIO_STATUS, UPDATE_RECORD_TIME, SELECT_AUDIO_FILE)
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.services.clova import ClovaApiClient
 
@@ -389,3 +390,32 @@ def recordtime_to_min_sec(record_time):
     minutes = int(record_time // 60)
     seconds = round(record_time % 60)
     return {"분": minutes, "초": round(seconds, 3)}
+
+
+def select_audio_file(id):
+    audio_file =  execute_select_query(query=SELECT_AUDIO_FILE, params={"id": id})
+    file_path = audio_file[0].file_path
+    get_audio(file_path)
+
+
+def get_audio(file_path: str):
+    try:
+        # S3에서 오디오 파일 불러오기
+        audio_file = s3.get_object(Bucket=bucket_name, Key=file_path)
+        audio_content = audio_file["Body"].read()
+        file_name = file_path.split("/")[-1]
+
+        # 오디오 내용을 BytesIO 객체에 쓰기
+        buffer = io.BytesIO(audio_content)
+
+        headers = {"Content-Disposition": f"inline; filename={file_name}"}
+
+        # BytesIO 객체의 시작 위치를 0으로 되돌립니다.
+        buffer.seek(0)
+
+        # 오디오 파일을 StreamingResponse로 반환
+        return StreamingResponse(
+            content=buffer, headers=headers, media_type="audio/webm"
+        )
+    except Exception as e:
+        raise e

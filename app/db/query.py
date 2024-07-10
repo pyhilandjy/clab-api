@@ -35,6 +35,13 @@ SELECT_AUDIO_FILES = text(
 """
 )
 
+SELECT_AUDIO_FILE = text(
+    """
+    SELECT * FROM audio_files
+    WHERE audio_files.id = :id
+"""
+)
+
 INSERT_IMAGE_FILES_META_DATA = text(
     """
 INSERT INTO image_files (id, speaker, user_id, start_date, end_date, image_path, type) VALUES 
