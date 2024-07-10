@@ -395,7 +395,7 @@ def recordtime_to_min_sec(record_time):
 def select_audio_file(id):
     audio_file =  execute_select_query(query=SELECT_AUDIO_FILE, params={"id": id})
     file_path = audio_file[0].file_path
-    get_audio(file_path)
+    return get_audio(file_path)
 
 
 def get_audio(file_path: str):
