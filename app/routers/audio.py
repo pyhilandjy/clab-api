@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, File, Header, HTTPException, UploadFile
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 from app.services.audio import (
@@ -9,6 +10,7 @@ from app.services.audio import (
     insert_audio_metadata,
     upload_to_s3,
     select_audio_file,
+    select_audio_info,
 )
 from app.services.users import get_user_info_from_token
 
@@ -59,6 +61,13 @@ async def get_files(user_id: str):
 
 
 @router.get("/webm/{id}", tags=["Audio"])
-async def get_audio_file(id: str):
+async def get_audio_file(id: str, range: str = Header(None)):
     """file_id 별 audio_files 가져오는 앤드포인트"""
-    return select_audio_file(id)
+    return await select_audio_file(id, range)
+
+
+@router.get("/webm/info/{id}", tags=["Audio"])
+async def get_audio_info(id: str):
+    """file_id 별 audio_files 정보 가져오는 앤드포인트"""
+    record_time = await select_audio_info(id)
+    return JSONResponse(content={"record_time": record_time})

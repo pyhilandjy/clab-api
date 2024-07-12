@@ -2,6 +2,7 @@ import io
 import json
 import logging
 import os
+import re
 import shutil
 import subprocess
 from datetime import datetime
@@ -392,30 +393,53 @@ def recordtime_to_min_sec(record_time):
     return {"분": minutes, "초": round(seconds, 3)}
 
 
-def select_audio_file(id):
-    audio_file =  execute_select_query(query=SELECT_AUDIO_FILE, params={"id": id})
+async def select_audio_file(id, range_header):
+    audio_file = execute_select_query(query=SELECT_AUDIO_FILE, params={"id": id})
     file_path = audio_file[0].file_path
-    return get_audio(file_path)
+    return await get_audio(file_path, range_header)
 
 
-def get_audio(file_path: str):
+
+async def get_audio(file_path: str, range_header: str = None):
     try:
         # S3에서 오디오 파일 불러오기
-        audio_file = s3.get_object(Bucket=bucket_name, Key=file_path)
-        audio_content = audio_file["Body"].read()
+        s3_response = s3.get_object(Bucket=bucket_name, Key=file_path)
+        audio_content = s3_response["Body"].read()
         file_name = file_path.split("/")[-1]
+        content_length = len(audio_content)
+
+        start, end = 0, content_length - 1
+        if range_header:
+            match = re.match(r"bytes=(\d+)-(\d*)", range_header)
+            if match:
+                start = int(match.group(1))
+                end = int(match.group(2)) if match.group(2) else content_length - 1
 
         # 오디오 내용을 BytesIO 객체에 쓰기
-        buffer = io.BytesIO(audio_content)
+        buffer = io.BytesIO(audio_content[start:end+1])
 
-        headers = {"Content-Disposition": f"inline; filename={file_name}"}
+        headers = {
+            "Content-Disposition": f"inline; filename={file_name}",
+            "Content-Range": f"bytes {start}-{end}/{content_length}",
+            "Accept-Ranges": "bytes",
+            "Content-Length": str(end - start + 1)
+        }
 
         # BytesIO 객체의 시작 위치를 0으로 되돌립니다.
         buffer.seek(0)
 
         # 오디오 파일을 StreamingResponse로 반환
         return StreamingResponse(
-            content=buffer, headers=headers, media_type="audio/webm"
+            content=buffer, headers=headers, media_type="audio/webm",
+            status_code=206 if range_header else 200
         )
     except Exception as e:
-        raise e
+        logger.error(f"Error processing audio file: {e}")
+
+
+
+async def select_audio_info(id: str):
+    """file_id 별 audio_files 정보 가져오는 앤드포인트"""
+    audio_file = execute_select_query(query=SELECT_AUDIO_FILE, params={"id": id})
+    record_time = audio_file[0].record_time
+    return record_time
