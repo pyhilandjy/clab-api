@@ -25,6 +25,10 @@ poetry add pandas
 poetry add seaborn
 poetry add mecab-ko
 poetry add wordcloud
+poetry add xlsxwriter
+poetry add supabase
+poetry add pyjwt
+poetry add apscheduler
 ```
 
 ## Getting Started
@@ -43,25 +47,31 @@ docker build -t example .
 docker run -d -p 2456:2456 --name fastapi_container example
 ```
 
+## Database DDL
+
+```bash
+./app/db/DDL.SQL
+```
+
 ## Fast-api Endpoint 구성 정리
 
-1. post(backendUrl + “/audio/upload/”)
+1. post(backendUrl + “/audio/”)
 
 - 목적 : user-page에서 녹음을 한 파일을 처리하기 위한 앤드포인트
 - 처리과정
-  - file_name(bucket에서 이름을 확인하기 위함) 생성
-  - file_path(ec2 local, s3 bucket) 생성
-  - 오디오 파일 저장 및 메타데이터 db적재
-  - file_path로 오디오 파일 불러와 clova_stt에 request, segments db 적재
-    - 파일을 던지려고 했는데 clova에서 파일을 받지 않음(backlog)
   - 오디오파일 s3 적재
+  - 메타데이터 db적재 (status = "ready")
+- 스케쥴러(10Min)
+  - S3 bucket에서 오디오 파일 불러와 webm to m4a convert
+    - error(status = "convert_error")
+  - clova_stt에 request, response segments 필요 데이터 db 적재
+    - error(status = "stt_error")
+  - 오디오 녹음시간 적재
   - 로컬 임시 오디오파일 삭제
-- issue
-  - [x] 오디오 파일 저장 후 return을 하는 백그라운드 테스크 적용 X 처리가 끝나고 그 데이터를 사용하여 처리를 하다보니 비동기처리가 안됨.
 
 2. get(backendUrl + “/users/”)
 
-- 목적 : user_id 반환하는 앤드포인트 (audio_files에서의 user_id)
+- 목적 : Supabase의 Authentication 유저 정보 반환
 
 3. get(backendUrl + “/audio/user/{user_id}/files/”)
 
@@ -131,3 +141,5 @@ docker run -d -p 2456:2456 --name fastapi_container example
 21. post(backendUrl + ”/report/csv/”)
 
 - 리포트 작성시 필요한 데이터 반환 csv
+
+22.

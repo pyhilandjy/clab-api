@@ -141,10 +141,7 @@ def create_morphs_data(user_id, start_date, end_date):
 # 워드클라우드
 
 
-# image file data
-def gen_image_file_id(
-    user_id: str, speaker: str, start_date: date, end_date: date, type: str
-) -> str:
+def gen_image_file_id(user_id: str, speaker: str, start_date: date, end_date: date, type: str) -> str:
     """이미지 파일 아이디 생성"""
     return f"{user_id}_{speaker}_{start_date}_{end_date}_{type}.png"
 
@@ -154,15 +151,7 @@ def gen_image_file_path(image_id):
     return f"./app/image/{image_id}"
 
 
-def create_image_metadata(
-    image_id: str,
-    speaker: str,
-    user_id: str,
-    start_date: date,
-    end_date: date,
-    type: str,
-    image_path: str,
-):
+def create_image_metadata(image_id: str, speaker: str, user_id: str, start_date: date, end_date: date, type: str, image_path: str):
     return {
         "image_id": image_id,
         "speaker": speaker,
@@ -200,6 +189,8 @@ def extract_nouns_with_mecab(text):
             tag = tag_info.split(",")[0]
             if tag in ["NNG", "NNP"]:
                 nouns.append(word)
+    # 특정 단어 수정
+    nouns = [word if word != "박하" else "박하율" for word in nouns]
     return nouns
 
 
@@ -228,8 +219,6 @@ def generate_wordcloud(word_counts, font_path, mask):
 def save_wordcloud(wordcloud, image_path, speaker, font_prop):
     """워드클라우드를 S3 및 로컬에 저장"""
     try:
-        # 메모리에 워드클라우드 이미지 저장
-        # img_data = io.BytesIO()
         plt.figure(figsize=(10, 10))
         plt.imshow(wordcloud, interpolation="bilinear")
         plt.axis("off")
@@ -244,12 +233,8 @@ def save_wordcloud(wordcloud, image_path, speaker, font_prop):
             transform=plt.gca().transAxes,
             bbox=dict(facecolor="white", alpha=0.5),
         )
-
-        # plt.savefig(img_data, format="PNG", bbox_inches="tight")
         plt.savefig(image_path, format="PNG", bbox_inches="tight")
         plt.close()
-        # img_data.seek(0)
-
     except Exception as e:
         return {"error": str(e)}
 
@@ -278,12 +263,7 @@ def create_wordcloud_path(stt_data, user_id, start_date, end_date):
         image_path = gen_image_file_path(image_id)
 
         # 워드클라우드 저장
-        save_wordcloud(
-            wordcloud,
-            image_path,
-            speaker,
-            font_prop,
-        )
+        save_wordcloud(wordcloud, image_path, speaker, font_prop)
         local_paths.append(image_path)
     return local_paths
 
