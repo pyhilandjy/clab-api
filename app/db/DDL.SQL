@@ -1,13 +1,3 @@
--- CREATE TABLE users
--- (
---     id VARCHAR(255) NOT NULL,
---     user_name VARCHAR(255) NOT NULL,
---     role_id INT,
---     plan_id INT,
---     created_at timestamp NOT NULL DEFAULT current_timestamp,
---     PRIMARY KEY (id)
--- );
-
 CREATE TABLE
   audio_files (
     id UUID DEFAULT gen_random_uuid () NOT NULL,
