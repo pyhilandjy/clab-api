@@ -254,17 +254,21 @@ def create_wordcloud_path(stt_data, user_id, start_date, end_date):
         speaker_data = stt_data[stt_data["speaker"] == speaker]
         text = " ".join(speaker_data["text_edited"].astype(str))
         nouns = extract_nouns_with_mecab(text)
+        
+        if not nouns:
+            continue
+        
         word_counts = count_words(nouns)
         mask = create_circle_mask()
         wordcloud = generate_wordcloud(word_counts, font_path, mask)
 
         image_id = gen_image_file_id(user_id, speaker, f_start_date, f_end_date, type)
-
         image_path = gen_image_file_path(image_id)
 
         # 워드클라우드 저장
         save_wordcloud(wordcloud, image_path, speaker, font_prop)
         local_paths.append(image_path)
+
     return local_paths
 
 
