@@ -55,7 +55,7 @@ docker run -d -p 2456:2456 --name fastapi_container example
 
 ## Fast-api Endpoint 구성 정리
 
-1. POST /audio/
+1. POST (backendUrl + “/audio/”)
 
 - 목적: user-page에서 녹음을 한 파일을 처리하기 위한 엔드포인트(for user)
 
