@@ -65,9 +65,10 @@ FROM users
 
 SELECT_FILES = text(
     """
-SELECT id, file_name
+SELECT id, file_name, status
 FROM audio_files f
 WHERE f.user_id = :user_id
+ORDER BY file_name DESC
 """
 )
 
