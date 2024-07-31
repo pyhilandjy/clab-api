@@ -1,6 +1,6 @@
 from numbers_parser import Document
 import pandas as pd
-from app.db.worker import execute_insert_update_query, execute_select_query
+from app.db.worker import execute_insert_update_query
 from sqlalchemy import text
 
 # Numbers 파일 열기
