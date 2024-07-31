@@ -50,3 +50,77 @@ CREATE TABLE talk_more
 	id SERIAL PRIMARY KEY,
 	talk_more VARCHAR(255) NOT NULL
 );
+
+CREATE TABLE
+  plans (
+    id UUID DEFAULT gen_random_uuid () NOT NULL,
+    plan_name VARCHAR(255) NOT NULL,
+    status VARCHAR(255) DEFAULT 'active',
+    created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    PRIMARY KEY (id)
+  );
+
+CREATE TABLE
+  user_plan (
+    id UUID DEFAULT gen_random_uuid () NOT NULL,
+    user_id UUID NOT NULL,
+    plan_id UUID NOT NULL,
+    start_at DATE NOT NULL,
+    end_at DATE NOT NULL,
+    status VARCHAR(255) DEFAULT 'active',
+    created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    PRIMARY KEY (id)
+  );
+
+CREATE TABLE
+  missions (
+    id UUID DEFAULT gen_random_uuid () NOT NULL,
+    plan_id UUID NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    day int NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    PRIMARY KEY (id)
+  );
+
+CREATE TABLE
+  user_missions (
+    id UUID DEFAULT gen_random_uuid () NOT NULL,
+    user_id UUID NOT NULL,
+    mission_id UUID NOT NULL,
+    status VARCHAR(255) NOT NULL DEFAULT 'ready',
+    created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    PRIMARY KEY (id)
+  );
+
+
+CREATE TABLE
+  missions_message (
+    id UUID DEFAULT gen_random_uuid () NOT NULL,
+    mission_id UUID NOT NULL,
+    message_type VARCHAR(255) NOT NULL,
+    message text NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    PRIMARY KEY (id)
+  );
+
+CREATE TABLE
+  user_missions_message (
+    id UUID DEFAULT gen_random_uuid () NOT NULL,
+    user_mission_id UUID NOT NULL,
+    message_type VARCHAR(255) NOT NULL,
+    message_id UUID NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    PRIMARY KEY (id)
+  );
+
+  CREATE TABLE
+  user_missions_audio (
+    id UUID DEFAULT gen_random_uuid () NOT NULL,
+    user_id UUID NOT NULL,
+    user_mission_id UUID NOT NULL,
+    audio_file_id UUID NOT NULL,
+    audio_count int NOT NULL DEFAULT 0, -- 한 mission에 몇개의 audio를 보냈는지
+    created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
+    PRIMARY KEY (id)
+  );
