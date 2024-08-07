@@ -445,3 +445,17 @@ INSERT_FILE_PATH_REPORT_ID = text(
     WHERE id = :id
     """
 )
+
+SELECT_PLANS = text(
+    """
+    SELECT * FROM plans
+    ORDER BY created_at DESC
+    """
+)
+
+SELECT_MISSION = text(
+    """
+    SELECT * FROM missions
+    WHERE plan_id = :plan_id
+    """
+)
