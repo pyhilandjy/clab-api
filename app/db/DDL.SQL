@@ -120,7 +120,6 @@ CREATE TABLE
     user_id UUID NOT NULL,
     user_mission_id UUID NOT NULL,
     audio_file_id UUID NOT NULL,
-    audio_count int NOT NULL DEFAULT 0, -- 한 mission에 몇개의 audio를 보냈는지
     created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
     PRIMARY KEY (id)
   );
