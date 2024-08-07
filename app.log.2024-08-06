@@ -1,0 +1,320 @@
+2024-08-06 00:57:23,294 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 01:00:03 KST)" was missed by 0:07:20.085831
+2024-08-06 01:58:30,703 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 02:00:03 KST)" was missed by 0:08:27.495860
+2024-08-06 02:09:21,447 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 02:10:03 KST)" was missed by 0:09:18.242009
+2024-08-06 02:59:34,093 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 03:00:03 KST)" was missed by 0:09:30.889460
+2024-08-06 04:00:37,974 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 04:10:03 KST)" was missed by 0:00:34.771153
+2024-08-06 05:01:38,196 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 05:10:03 KST)" was missed by 0:01:34.992675
+2024-08-06 05:43:35,849 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 05:50:03 KST)" was missed by 0:03:31.915321
+2024-08-06 06:02:39,134 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 06:10:03 KST)" was missed by 0:02:35.930732
+2024-08-06 07:03:41,144 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 07:10:03 KST)" was missed by 0:03:37.940362
+2024-08-06 08:04:42,099 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 08:10:03 KST)" was missed by 0:04:38.895330
+2024-08-06 08:55:23,744 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 09:00:03 KST)" was missed by 0:05:20.541072
+2024-08-06 09:05:42,978 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 09:10:03 KST)" was missed by 0:05:39.774350
+2024-08-06 10:06:44,998 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 10:10:03 KST)" was missed by 0:06:41.794912
+2024-08-06 11:07:46,923 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 11:10:03 KST)" was missed by 0:07:43.719850
+2024-08-06 12:01:40,090 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 12:10:03 KST)" was missed by 0:01:36.886135
+2024-08-06 12:10:03,210 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 12:20:03 KST)" (scheduled at 2024-08-06 12:10:03.203633+09:00)
+2024-08-06 12:10:03,224 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 12:10:03,856 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 12:10:03,857 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 12:20:03 KST)" executed successfully
+2024-08-06 12:20:03,205 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 12:30:03 KST)" (scheduled at 2024-08-06 12:20:03.203633+09:00)
+2024-08-06 12:20:03,209 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 12:20:03,273 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 12:20:03,273 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 12:30:03 KST)" executed successfully
+2024-08-06 12:29:26,223 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:29:26,386 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:29:51,605 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:29:51,727 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:29:56,467 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:29:56,626 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:30:03,205 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 12:40:03 KST)" (scheduled at 2024-08-06 12:30:03.203633+09:00)
+2024-08-06 12:30:03,206 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 12:30:03,253 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 12:30:03,254 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 12:40:03 KST)" executed successfully
+2024-08-06 12:30:23,160 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:30:23,259 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:31:56,730 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:31:56,840 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:32:02,017 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:32:02,178 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:33:08,300 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:33:08,540 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:33:43,588 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:33:43,671 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:33:45,115 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:33:45,315 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:35:03,857 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:35:03,946 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:35:14,621 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:35:14,900 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:36:51,722 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 12:36:51,730 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 12:36:51,730 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 12:36:54,108 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:36:54,307 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:45:33,383 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:45:33,706 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:46:51,724 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 12:56:51 KST)" (scheduled at 2024-08-06 12:46:51.721594+09:00)
+2024-08-06 12:46:51,726 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 12:46:51,788 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 12:46:51,789 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 12:56:51 KST)" executed successfully
+2024-08-06 12:49:14,313 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:49:14,464 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:52:04,282 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:52:04,415 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:52:41,113 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:52:41,226 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:52:44,269 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:52:44,371 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:53:24,352 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:53:24,449 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:54:16,930 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:54:17,115 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:54:20,649 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:54:20,762 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:54:27,029 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:54:27,144 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:56:40,376 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:56:40,622 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 12:56:51,723 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 13:06:51 KST)" (scheduled at 2024-08-06 12:56:51.721594+09:00)
+2024-08-06 12:56:51,724 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 12:56:51,784 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 12:56:51,784 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 13:06:51 KST)" executed successfully
+2024-08-06 12:59:48,966 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 12:59:48,973 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 12:59:48,973 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 13:00:01,535 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 13:00:01,553 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 13:00:01,554 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 13:01:47,200 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 13:01:47,205 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 13:01:47,206 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 13:02:30,901 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 13:02:30,906 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 13:02:30,907 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 13:03:22,255 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 13:03:22,259 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 13:03:22,260 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 13:04:46,011 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 13:04:46,017 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 13:04:46,017 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 13:05:04,999 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 13:05:05,003 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 13:05:05,004 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 13:05:15,062 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 13:05:15,066 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 13:05:15,066 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 13:05:30,013 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 13:05:30,020 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 13:05:30,021 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 13:05:58,305 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 13:05:58,309 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 13:05:58,309 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 13:09:43,309 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 13:09:43,401 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 13:12:36,155 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 13:12:36,505 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 13:14:34,014 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 13:14:34,127 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 13:14:35,184 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 13:14:35,442 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 13:15:58,308 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 13:25:58 KST)" (scheduled at 2024-08-06 13:15:58.305297+09:00)
+2024-08-06 13:15:58,312 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 13:15:58,375 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 13:15:58,377 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 13:25:58 KST)" executed successfully
+2024-08-06 13:25:58,384 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 13:35:58 KST)" (scheduled at 2024-08-06 13:25:58.305297+09:00)
+2024-08-06 13:25:58,386 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 13:25:58,539 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 13:25:58,540 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 13:35:58 KST)" executed successfully
+2024-08-06 13:35:58,321 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 13:45:58 KST)" (scheduled at 2024-08-06 13:35:58.305297+09:00)
+2024-08-06 13:35:58,324 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 13:35:58,375 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 13:35:58,376 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 13:45:58 KST)" executed successfully
+2024-08-06 13:45:58,322 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 13:55:58 KST)" (scheduled at 2024-08-06 13:45:58.305297+09:00)
+2024-08-06 13:45:58,326 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 13:45:58,401 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 13:45:58,402 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 13:55:58 KST)" executed successfully
+2024-08-06 13:55:58,307 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 14:05:58 KST)" (scheduled at 2024-08-06 13:55:58.305297+09:00)
+2024-08-06 13:55:58,309 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 13:55:58,364 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 13:55:58,365 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 14:05:58 KST)" executed successfully
+2024-08-06 14:05:58,308 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 14:15:58 KST)" (scheduled at 2024-08-06 14:05:58.305297+09:00)
+2024-08-06 14:05:58,312 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 14:05:58,376 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 14:05:58,377 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 14:15:58 KST)" executed successfully
+2024-08-06 14:12:20,590 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 14:12:20,595 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 14:12:20,596 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 14:12:32,381 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 14:12:32,386 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 14:12:32,387 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 14:13:29,652 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 14:13:29,658 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 14:13:29,658 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 14:13:42,051 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 14:13:42,055 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 14:13:42,056 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 14:14:24,786 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 14:14:24,791 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 14:14:24,792 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 14:15:10,117 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 14:15:10,122 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 14:15:10,122 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 14:15:30,756 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 14:15:30,761 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 14:15:30,762 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 14:25:30,780 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 14:35:30 KST)" (scheduled at 2024-08-06 14:25:30.755664+09:00)
+2024-08-06 14:25:30,786 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 14:25:30,847 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 14:25:30,848 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 14:35:30 KST)" executed successfully
+2024-08-06 14:27:31,741 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-06 14:27:31,748 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-06 14:27:31,749 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-06 14:33:28,695 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 14:33:28,860 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 14:33:30,157 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 14:33:30,299 - httpx - INFO - HTTP Request: GET https://dxpsdvnnmfufrrsycryf.supabase.co/auth/v1/admin/users?page=&per_page= "HTTP/1.1 200 OK"
+2024-08-06 14:37:31,744 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 14:47:31 KST)" (scheduled at 2024-08-06 14:37:31.739906+09:00)
+2024-08-06 14:37:31,745 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 14:37:31,817 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 14:37:31,818 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 14:47:31 KST)" executed successfully
+2024-08-06 14:47:31,745 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 14:57:31 KST)" (scheduled at 2024-08-06 14:47:31.739906+09:00)
+2024-08-06 14:47:31,748 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 14:47:31,830 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 14:47:31,834 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 14:57:31 KST)" executed successfully
+2024-08-06 14:57:31,768 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 15:07:31 KST)" (scheduled at 2024-08-06 14:57:31.739906+09:00)
+2024-08-06 14:57:31,792 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 14:57:31,911 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 14:57:31,912 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 15:07:31 KST)" executed successfully
+2024-08-06 15:07:31,748 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 15:17:31 KST)" (scheduled at 2024-08-06 15:07:31.739906+09:00)
+2024-08-06 15:07:31,755 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 15:07:31,981 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 15:07:31,984 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 15:17:31 KST)" executed successfully
+2024-08-06 15:17:31,742 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 15:27:31 KST)" (scheduled at 2024-08-06 15:17:31.739906+09:00)
+2024-08-06 15:17:31,745 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 15:17:31,806 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 15:17:31,807 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 15:27:31 KST)" executed successfully
+2024-08-06 15:27:31,743 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 15:37:31 KST)" (scheduled at 2024-08-06 15:27:31.739906+09:00)
+2024-08-06 15:27:31,745 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 15:27:31,908 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 15:27:31,911 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 15:37:31 KST)" executed successfully
+2024-08-06 15:37:31,743 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 15:47:31 KST)" (scheduled at 2024-08-06 15:37:31.739906+09:00)
+2024-08-06 15:37:31,746 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 15:37:31,887 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 15:37:31,888 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 15:47:31 KST)" executed successfully
+2024-08-06 15:47:31,742 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 15:57:31 KST)" (scheduled at 2024-08-06 15:47:31.739906+09:00)
+2024-08-06 15:47:31,745 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 15:47:31,827 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 15:47:31,830 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 15:57:31 KST)" executed successfully
+2024-08-06 15:57:31,741 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 16:07:31 KST)" (scheduled at 2024-08-06 15:57:31.739906+09:00)
+2024-08-06 15:57:31,745 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 15:57:31,900 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 15:57:31,906 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 16:07:31 KST)" executed successfully
+2024-08-06 16:07:31,745 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 16:17:31 KST)" (scheduled at 2024-08-06 16:07:31.739906+09:00)
+2024-08-06 16:07:31,748 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 16:07:31,912 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 16:07:31,913 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 16:17:31 KST)" executed successfully
+2024-08-06 16:17:31,740 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 16:27:31 KST)" (scheduled at 2024-08-06 16:17:31.739906+09:00)
+2024-08-06 16:17:31,742 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 16:17:31,900 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 16:17:31,903 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 16:27:31 KST)" executed successfully
+2024-08-06 16:27:31,742 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 16:37:31 KST)" (scheduled at 2024-08-06 16:27:31.739906+09:00)
+2024-08-06 16:27:31,746 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 16:27:31,889 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 16:27:31,890 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 16:37:31 KST)" executed successfully
+2024-08-06 16:37:31,742 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 16:47:31 KST)" (scheduled at 2024-08-06 16:37:31.739906+09:00)
+2024-08-06 16:37:31,746 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 16:37:31,913 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 16:37:31,916 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 16:47:31 KST)" executed successfully
+2024-08-06 16:47:31,741 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 16:57:31 KST)" (scheduled at 2024-08-06 16:47:31.739906+09:00)
+2024-08-06 16:47:31,746 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 16:47:31,873 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 16:47:31,875 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 16:57:31 KST)" executed successfully
+2024-08-06 16:57:31,744 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 17:07:31 KST)" (scheduled at 2024-08-06 16:57:31.739906+09:00)
+2024-08-06 16:57:31,755 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 16:57:31,943 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 16:57:31,952 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 17:07:31 KST)" executed successfully
+2024-08-06 17:07:31,832 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 17:17:31 KST)" (scheduled at 2024-08-06 17:07:31.739906+09:00)
+2024-08-06 17:07:31,835 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 17:07:31,912 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-06 17:07:31,913 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 17:17:31 KST)" executed successfully
+2024-08-06 17:17:38,612 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 17:27:31 KST)" was missed by 0:00:06.842947
+2024-08-06 17:28:49,580 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 17:37:31 KST)" was missed by 0:01:17.840669
+2024-08-06 17:37:48,884 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 17:47:31 KST)" was missed by 0:00:17.141595
+2024-08-06 17:48:19,360 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 17:57:31 KST)" was missed by 0:00:47.620230
+2024-08-06 17:58:49,614 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 18:07:31 KST)" was missed by 0:01:17.874378
+2024-08-06 18:07:33,361 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 18:17:31 KST)" was missed by 0:00:01.619800
+2024-08-06 18:19:04,413 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 18:27:31 KST)" was missed by 0:01:32.672720
+2024-08-06 18:28:11,788 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 18:37:31 KST)" was missed by 0:00:40.047231
+2024-08-06 18:37:31,758 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 18:47:31 KST)" (scheduled at 2024-08-06 18:37:31.739906+09:00)
+2024-08-06 18:37:31,788 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-06 19:08:50,659 - app.services.audio - ERROR - Error during file processing: (psycopg2.OperationalError) could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+[SQL: SET TIME ZONE 'Asia/Seoul']
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-08-06 19:08:50,745 - apscheduler.executors.default - ERROR - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 18:47:31 KST)" raised an exception
+Traceback (most recent call last):
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/apscheduler/executors/base_py3.py", line 30, in run_coroutine_job
+    retval = await job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/services/audio.py", line 76, in download_and_process_file
+    raise e
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/services/audio.py", line 61, in download_and_process_file
+    ready_files = select_audio_ready()
+                  ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/services/audio.py", line 80, in select_audio_ready
+    results = execute_select_query(query=SELECT_AUDIO_FILES)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/db/worker.py", line 22, in execute_select_query
+    set_timezone(db)
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/db/worker.py", line 6, in set_timezone
+    db.execute(text(f"SET TIME ZONE '{timezone}'"))
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2245, in _execute_internal
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+[SQL: SET TIME ZONE 'Asia/Seoul']
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-08-06 19:08:50,807 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 19:17:31 KST)" was missed by 0:01:19.067730
+2024-08-06 20:09:51,518 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 20:17:31 KST)" was missed by 0:02:19.772217
+2024-08-06 21:10:54,294 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 21:17:31 KST)" was missed by 0:03:22.554584
+2024-08-06 22:09:38,552 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 22:17:31 KST)" was missed by 0:02:06.812730
+2024-08-06 22:56:18,539 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 22:57:31 KST)" was missed by 0:08:46.799674
+2024-08-06 23:13:04,000 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-06 23:17:31 KST)" was missed by 0:05:32.257596
