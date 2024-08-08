@@ -1,17 +1,18 @@
-import uuid
 from typing import Dict
-
+from fastapi import Header, Security, APIRouter, HTTPException
+from fastapi.security.api_key import APIKeyHeader
 import jwt
-import requests
-import supabase
-from fastapi import APIRouter, HTTPException
 from supabase import Client, create_client
 
 from app.config import settings
 
-router = APIRouter()
+api_key_header = APIKeyHeader(name="authorization", auto_error=False)
 
 supabase: Client = create_client(settings.supabase_url, settings.supabase_service_key)
+
+JWT_AUDIENCE = "authenticated"
+
+router = APIRouter()
 
 
 @router.get("/users/", tags=["users"])
@@ -33,9 +34,21 @@ def get_all_users():
         return {"error": str(e)}
 
 
-def get_user_id_from_token(token: str) -> str:
+def get_user_info_from_token(token: str) -> str:
+
+    payload = jwt.decode(
+        token,
+        settings.supabase_jwt_key,
+        algorithms=["HS256"],
+        audience=JWT_AUDIENCE,
+    )
+    return payload
+
+
+async def get_current_user(authorization: str = Security(api_key_header)):
     try:
-        payload = jwt.decode(token, settings.supabase_jwt_key, algorithms=["HS256"])
-        return payload.get("id")
-    except jwt.PyJWTError:
-        raise HTTPException(status_code=403, detail="Could not validate credentials")
+        token = authorization.split(" ")[1]
+        payload = get_user_info_from_token(token)
+        return payload
+    except Exception as e:
+        raise e

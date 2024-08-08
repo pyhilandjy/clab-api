@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import json
@@ -12,7 +12,11 @@ from app.services.plan import (
     update_plans,
     select_plan,
     update_plan_status,
+    update_user_plan,
+    select_plans_user,
 )
+
+from app.services.users import get_current_user
 
 router = APIRouter()
 
@@ -128,3 +132,29 @@ def insert_plan(payload: UpdatePlanStatus):
         return {"message": "Plan successfully inserted"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+# @router.post("/user/plans/{plan_id}", tags=["Plan"])
+# # async def post_user_plan(plan_id: str, user_id: str):
+# async def post_user_plan(plan_id: str, current_user=Depends(get_current_user)):
+#     try:
+#         user_id = current_user.get("sub")
+#         if not user_id:
+#             raise HTTPException(status_code=400, detail="Invalid user ID")
+#         update_user_plan(user_id, plan_id)
+#         return {"message": "User plan updated successfully"}
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
+
+
+# @router.get("/user/plan/", tags=["Plan"])
+# async def post_user_plan(current_user=Depends(get_current_user)):
+#     # async def get_user_plan(user_id):
+#     try:
+#         user_id = current_user.get("sub")
+#         if not user_id:
+#             raise HTTPException(status_code=400, detail="Invalid user ID")
+#         user_plan = select_plans_user(user_id)
+#         return user_plan
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))

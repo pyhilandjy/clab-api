@@ -12,18 +12,9 @@ from app.services.audio import (
     select_audio_file,
     select_audio_info,
 )
-from app.services.users import get_user_info_from_token
+from app.services.users import get_current_user
 
 router = APIRouter()
-
-
-async def get_current_user(authorization: str = Header(...)):
-    try:
-        token = authorization.split(" ")[1]
-        payload = get_user_info_from_token(token)
-        return payload
-    except Exception as e:
-        raise HTTPException(status_code=401, detail="Invalid token")
 
 
 @router.post("/", tags=["Audio"])

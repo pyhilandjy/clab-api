@@ -4,23 +4,34 @@ from datetime import date
 from typing import List
 
 import pandas as pd
-from fastapi import APIRouter, File, Form, Header, HTTPException, UploadFile
+from fastapi import APIRouter, File, Form, Header, HTTPException, UploadFile, Depends
 from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 
-from app.services.report import (create_audio_record_time, create_file_path,
-                                 create_morphs_data, create_report_date,
-                                 create_sentence_len, create_tmp_file_path,
-                                 create_violinplot, create_wordcoud,
-                                 export_to_excel, gen_report_file_metadata,
-                                 get_report, get_report_file_path,
-                                 get_report_metadata,
-                                 group_stt_data_by_file_name,
-                                 insert_report_metadata, save_report_file_s3,
-                                 select_act_count, select_audio_id_stt_data,
-                                 select_talk_more_count, update_file_path,
-                                 update_report_id)
-from app.services.users import get_user_info_from_token
+from app.services.report import (
+    create_audio_record_time,
+    create_file_path,
+    create_morphs_data,
+    create_report_date,
+    create_sentence_len,
+    create_tmp_file_path,
+    create_violinplot,
+    create_wordcoud,
+    export_to_excel,
+    gen_report_file_metadata,
+    get_report,
+    get_report_file_path,
+    get_report_metadata,
+    group_stt_data_by_file_name,
+    insert_report_metadata,
+    save_report_file_s3,
+    select_act_count,
+    select_audio_id_stt_data,
+    select_talk_more_count,
+    update_file_path,
+    update_report_id,
+)
+from app.services.users import get_current_user
 
 router = APIRouter()
 
@@ -184,10 +195,8 @@ async def select_report_metadata(user_id: str):
 
 
 @router.get("/reports/", tags=["Report"])
-async def select_report_metadata(authorization: str = Header(...)):
-    token = authorization.split(" ")[1]
-    payload = get_user_info_from_token(token)
-    user_id = payload.get("sub")
+async def select_report_metadata(current_user=Depends(get_current_user)):
+    user_id = current_user.get("sub")
     report_metadata = get_report_metadata(user_id)
     return report_metadata
 
