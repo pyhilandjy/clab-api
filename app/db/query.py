@@ -504,3 +504,25 @@ UPDATE_PLAN_STATUS = text(
         id = :id
     """
 )
+
+
+SELECT_PLAN = text(
+    """
+    SELECT * FROM plans
+    WHERE id = :plan_id
+    """
+)
+
+SELECT_PLANS_USER = text(
+    """
+    SELECT * FROM user_plan
+    WHERE user_id = :user_id
+    """
+)
+
+INSERT_USER_PLAN = text(
+    """
+    INSERT INTO user_plan (plan_id, user_id, start_at, end_at)
+    VALUES (:plan_id, :user_id, :start_at, :end_at)
+    """
+)
