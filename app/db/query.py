@@ -453,9 +453,54 @@ SELECT_PLANS = text(
     """
 )
 
+SELECT_PLAN = text(
+    """
+    SELECT * FROM plans
+    WHERE id = :plan_id
+    """
+)
+
 SELECT_MISSION = text(
     """
     SELECT * FROM missions
     WHERE plan_id = :plan_id
+    """
+)
+
+DELETE_PLAN = text(
+    """
+    DELETE FROM plans
+    WHERE id = :plan_id
+    """
+)
+
+INSERT_PLANS = text(
+    """
+    INSERT INTO plans (plan_name, price, start_age_month, end_age_month, description)
+    VALUES (:plan_name, :price, :start_age_month, :end_age_month, :description)
+    """
+)
+
+UPDATE_PLANS = text(
+    """
+    UPDATE plans
+    SET
+        plan_name = :plan_name,
+        price = :price,
+        start_age_month = :start_age_month,
+        end_age_month = :end_age_month,
+        description = :description
+    WHERE
+        id = :id
+    """
+)
+
+UPDATE_PLAN_STATUS = text(
+    """
+    UPDATE plans
+    SET
+        status = :status
+    WHERE
+        id = :id
     """
 )
