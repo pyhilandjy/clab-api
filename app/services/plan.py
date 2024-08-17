@@ -11,6 +11,9 @@ from app.db.query import (
     UPDATE_PLAN_STATUS,
     SELECT_PLANS_USER,
     INSERT_USER_PLAN,
+    UPDATE_MISSION_STATUS,
+    DELETE_MISSION,
+    DELETE_MISSION_MESSAGE,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.error.utils import generate_error_response
@@ -70,6 +73,7 @@ def insert_plans(payload: dict):
         params={
             "plan_name": payload["plan_name"],
             "price": payload["price"],
+            "day": payload["day"],
             "start_age_month": payload["start_age_month"],
             "end_age_month": payload["end_age_month"],
             "description": payload["description"],
@@ -84,6 +88,7 @@ def update_plans(payload: dict):
             "id": payload["id"],
             "plan_name": payload["plan_name"],
             "price": payload["price"],
+            "day": payload["day"],
             "start_age_month": payload["start_age_month"],
             "end_age_month": payload["end_age_month"],
             "description": payload["description"],
@@ -150,5 +155,31 @@ def update_user_plan(user_id, plan_id):
             "user_id": user_id,
             "start_at": start_at,
             "end_at": end_at,
+        },
+    )
+
+
+def update_mission_status(playload: dict):
+    return execute_insert_update_query(
+        query=UPDATE_MISSION_STATUS,
+        params={
+            "id": playload["id"],
+            "status": playload["status"],
+        },
+    )
+
+
+def delete_mission(mission_id):
+    execute_insert_update_query(
+        query=DELETE_MISSION_MESSAGE,
+        params={
+            "mission_id": mission_id,
+        },
+    )
+
+    execute_insert_update_query(
+        query=DELETE_MISSION,
+        params={
+            "mission_id": mission_id,
         },
     )

@@ -1,0 +1,367 @@
+2024-08-12 00:30:25,853 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 00:38:16 KST)" was missed by 0:02:09.115383
+2024-08-12 01:31:26,751 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 01:38:16 KST)" was missed by 0:03:10.013100
+2024-08-12 02:32:28,688 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 02:38:16 KST)" was missed by 0:04:11.950413
+2024-08-12 03:33:31,610 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 03:38:16 KST)" was missed by 0:05:14.872196
+2024-08-12 03:45:06,612 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 03:48:16 KST)" was missed by 0:06:49.874226
+2024-08-12 04:34:32,587 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 04:38:16 KST)" was missed by 0:06:15.848528
+2024-08-12 05:35:34,547 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 05:38:16 KST)" was missed by 0:07:17.809005
+2024-08-12 06:36:35,512 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 06:38:16 KST)" was missed by 0:08:18.773356
+2024-08-12 07:27:37,457 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 07:28:16 KST)" was missed by 0:09:20.718962
+2024-08-12 07:37:36,373 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 07:38:16 KST)" was missed by 0:09:19.634768
+2024-08-12 08:38:37,377 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 08:48:16 KST)" was missed by 0:00:20.639317
+2024-08-12 09:39:38,290 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 09:48:16 KST)" was missed by 0:01:21.551560
+2024-08-12 09:57:45,252 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 09:58:16 KST)" was missed by 0:09:28.514273
+2024-08-12 09:58:16,739 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 10:08:16 KST)" (scheduled at 2024-08-12 09:58:16.738315+09:00)
+2024-08-12 09:58:16,741 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 09:58:34,695 - app.services.audio - ERROR - Error during file processing: (psycopg2.OperationalError) could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+[SQL: SET TIME ZONE 'Asia/Seoul']
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-08-12 09:58:34,837 - apscheduler.executors.default - ERROR - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 10:08:16 KST)" raised an exception
+Traceback (most recent call last):
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/apscheduler/executors/base_py3.py", line 30, in run_coroutine_job
+    retval = await job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/services/audio.py", line 74, in download_and_process_file
+    raise e
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/services/audio.py", line 61, in download_and_process_file
+    ready_files = select_audio_ready()
+                  ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/services/audio.py", line 78, in select_audio_ready
+    results = execute_select_query(query=SELECT_AUDIO_FILES)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/db/worker.py", line 22, in execute_select_query
+    set_timezone(db)
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/db/worker.py", line 6, in set_timezone
+    db.execute(text(f"SET TIME ZONE '{timezone}'"))
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2245, in _execute_internal
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+[SQL: SET TIME ZONE 'Asia/Seoul']
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-08-12 10:08:16,743 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 10:18:16 KST)" (scheduled at 2024-08-12 10:08:16.738315+09:00)
+2024-08-12 10:08:16,745 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 10:08:17,246 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 10:08:17,247 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 10:18:16 KST)" executed successfully
+2024-08-12 10:18:16,741 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 10:28:16 KST)" (scheduled at 2024-08-12 10:18:16.738315+09:00)
+2024-08-12 10:18:16,743 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 10:18:16,795 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 10:18:16,796 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 10:28:16 KST)" executed successfully
+2024-08-12 10:28:16,740 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 10:38:16 KST)" (scheduled at 2024-08-12 10:28:16.738315+09:00)
+2024-08-12 10:28:16,742 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 10:28:17,303 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 10:28:17,305 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 10:38:16 KST)" executed successfully
+2024-08-12 10:38:16,740 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 10:48:16 KST)" (scheduled at 2024-08-12 10:38:16.738315+09:00)
+2024-08-12 10:38:16,741 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 10:38:16,798 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 10:38:16,799 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 10:48:16 KST)" executed successfully
+2024-08-12 10:48:16,740 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 10:58:16 KST)" (scheduled at 2024-08-12 10:48:16.738315+09:00)
+2024-08-12 10:48:16,742 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 10:48:16,788 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 10:48:16,789 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 10:58:16 KST)" executed successfully
+2024-08-12 10:58:16,740 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 11:08:16 KST)" (scheduled at 2024-08-12 10:58:16.738315+09:00)
+2024-08-12 10:58:16,744 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 10:58:16,802 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 10:58:16,803 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 11:08:16 KST)" executed successfully
+2024-08-12 11:08:16,748 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 11:18:16 KST)" (scheduled at 2024-08-12 11:08:16.738315+09:00)
+2024-08-12 11:08:16,756 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 11:08:16,840 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 11:08:16,842 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 11:18:16 KST)" executed successfully
+2024-08-12 11:18:16,740 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 11:28:16 KST)" (scheduled at 2024-08-12 11:18:16.738315+09:00)
+2024-08-12 11:18:16,745 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 11:18:16,794 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 11:18:16,795 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 11:28:16 KST)" executed successfully
+2024-08-12 11:28:16,743 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 11:38:16 KST)" (scheduled at 2024-08-12 11:28:16.738315+09:00)
+2024-08-12 11:28:16,746 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 11:28:16,847 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 11:28:16,849 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 11:38:16 KST)" executed successfully
+2024-08-12 11:38:16,742 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 11:48:16 KST)" (scheduled at 2024-08-12 11:38:16.738315+09:00)
+2024-08-12 11:38:16,744 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 11:38:16,797 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 11:38:16,798 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 11:48:16 KST)" executed successfully
+2024-08-12 11:48:47,183 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 11:58:16 KST)" was missed by 0:00:30.445270
+2024-08-12 11:58:16,746 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 12:08:16 KST)" (scheduled at 2024-08-12 11:58:16.738315+09:00)
+2024-08-12 11:58:16,749 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 13:44:28,950 - app.services.audio - ERROR - Error during file processing: (psycopg2.OperationalError) could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+[SQL: SET TIME ZONE 'Asia/Seoul']
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-08-12 13:44:29,005 - apscheduler.executors.default - ERROR - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 12:08:16 KST)" raised an exception
+Traceback (most recent call last):
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.OperationalError: could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/apscheduler/executors/base_py3.py", line 30, in run_coroutine_job
+    retval = await job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/services/audio.py", line 74, in download_and_process_file
+    raise e
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/services/audio.py", line 61, in download_and_process_file
+    ready_files = select_audio_ready()
+                  ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/services/audio.py", line 78, in select_audio_ready
+    results = execute_select_query(query=SELECT_AUDIO_FILES)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/db/worker.py", line 22, in execute_select_query
+    set_timezone(db)
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/db/worker.py", line 6, in set_timezone
+    db.execute(text(f"SET TIME ZONE '{timezone}'"))
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2245, in _execute_internal
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) could not receive data from server: Operation timed out
+SSL SYSCALL error: Operation timed out
+
+[SQL: SET TIME ZONE 'Asia/Seoul']
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-08-12 13:44:29,031 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 13:48:16 KST)" was missed by 0:06:12.293315
+2024-08-12 14:45:30,134 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 14:48:16 KST)" was missed by 0:07:13.396345
+2024-08-12 14:51:05,580 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 14:58:16 KST)" was missed by 0:02:48.842468
+2024-08-12 15:20:38,905 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 15:28:16 KST)" was missed by 0:02:22.167064
+2024-08-12 15:46:30,692 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 15:48:16 KST)" was missed by 0:08:13.953604
+2024-08-12 15:49:08,750 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 15:58:16 KST)" was missed by 0:00:52.012384
+2024-08-12 15:58:16,776 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 16:08:16 KST)" (scheduled at 2024-08-12 15:58:16.738315+09:00)
+2024-08-12 15:58:16,783 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 15:58:17,250 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 15:58:17,251 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 16:08:16 KST)" executed successfully
+2024-08-12 16:08:16,756 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 16:18:16 KST)" (scheduled at 2024-08-12 16:08:16.738315+09:00)
+2024-08-12 16:08:16,761 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 16:08:16,811 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 16:08:16,813 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 16:18:16 KST)" executed successfully
+2024-08-12 16:18:17,028 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 16:28:16 KST)" (scheduled at 2024-08-12 16:18:16.738315+09:00)
+2024-08-12 16:18:17,031 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 16:18:17,095 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 16:18:17,098 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 16:28:16 KST)" executed successfully
+2024-08-12 16:28:16,753 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 16:38:16 KST)" (scheduled at 2024-08-12 16:28:16.738315+09:00)
+2024-08-12 16:28:16,755 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 16:28:16,799 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 16:28:16,801 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 16:38:16 KST)" executed successfully
+2024-08-12 16:38:16,741 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 16:48:16 KST)" (scheduled at 2024-08-12 16:38:16.738315+09:00)
+2024-08-12 16:38:16,745 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 16:38:16,796 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 16:38:16,797 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 16:48:16 KST)" executed successfully
+2024-08-12 16:48:16,757 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 16:58:16 KST)" (scheduled at 2024-08-12 16:48:16.738315+09:00)
+2024-08-12 16:48:16,758 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 16:48:16,821 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 16:48:16,821 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 16:58:16 KST)" executed successfully
+2024-08-12 16:58:16,746 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 17:08:16 KST)" (scheduled at 2024-08-12 16:58:16.738315+09:00)
+2024-08-12 16:58:16,750 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 16:58:16,800 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 16:58:16,802 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 17:08:16 KST)" executed successfully
+2024-08-12 17:08:16,744 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 17:18:16 KST)" (scheduled at 2024-08-12 17:08:16.738315+09:00)
+2024-08-12 17:08:16,747 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 17:08:16,793 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 17:08:16,794 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 17:18:16 KST)" executed successfully
+2024-08-12 17:18:16,740 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 17:28:16 KST)" (scheduled at 2024-08-12 17:18:16.738315+09:00)
+2024-08-12 17:18:16,746 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 17:18:16,810 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 17:18:16,811 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 17:28:16 KST)" executed successfully
+2024-08-12 17:28:16,741 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 17:38:16 KST)" (scheduled at 2024-08-12 17:28:16.738315+09:00)
+2024-08-12 17:28:16,745 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 17:28:16,795 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 17:28:16,796 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 17:38:16 KST)" executed successfully
+2024-08-12 17:38:16,741 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 17:48:16 KST)" (scheduled at 2024-08-12 17:38:16.738315+09:00)
+2024-08-12 17:38:16,743 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 17:38:16,818 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 17:38:16,826 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 17:48:16 KST)" executed successfully
+2024-08-12 17:48:16,753 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 17:58:16 KST)" (scheduled at 2024-08-12 17:48:16.738315+09:00)
+2024-08-12 17:48:16,757 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 17:48:16,811 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 17:48:16,813 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 17:58:16 KST)" executed successfully
+2024-08-12 17:58:16,740 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 18:08:16 KST)" (scheduled at 2024-08-12 17:58:16.738315+09:00)
+2024-08-12 17:58:16,744 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 17:58:16,794 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 17:58:16,796 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 18:08:16 KST)" executed successfully
+2024-08-12 18:08:16,743 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 18:18:16 KST)" (scheduled at 2024-08-12 18:08:16.738315+09:00)
+2024-08-12 18:08:16,745 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 18:08:16,829 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 18:08:16,831 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 18:18:16 KST)" executed successfully
+2024-08-12 18:18:16,743 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 18:28:16 KST)" (scheduled at 2024-08-12 18:18:16.738315+09:00)
+2024-08-12 18:18:16,746 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 18:18:16,785 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 18:18:16,787 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 18:28:16 KST)" executed successfully
+2024-08-12 18:28:16,741 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 18:38:16 KST)" (scheduled at 2024-08-12 18:28:16.738315+09:00)
+2024-08-12 18:28:16,743 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 18:28:16,811 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 18:28:16,812 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 18:38:16 KST)" executed successfully
+2024-08-12 18:38:16,739 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 18:48:16 KST)" (scheduled at 2024-08-12 18:38:16.738315+09:00)
+2024-08-12 18:38:16,741 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 18:38:16,800 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 18:38:16,803 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 18:48:16 KST)" executed successfully
+2024-08-12 18:48:16,738 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 18:58:16 KST)" (scheduled at 2024-08-12 18:48:16.738315+09:00)
+2024-08-12 18:48:16,740 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 18:48:16,793 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 18:48:16,794 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 18:58:16 KST)" executed successfully
+2024-08-12 18:58:16,739 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 19:08:16 KST)" (scheduled at 2024-08-12 18:58:16.738315+09:00)
+2024-08-12 18:58:16,741 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 18:58:16,784 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 18:58:16,785 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 19:08:16 KST)" executed successfully
+2024-08-12 19:08:16,742 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 19:18:16 KST)" (scheduled at 2024-08-12 19:08:16.738315+09:00)
+2024-08-12 19:08:16,746 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 19:08:16,807 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 19:08:16,808 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 19:18:16 KST)" executed successfully
+2024-08-12 19:18:16,744 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 19:28:16 KST)" (scheduled at 2024-08-12 19:18:16.738315+09:00)
+2024-08-12 19:18:16,747 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 19:18:16,812 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 19:18:16,815 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 19:28:16 KST)" executed successfully
+2024-08-12 19:28:16,743 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 19:38:16 KST)" (scheduled at 2024-08-12 19:28:16.738315+09:00)
+2024-08-12 19:28:16,746 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 19:28:16,816 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 19:28:16,818 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 19:38:16 KST)" executed successfully
+2024-08-12 19:38:16,740 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 19:48:16 KST)" (scheduled at 2024-08-12 19:38:16.738315+09:00)
+2024-08-12 19:38:16,742 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 19:38:16,790 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 19:38:16,792 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 19:48:16 KST)" executed successfully
+2024-08-12 19:48:16,740 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 19:58:16 KST)" (scheduled at 2024-08-12 19:48:16.738315+09:00)
+2024-08-12 19:48:16,743 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 19:48:16,803 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 19:48:16,804 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 19:58:16 KST)" executed successfully
+2024-08-12 19:58:16,739 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 20:08:16 KST)" (scheduled at 2024-08-12 19:58:16.738315+09:00)
+2024-08-12 19:58:16,743 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 19:58:16,811 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 19:58:16,813 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 20:08:16 KST)" executed successfully
+2024-08-12 20:08:16,771 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 20:18:16 KST)" (scheduled at 2024-08-12 20:08:16.738315+09:00)
+2024-08-12 20:08:16,774 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 20:08:16,861 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 20:08:16,864 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 20:18:16 KST)" executed successfully
+2024-08-12 20:18:16,749 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 20:28:16 KST)" (scheduled at 2024-08-12 20:18:16.738315+09:00)
+2024-08-12 20:18:16,754 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 20:18:16,804 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 20:18:16,806 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 20:28:16 KST)" executed successfully
+2024-08-12 20:28:16,748 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 20:38:16 KST)" (scheduled at 2024-08-12 20:28:16.738315+09:00)
+2024-08-12 20:28:16,750 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 20:28:16,809 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 20:28:16,813 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 20:38:16 KST)" executed successfully
+2024-08-12 20:38:16,743 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 20:48:16 KST)" (scheduled at 2024-08-12 20:38:16.738315+09:00)
+2024-08-12 20:38:16,744 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 20:38:16,809 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 20:38:16,810 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 20:48:16 KST)" executed successfully
+2024-08-12 20:48:16,748 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 20:58:16 KST)" (scheduled at 2024-08-12 20:48:16.738315+09:00)
+2024-08-12 20:48:16,754 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 20:48:16,808 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 20:48:16,812 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 20:58:16 KST)" executed successfully
+2024-08-12 20:58:16,742 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 21:08:16 KST)" (scheduled at 2024-08-12 20:58:16.738315+09:00)
+2024-08-12 20:58:16,746 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 20:58:16,804 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 20:58:16,807 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 21:08:16 KST)" executed successfully
+2024-08-12 21:08:16,740 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 21:18:16 KST)" (scheduled at 2024-08-12 21:08:16.738315+09:00)
+2024-08-12 21:08:16,745 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 21:08:16,809 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 21:08:16,811 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 21:18:16 KST)" executed successfully
+2024-08-12 21:18:16,740 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 21:28:16 KST)" (scheduled at 2024-08-12 21:18:16.738315+09:00)
+2024-08-12 21:18:16,743 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 21:18:16,806 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 21:18:16,807 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 21:28:16 KST)" executed successfully
+2024-08-12 21:28:16,739 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 21:38:16 KST)" (scheduled at 2024-08-12 21:28:16.738315+09:00)
+2024-08-12 21:28:16,741 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 21:28:16,783 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 21:28:16,784 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 21:38:16 KST)" executed successfully
+2024-08-12 21:38:16,739 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 21:48:16 KST)" (scheduled at 2024-08-12 21:38:16.738315+09:00)
+2024-08-12 21:38:16,743 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 21:38:16,785 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 21:38:16,786 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 21:48:16 KST)" executed successfully
+2024-08-12 21:48:16,741 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 21:58:16 KST)" (scheduled at 2024-08-12 21:48:16.738315+09:00)
+2024-08-12 21:48:16,745 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 21:48:16,799 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 21:48:16,800 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 21:58:16 KST)" executed successfully
+2024-08-12 21:58:16,739 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 22:08:16 KST)" (scheduled at 2024-08-12 21:58:16.738315+09:00)
+2024-08-12 21:58:16,740 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 21:58:16,782 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 21:58:16,784 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 22:08:16 KST)" executed successfully
+2024-08-12 22:08:16,739 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 22:18:16 KST)" (scheduled at 2024-08-12 22:08:16.738315+09:00)
+2024-08-12 22:08:16,743 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 22:08:16,809 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 22:08:16,810 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 22:18:16 KST)" executed successfully
+2024-08-12 22:18:16,743 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 22:28:16 KST)" (scheduled at 2024-08-12 22:18:16.738315+09:00)
+2024-08-12 22:18:16,746 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 22:18:16,804 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 22:18:16,806 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 22:28:16 KST)" executed successfully
+2024-08-12 22:28:16,741 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 22:38:16 KST)" (scheduled at 2024-08-12 22:28:16.738315+09:00)
+2024-08-12 22:28:16,743 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 22:28:16,815 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 22:28:16,817 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 22:38:16 KST)" executed successfully
+2024-08-12 22:38:16,742 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 22:48:16 KST)" (scheduled at 2024-08-12 22:38:16.738315+09:00)
+2024-08-12 22:38:16,744 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 22:38:16,813 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 22:38:16,815 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 22:48:16 KST)" executed successfully
+2024-08-12 22:48:16,741 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 22:58:16 KST)" (scheduled at 2024-08-12 22:48:16.738315+09:00)
+2024-08-12 22:48:16,745 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 22:48:16,813 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 22:48:16,815 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 22:58:16 KST)" executed successfully
+2024-08-12 22:58:16,743 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 23:08:16 KST)" (scheduled at 2024-08-12 22:58:16.738315+09:00)
+2024-08-12 22:58:16,746 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-12 22:58:16,806 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-12 22:58:16,808 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 23:08:16 KST)" executed successfully
+2024-08-12 23:37:52,569 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 23:38:16 KST)" was missed by 0:09:35.830527
+2024-08-12 23:38:17,922 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 23:48:16 KST)" was missed by 0:00:01.183051
+2024-08-12 23:55:10,954 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-12 23:58:16 KST)" was missed by 0:06:54.216073

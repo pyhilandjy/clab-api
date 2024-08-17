@@ -12,8 +12,8 @@ from app.services.plan import (
     update_plans,
     select_plan,
     update_plan_status,
-    update_user_plan,
-    select_plans_user,
+    update_mission_status,
+    delete_mission,
 )
 
 from app.services.users import get_current_user
@@ -37,10 +37,10 @@ async def get_missions(plan_id: str):
     """
     plan_id 별 mission 데이터를 가져오는 엔드포인트
     """
-    file_ids = select_mission(plan_id)
-    if not file_ids:
-        raise HTTPException(status_code=404, detail="Files not found")
-    return file_ids
+    mission = select_mission(plan_id)
+    if not mission:
+        return []
+    return mission
 
 
 @router.get("/plans/{plan_id}", tags=["Plans"])
@@ -63,9 +63,9 @@ async def gdel_plans(plan_id: str):
     response = json.loads(response_json)
 
     if response["Code"] == "1001":
-        return JSONResponse(status_code=400, content=response)
+        return JSONResponse(status_code=1001, content=response)
     elif response["Code"] == "1002":
-        return JSONResponse(status_code=500, content=response)
+        return JSONResponse(status_code=1002, content=response)
     elif response["Code"] == "0":
         return response
     else:
@@ -77,6 +77,7 @@ async def gdel_plans(plan_id: str):
 class PlanPayload(BaseModel):
     plan_name: str
     price: Optional[int] = None
+    day: Optional[int] = None
     start_age_month: Optional[int] = None
     end_age_month: Optional[int] = None
     description: Optional[str] = None
@@ -106,6 +107,7 @@ class UpdatePlanPayload(BaseModel):
     id: str
     plan_name: str
     price: Optional[int] = None
+    day: Optional[int] = None
     start_age_month: Optional[int] = None
     end_age_month: Optional[int] = None
     description: Optional[str] = None
@@ -132,6 +134,28 @@ def insert_plan(payload: UpdatePlanStatus):
         return {"message": "Plan successfully inserted"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+class UpdatemissionStatus(BaseModel):
+    id: str
+    status: str
+
+
+@router.patch("/missions/status/", tags=["mission"])
+def insert_mission(payload: UpdatemissionStatus):
+    try:
+        update_mission_status(payload.model_dump())
+        return {"message": "mission successfully inserted"}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.delete("/missions/{mission_id}", tags=["Mission"])
+async def gdel_plans(mission_id: str):
+    """
+    mission 삭제시 mission_message 내용도 삭제
+    """
+    delete_mission(mission_id)
 
 
 # @router.post("/user/plans/{plan_id}", tags=["Plan"])

@@ -1,0 +1,163 @@
+2024-08-11 14:57:11,145 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 14:57:11,155 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 14:57:11,159 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 15:07:11,146 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 15:17:11 KST)" (scheduled at 2024-08-11 15:07:11.144452+09:00)
+2024-08-11 15:07:11,148 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 15:07:11,188 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 15:07:11,189 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 15:17:11 KST)" executed successfully
+2024-08-11 15:17:11,146 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 15:27:11 KST)" (scheduled at 2024-08-11 15:17:11.144452+09:00)
+2024-08-11 15:17:11,148 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 15:17:11,189 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 15:17:11,190 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 15:27:11 KST)" executed successfully
+2024-08-11 15:22:14,167 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 15:22:14,172 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 15:22:14,173 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 15:32:14,171 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 15:42:14 KST)" (scheduled at 2024-08-11 15:32:14.166776+09:00)
+2024-08-11 15:32:14,175 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 15:32:14,215 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 15:32:14,216 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 15:42:14 KST)" executed successfully
+2024-08-11 15:35:40,712 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 15:35:40,718 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 15:35:40,719 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 15:35:57,767 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 15:35:57,774 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 15:35:57,775 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 15:36:24,138 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 15:36:24,142 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 15:36:24,143 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 15:36:37,156 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 15:36:37,160 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 15:36:37,160 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 15:36:47,186 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 15:36:47,190 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 15:36:47,191 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 15:37:01,758 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 15:37:01,763 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 15:37:01,764 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 15:47:01,762 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 15:57:01 KST)" (scheduled at 2024-08-11 15:47:01.757395+09:00)
+2024-08-11 15:47:01,766 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 15:47:02,252 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 15:47:02,253 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 15:57:01 KST)" executed successfully
+2024-08-11 15:57:01,759 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 16:07:01 KST)" (scheduled at 2024-08-11 15:57:01.757395+09:00)
+2024-08-11 15:57:01,762 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 15:57:01,831 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 15:57:01,832 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 16:07:01 KST)" executed successfully
+2024-08-11 16:04:39,503 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 16:04:39,509 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 16:04:39,510 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 16:04:56,859 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 16:04:56,864 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 16:04:56,865 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 16:05:53,074 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 16:05:53,078 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 16:05:53,079 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 16:06:04,814 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 16:06:04,819 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 16:06:04,820 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 16:12:10,644 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 16:12:10,649 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 16:12:10,650 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 16:13:28,964 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 16:13:28,969 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 16:13:28,969 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 16:13:58,875 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 16:13:58,880 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 16:13:58,880 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 16:23:58,877 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 16:33:58 KST)" (scheduled at 2024-08-11 16:23:58.873249+09:00)
+2024-08-11 16:23:58,881 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 16:23:58,920 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 16:23:58,921 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 16:33:58 KST)" executed successfully
+2024-08-11 16:33:58,876 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 16:43:58 KST)" (scheduled at 2024-08-11 16:33:58.873249+09:00)
+2024-08-11 16:33:58,880 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 16:33:59,023 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 16:33:59,024 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 16:43:58 KST)" executed successfully
+2024-08-11 16:43:58,876 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 16:53:58 KST)" (scheduled at 2024-08-11 16:43:58.873249+09:00)
+2024-08-11 16:43:58,879 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 16:43:58,930 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 16:43:58,930 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 16:53:58 KST)" executed successfully
+2024-08-11 16:47:51,094 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 16:47:51,099 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 16:47:51,099 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 16:57:51,101 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 17:07:51 KST)" (scheduled at 2024-08-11 16:57:51.093604+09:00)
+2024-08-11 16:57:51,106 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 16:57:51,583 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 16:57:51,584 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 17:07:51 KST)" executed successfully
+2024-08-11 17:07:51,184 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 17:17:51 KST)" (scheduled at 2024-08-11 17:07:51.093604+09:00)
+2024-08-11 17:07:51,187 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 17:07:51,233 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 17:07:51,234 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 17:17:51 KST)" executed successfully
+2024-08-11 17:17:51,109 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 17:27:51 KST)" (scheduled at 2024-08-11 17:17:51.093604+09:00)
+2024-08-11 17:17:51,113 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 17:17:51,146 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 17:17:51,147 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 17:27:51 KST)" executed successfully
+2024-08-11 17:27:51,110 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 17:37:51 KST)" (scheduled at 2024-08-11 17:27:51.093604+09:00)
+2024-08-11 17:27:51,113 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 17:27:51,147 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 17:27:51,148 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 17:37:51 KST)" executed successfully
+2024-08-11 17:31:41,391 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 17:31:41,397 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 17:31:41,398 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 17:31:52,103 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 17:31:52,106 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 17:31:52,107 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 17:32:35,958 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 17:32:35,962 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 17:32:35,962 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 17:34:49,616 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 17:34:49,621 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 17:34:49,621 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 17:35:01,142 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 17:35:01,147 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 17:35:01,148 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 17:39:59,294 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 17:39:59,301 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 17:39:59,301 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 17:40:10,850 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 17:40:10,855 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 17:40:10,856 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 17:53:35,781 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 18:00:10 KST)" was missed by 0:03:24.931148
+2024-08-11 17:57:39,616 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 17:57:39,621 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 17:57:39,621 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 18:07:39,631 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 18:17:39 KST)" (scheduled at 2024-08-11 18:07:39.616054+09:00)
+2024-08-11 18:07:39,634 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 18:07:39,678 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 18:07:39,679 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 18:17:39 KST)" executed successfully
+2024-08-11 18:08:04,604 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 18:08:04,610 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 18:08:04,610 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 18:08:57,628 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 18:08:57,633 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 18:08:57,634 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 18:18:57,629 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 18:28:57 KST)" (scheduled at 2024-08-11 18:18:57.628099+09:00)
+2024-08-11 18:18:57,632 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 18:18:57,670 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 18:18:57,671 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 18:28:57 KST)" executed successfully
+2024-08-11 18:28:57,633 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 18:38:57 KST)" (scheduled at 2024-08-11 18:28:57.628099+09:00)
+2024-08-11 18:28:57,636 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 18:28:57,672 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 18:28:57,673 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 18:38:57 KST)" executed successfully
+2024-08-11 18:38:16,738 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-11 18:38:16,744 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-11 18:38:16,744 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-11 18:48:16,746 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 18:58:16 KST)" (scheduled at 2024-08-11 18:48:16.738315+09:00)
+2024-08-11 18:48:16,750 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 18:48:16,785 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 18:48:16,785 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 18:58:16 KST)" executed successfully
+2024-08-11 18:58:16,742 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 19:08:16 KST)" (scheduled at 2024-08-11 18:58:16.738315+09:00)
+2024-08-11 18:58:16,745 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 18:58:16,785 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 18:58:16,786 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 19:08:16 KST)" executed successfully
+2024-08-11 19:08:16,746 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 19:18:16 KST)" (scheduled at 2024-08-11 19:08:16.738315+09:00)
+2024-08-11 19:08:16,750 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 19:08:16,792 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 19:08:16,792 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 19:18:16 KST)" executed successfully
+2024-08-11 19:18:16,746 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 19:28:16 KST)" (scheduled at 2024-08-11 19:18:16.738315+09:00)
+2024-08-11 19:18:16,749 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-11 19:18:16,790 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-11 19:18:16,791 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 19:28:16 KST)" executed successfully
+2024-08-11 19:28:48,653 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 19:38:16 KST)" was missed by 0:00:31.914900
+2024-08-11 19:51:04,678 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 19:58:16 KST)" was missed by 0:02:47.940038
+2024-08-11 21:27:22,052 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 21:28:16 KST)" was missed by 0:09:05.314064
+2024-08-11 22:28:23,844 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 22:38:16 KST)" was missed by 0:00:07.106247
+2024-08-11 23:29:24,833 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-11 23:38:16 KST)" was missed by 0:01:08.095365

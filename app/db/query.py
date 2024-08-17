@@ -464,6 +464,14 @@ SELECT_MISSION = text(
     """
     SELECT * FROM missions
     WHERE plan_id = :plan_id
+    ORDER BY day ASC;
+    """
+)
+
+DELETE_MISSION_MESSAGE = text(
+    """
+    DELETE FROM missions_message
+    WHERE mission_id = :mission_id
     """
 )
 
@@ -474,10 +482,17 @@ DELETE_PLAN = text(
     """
 )
 
+DELETE_MISSION = text(
+    """
+    DELETE FROM missions
+    WHERE id = :mission_id
+    """
+)
+
 INSERT_PLANS = text(
     """
-    INSERT INTO plans (plan_name, price, start_age_month, end_age_month, description)
-    VALUES (:plan_name, :price, :start_age_month, :end_age_month, :description)
+    INSERT INTO plans (plan_name, price, day, start_age_month, end_age_month, description)
+    VALUES (:plan_name, :price, :day, :start_age_month, :end_age_month, :description)
     """
 )
 
@@ -487,6 +502,7 @@ UPDATE_PLANS = text(
     SET
         plan_name = :plan_name,
         price = :price,
+        day = :day,
         start_age_month = :start_age_month,
         end_age_month = :end_age_month,
         description = :description
@@ -505,6 +521,15 @@ UPDATE_PLAN_STATUS = text(
     """
 )
 
+UPDATE_MISSION_STATUS = text(
+    """
+    UPDATE missions
+    SET
+        status = :status
+    WHERE
+        id = :id
+    """
+)
 
 SELECT_PLAN = text(
     """

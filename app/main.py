@@ -48,6 +48,7 @@ app.add_middleware(
         "https://clab-fe.vercel.app",
         "http://localhost:3001",
         "http://localhost:3100",
+        "http://localhost:3000",
     ],
     allow_credentials=True,
     allow_methods=["*"],
