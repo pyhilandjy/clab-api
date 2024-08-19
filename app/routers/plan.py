@@ -14,6 +14,8 @@ from app.services.plan import (
     update_plan_status,
     update_mission_status,
     delete_mission,
+    select_sub_category,
+    select_main_category,
 )
 
 from app.services.users import get_current_user
@@ -81,6 +83,9 @@ class PlanPayload(BaseModel):
     start_age_month: Optional[int] = None
     end_age_month: Optional[int] = None
     description: Optional[str] = None
+    type: Optional[str] = None
+    tags: Optional[list] = None
+    categoty_id: Optional[str] = None
 
 
 @router.post("/plans/", tags=["Plan"])
@@ -111,6 +116,9 @@ class UpdatePlanPayload(BaseModel):
     start_age_month: Optional[int] = None
     end_age_month: Optional[int] = None
     description: Optional[str] = None
+    type: Optional[str] = None
+    tags: Optional[list] = None
+    categoty_id: Optional[str] = None
 
 
 @router.put("/plans/", tags=["Plan"])
@@ -134,6 +142,22 @@ def insert_plan(payload: UpdatePlanStatus):
         return {"message": "Plan successfully inserted"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/category/sub/", tags=["Plan"])
+def get_sub_category(parents_id):
+    categorys = select_sub_category(parents_id)
+    if not categorys:
+        raise HTTPException(status_code=404, detail="Files not found")
+    return categorys
+
+
+@router.get("/category/main/", tags=["Plan"])
+def get_main_category():
+    categorys = select_main_category()
+    if not categorys:
+        raise HTTPException(status_code=404, detail="Files not found")
+    return categorys
 
 
 class UpdatemissionStatus(BaseModel):

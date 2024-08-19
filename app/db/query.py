@@ -491,8 +491,8 @@ DELETE_MISSION = text(
 
 INSERT_PLANS = text(
     """
-    INSERT INTO plans (plan_name, price, day, start_age_month, end_age_month, description)
-    VALUES (:plan_name, :price, :day, :start_age_month, :end_age_month, :description)
+    INSERT INTO plans (plan_name, price, day, start_age_month, end_age_month, description, type, tags, category_id)
+    VALUES (:plan_name, :price, :day, :start_age_month, :end_age_month, :description, :type, :tags, :category_id)
     """
 )
 
@@ -505,7 +505,10 @@ UPDATE_PLANS = text(
         day = :day,
         start_age_month = :start_age_month,
         end_age_month = :end_age_month,
-        description = :description
+        description = :description,
+        type = :type,
+        tags = :tags
+        category_id = :category_id
     WHERE
         id = :id
     """
@@ -550,4 +553,18 @@ INSERT_USER_PLAN = text(
     INSERT INTO user_plan (plan_id, user_id, start_at, end_at)
     VALUES (:plan_id, :user_id, :start_at, :end_at)
     """
+)
+
+SELECT_SUB_CATEGORY = text(
+    """
+    select * from category
+    where parents_id = :parents_id
+"""
+)
+
+SELECT_MAIN_CATEGORY = text(
+    """
+    select * from category
+    where parents_id is null
+"""
 )

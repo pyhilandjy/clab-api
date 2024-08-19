@@ -14,6 +14,8 @@ from app.db.query import (
     UPDATE_MISSION_STATUS,
     DELETE_MISSION,
     DELETE_MISSION_MESSAGE,
+    SELECT_SUB_CATEGORY,
+    SELECT_MAIN_CATEGORY,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.error.utils import generate_error_response
@@ -71,12 +73,15 @@ def insert_plans(payload: dict):
     return execute_insert_update_query(
         query=INSERT_PLANS,
         params={
-            "plan_name": payload["plan_name"],
-            "price": payload["price"],
-            "day": payload["day"],
-            "start_age_month": payload["start_age_month"],
-            "end_age_month": payload["end_age_month"],
-            "description": payload["description"],
+            "plan_name": payload.get("plan_name"),
+            "price": payload.get("price"),
+            "day": payload.get("day"),
+            "start_age_month": payload.get("start_age_month"),
+            "end_age_month": payload.get("end_age_month"),
+            "description": payload.get("description"),
+            "type": payload.get("type"),
+            "tags": payload.get("tags"),
+            "category_id": payload.get("category_id"),
         },
     )
 
@@ -85,13 +90,16 @@ def update_plans(payload: dict):
     return execute_insert_update_query(
         query=UPDATE_PLANS,
         params={
-            "id": payload["id"],
-            "plan_name": payload["plan_name"],
-            "price": payload["price"],
-            "day": payload["day"],
-            "start_age_month": payload["start_age_month"],
-            "end_age_month": payload["end_age_month"],
-            "description": payload["description"],
+            "id": payload.get["id"],
+            "plan_name": payload.get("plan_name"),
+            "price": payload.get("price"),
+            "day": payload.get("day"),
+            "start_age_month": payload.get("start_age_month"),
+            "end_age_month": payload.get("end_age_month"),
+            "description": payload.get("description"),
+            "type": payload.get("type"),
+            "tags": payload.get("tags"),
+            "category_id": payload.get("category_id"),
         },
     )
 
@@ -104,6 +112,16 @@ def update_plan_status(playload: dict):
             "status": playload["status"],
         },
     )
+
+
+def select_sub_category(parents_id):
+    return execute_select_query(
+        query=SELECT_SUB_CATEGORY, params={"parents_id": parents_id}
+    )
+
+
+def select_main_category():
+    return execute_select_query(query=SELECT_MAIN_CATEGORY)
 
 
 # user

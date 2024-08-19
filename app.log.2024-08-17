@@ -1,0 +1,196 @@
+2024-08-17 16:06:59,158 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 16:06:59,167 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 16:06:59,169 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 16:44:53,523 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 16:46:59 KST)" was missed by 0:07:54.364536
+2024-08-17 16:46:59,208 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 16:56:59 KST)" (scheduled at 2024-08-17 16:46:59.157138+09:00)
+2024-08-17 16:46:59,211 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-17 16:46:59,266 - app.services.audio - ERROR - Error during file processing: (psycopg2.OperationalError) server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+[SQL: SET TIME ZONE 'Asia/Seoul']
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-08-17 16:46:59,307 - apscheduler.executors.default - ERROR - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 16:56:59 KST)" raised an exception
+Traceback (most recent call last):
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+psycopg2.OperationalError: server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/apscheduler/executors/base_py3.py", line 30, in run_coroutine_job
+    retval = await job.func(*job.args, **job.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/services/audio.py", line 74, in download_and_process_file
+    raise e
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/services/audio.py", line 61, in download_and_process_file
+    ready_files = select_audio_ready()
+                  ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/services/audio.py", line 78, in select_audio_ready
+    results = execute_select_query(query=SELECT_AUDIO_FILES)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/db/worker.py", line 22, in execute_select_query
+    set_timezone(db)
+  File "/Users/choi-junyong/local/connects_lab/clab-api/app/db/worker.py", line 6, in set_timezone
+    db.execute(text(f"SET TIME ZONE '{timezone}'"))
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2351, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/orm/session.py", line 2245, in _execute_internal
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2353, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/Users/choi-junyong/Library/Caches/pypoetry/virtualenvs/clab-api-VZOQELhB-py3.12/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 924, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (psycopg2.OperationalError) server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+server closed the connection unexpectedly
+	This probably means the server terminated abnormally
+	before or while processing the request.
+
+[SQL: SET TIME ZONE 'Asia/Seoul']
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+2024-08-17 17:03:15,900 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 17:06:59 KST)" was missed by 0:06:16.742695
+2024-08-17 17:06:59,157 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 17:16:59 KST)" (scheduled at 2024-08-17 17:06:59.157138+09:00)
+2024-08-17 17:06:59,158 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-17 17:06:59,738 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-17 17:06:59,739 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 17:16:59 KST)" executed successfully
+2024-08-17 17:16:59,157 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 17:26:59 KST)" (scheduled at 2024-08-17 17:16:59.157138+09:00)
+2024-08-17 17:16:59,159 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-17 17:16:59,242 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-17 17:16:59,243 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 17:26:59 KST)" executed successfully
+2024-08-17 17:26:59,157 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 17:36:59 KST)" (scheduled at 2024-08-17 17:26:59.157138+09:00)
+2024-08-17 17:26:59,160 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-17 17:26:59,233 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-17 17:26:59,233 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 17:36:59 KST)" executed successfully
+2024-08-17 17:36:59,157 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 17:46:59 KST)" (scheduled at 2024-08-17 17:36:59.157138+09:00)
+2024-08-17 17:36:59,159 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-17 17:36:59,233 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-17 17:36:59,234 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 17:46:59 KST)" executed successfully
+2024-08-17 17:46:59,157 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 17:56:59 KST)" (scheduled at 2024-08-17 17:46:59.157138+09:00)
+2024-08-17 17:46:59,159 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-17 17:46:59,241 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-17 17:46:59,242 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 17:56:59 KST)" executed successfully
+2024-08-17 17:47:57,339 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 17:47:57,346 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 17:47:57,347 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 17:49:06,108 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 17:49:06,112 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 17:49:06,113 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 17:51:04,445 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 17:51:04,453 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 17:51:04,454 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 17:53:42,330 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 17:53:42,334 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 17:53:42,335 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 17:54:24,719 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 17:54:24,724 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 17:54:24,724 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 17:54:41,803 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 17:54:41,809 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 17:54:41,809 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:04:41,808 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 18:14:41 KST)" (scheduled at 2024-08-17 18:04:41.802812+09:00)
+2024-08-17 18:04:41,814 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-17 18:04:42,481 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-17 18:04:42,482 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 18:14:41 KST)" executed successfully
+2024-08-17 18:13:00,361 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:13:00,366 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:13:00,366 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:14:19,689 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:14:19,695 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:14:19,697 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:14:35,055 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:14:35,060 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:14:35,061 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:24:35,056 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 18:34:35 KST)" (scheduled at 2024-08-17 18:24:35.054855+09:00)
+2024-08-17 18:24:35,058 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-17 18:24:35,142 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-17 18:24:35,143 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 18:34:35 KST)" executed successfully
+2024-08-17 18:27:14,218 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:27:14,225 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:27:14,225 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:28:32,721 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:28:32,728 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:28:32,728 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:28:45,703 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:28:45,706 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:28:45,707 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:30:17,725 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:30:17,731 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:30:17,732 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:31:29,692 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:31:29,698 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:31:29,699 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:31:44,417 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:31:44,424 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:31:44,426 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:32:29,621 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:32:29,625 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:32:29,626 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:32:52,853 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:32:52,859 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:32:52,859 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:33:12,712 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:33:12,718 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:33:12,718 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:33:44,200 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:33:44,205 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:33:44,206 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:34:14,413 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:34:14,418 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:34:14,418 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 18:44:14,415 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 18:54:14 KST)" (scheduled at 2024-08-17 18:44:14.412437+09:00)
+2024-08-17 18:44:14,418 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-17 18:44:14,500 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-17 18:44:14,501 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 18:54:14 KST)" executed successfully
+2024-08-17 18:52:58,975 - apscheduler.scheduler - INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2024-08-17 18:52:58,981 - apscheduler.scheduler - INFO - Added job "download_and_process_file" to job store "default"
+2024-08-17 18:52:58,982 - apscheduler.scheduler - INFO - Scheduler started
+2024-08-17 19:02:58,977 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 19:12:58 KST)" (scheduled at 2024-08-17 19:02:58.974482+09:00)
+2024-08-17 19:02:58,979 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-17 19:02:59,064 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-17 19:02:59,064 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 19:12:58 KST)" executed successfully
+2024-08-17 19:12:58,975 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 19:22:58 KST)" (scheduled at 2024-08-17 19:12:58.974482+09:00)
+2024-08-17 19:12:58,977 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-17 19:12:59,061 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-17 19:12:59,061 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 19:22:58 KST)" executed successfully
+2024-08-17 19:22:58,999 - apscheduler.executors.default - INFO - Running job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 19:32:58 KST)" (scheduled at 2024-08-17 19:22:58.974482+09:00)
+2024-08-17 19:22:59,002 - app.services.audio - INFO - Starting download_and_process_file task
+2024-08-17 19:22:59,073 - app.services.audio - INFO - Completed download_and_process_file task
+2024-08-17 19:22:59,073 - apscheduler.executors.default - INFO - Job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 19:32:58 KST)" executed successfully
+2024-08-17 19:33:43,290 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 19:42:58 KST)" was missed by 0:00:44.315788
+2024-08-17 19:43:40,595 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 19:52:58 KST)" was missed by 0:00:41.620552
+2024-08-17 20:04:49,539 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 20:12:58 KST)" was missed by 0:01:50.564906
+2024-08-17 21:33:17,536 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 21:42:58 KST)" was missed by 0:00:18.561239
+2024-08-17 22:34:19,539 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 22:42:58 KST)" was missed by 0:01:20.564516
+2024-08-17 23:35:21,443 - apscheduler.executors.default - WARNING - Run time of job "download_and_process_file (trigger: interval[0:10:00], next run at: 2024-08-17 23:42:58 KST)" was missed by 0:02:22.468980
