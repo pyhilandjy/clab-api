@@ -16,6 +16,7 @@ from app.services.plan import (
     delete_mission,
     select_sub_category,
     select_main_category,
+    get_all_categories,
 )
 
 from app.services.users import get_current_user
@@ -85,7 +86,7 @@ class PlanPayload(BaseModel):
     description: Optional[str] = None
     type: Optional[str] = None
     tags: Optional[list] = None
-    categoty_id: Optional[str] = None
+    category_id: Optional[str] = None
 
 
 @router.post("/plans/", tags=["Plan"])
@@ -118,14 +119,14 @@ class UpdatePlanPayload(BaseModel):
     description: Optional[str] = None
     type: Optional[str] = None
     tags: Optional[list] = None
-    categoty_id: Optional[str] = None
+    category_id: Optional[str] = None
 
 
-@router.put("/plans/", tags=["Plan"])
-def insert_plan(payload: UpdatePlanPayload):
+@router.put("/plans/{plan_id}", tags=["Plan"])
+def insert_plan(plan_id: str, payload: UpdatePlanPayload):
     try:
         update_plans(payload.model_dump())
-        return {"message": "Plan successfully inserted"}
+        return {"message": "Plan successfully updated"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -144,7 +145,7 @@ def insert_plan(payload: UpdatePlanStatus):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.get("/category/sub/", tags=["Plan"])
+@router.get("/category/sub/{parents_id}", tags=["Plan"])
 def get_sub_category(parents_id):
     categorys = select_sub_category(parents_id)
     if not categorys:
@@ -152,12 +153,18 @@ def get_sub_category(parents_id):
     return categorys
 
 
-@router.get("/category/main/", tags=["Plan"])
+@router.get("/categorys/main/", tags=["Plan"])
 def get_main_category():
     categorys = select_main_category()
     if not categorys:
         raise HTTPException(status_code=404, detail="Files not found")
     return categorys
+
+
+@router.get("/categories/", tags=["Plan"])
+def read_categories():
+    categories = get_all_categories()
+    return categories
 
 
 class UpdatemissionStatus(BaseModel):

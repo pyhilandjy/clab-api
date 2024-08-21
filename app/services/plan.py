@@ -16,6 +16,7 @@ from app.db.query import (
     DELETE_MISSION_MESSAGE,
     SELECT_SUB_CATEGORY,
     SELECT_MAIN_CATEGORY,
+    SELECT_ALL_CATEGORIES,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.error.utils import generate_error_response
@@ -90,7 +91,7 @@ def update_plans(payload: dict):
     return execute_insert_update_query(
         query=UPDATE_PLANS,
         params={
-            "id": payload.get["id"],
+            "id": payload.get("id"),
             "plan_name": payload.get("plan_name"),
             "price": payload.get("price"),
             "day": payload.get("day"),
@@ -122,6 +123,33 @@ def select_sub_category(parents_id):
 
 def select_main_category():
     return execute_select_query(query=SELECT_MAIN_CATEGORY)
+
+
+def get_all_categories():
+    rows = execute_select_query(query=SELECT_ALL_CATEGORIES)
+
+    categories = {}
+    for row in rows:
+        if row["parents_id"] is None:  # 메인 카테고리
+            categories[row["id"]] = {
+                "id": row["id"],
+                "name": row["name"],
+                "created_at": row["created_at"],
+                "parent_id": None,
+                "sub_categories": [],
+            }
+        else:  # 서브 카테고리
+            if row["parents_id"] in categories:
+                categories[row["parents_id"]]["sub_categories"].append(
+                    {
+                        "id": row["id"],
+                        "name": row["name"],
+                        "created_at": row["created_at"],
+                        "parent_id": row["parents_id"],
+                    }
+                )
+
+    return list(categories.values())
 
 
 # user
