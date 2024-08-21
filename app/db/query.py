@@ -507,7 +507,7 @@ UPDATE_PLANS = text(
         end_age_month = :end_age_month,
         description = :description,
         type = :type,
-        tags = :tags
+        tags = :tags,
         category_id = :category_id
     WHERE
         id = :id
@@ -566,5 +566,11 @@ SELECT_MAIN_CATEGORY = text(
     """
     select * from category
     where parents_id is null
+"""
+)
+
+SELECT_ALL_CATEGORIES = text(
+    """
+    select * from category
 """
 )
