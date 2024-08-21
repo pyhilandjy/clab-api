@@ -468,6 +468,25 @@ SELECT_MISSION = text(
     """
 )
 
+INSERT_MISSION = text(
+    """
+    INSERT INTO missions (plan_id, title, day, message, summation)
+    VALUES (:plan_id, :title, :day, :message, :summation)
+    """
+)
+
+UPDATE_MISSION = text(
+    """
+    UPDATE missions
+    SET title = :title,
+        day = :day,
+        message = :message,
+        summation = :summation
+    WHERE id = :id
+    """
+)
+
+
 DELETE_MISSION_MESSAGE = text(
     """
     DELETE FROM missions_message

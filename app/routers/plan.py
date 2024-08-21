@@ -17,6 +17,8 @@ from app.services.plan import (
     select_sub_category,
     select_main_category,
     get_all_categories,
+    insert_mission,
+    update_mission,
 )
 
 from app.services.users import get_current_user
@@ -173,7 +175,7 @@ class UpdatemissionStatus(BaseModel):
 
 
 @router.patch("/missions/status/", tags=["mission"])
-def insert_mission(payload: UpdatemissionStatus):
+def petch_mission_status(payload: UpdatemissionStatus):
     try:
         update_mission_status(payload.model_dump())
         return {"message": "mission successfully inserted"}
@@ -187,6 +189,41 @@ async def gdel_plans(mission_id: str):
     mission 삭제시 mission_message 내용도 삭제
     """
     delete_mission(mission_id)
+
+
+class InsertMission(BaseModel):
+    title: str
+    summation: str
+    day: int
+    message: str
+
+
+@router.post("/missions/{plan_id}", tags=["Mission"])
+async def post_missions(plan_id: str, payload: InsertMission):
+    """
+    plan_id 별 mission 데이터를 추가하는 엔드포인트
+    """
+    mission_data = payload.model_dump()
+    mission_data["plan_id"] = plan_id
+    insert_mission(mission_data)
+    return {"message": "success"}
+
+
+class UpdateMission(BaseModel):
+    id: str
+    title: str
+    summation: str
+    day: int
+    message: str
+
+
+@router.patch("/missions/", tags=["Mission"])
+async def patch_missions(payload: UpdateMission):
+    """
+    plan_id 별 mission 데이터를 추가하는 엔드포인트
+    """
+    update_mission(payload.model_dump())
+    return {"message": "success"}
 
 
 # @router.post("/user/plans/{plan_id}", tags=["Plan"])

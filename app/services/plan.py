@@ -17,6 +17,8 @@ from app.db.query import (
     SELECT_SUB_CATEGORY,
     SELECT_MAIN_CATEGORY,
     SELECT_ALL_CATEGORIES,
+    INSERT_MISSION,
+    UPDATE_MISSION,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.error.utils import generate_error_response
@@ -227,5 +229,31 @@ def delete_mission(mission_id):
         query=DELETE_MISSION,
         params={
             "mission_id": mission_id,
+        },
+    )
+
+
+def insert_mission(payload: dict):
+    return execute_insert_update_query(
+        query=INSERT_MISSION,
+        params={
+            "plan_id": payload["plan_id"],
+            "title": payload["title"],
+            "day": payload["day"],
+            "message": payload["message"],
+            "summation": payload["summation"],
+        },
+    )
+
+
+def update_mission(payload: dict):
+    return execute_insert_update_query(
+        query=UPDATE_MISSION,
+        params={
+            "id": payload["id"],
+            "title": payload["title"],
+            "day": payload["day"],
+            "message": payload["message"],
+            "summation": payload["summation"],
         },
     )
