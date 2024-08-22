@@ -5,7 +5,7 @@ CREATE TABLE
     file_path VARCHAR(255) NOT NULL,
     file_name VARCHAR(255) NOT NULL,
     record_time INT,
-    report_id UUID,
+    reports_id UUID,
     status VARCHAR(255) DEFAULT 'ready',
     created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
     PRIMARY KEY (id)
