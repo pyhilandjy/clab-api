@@ -4,7 +4,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import audio, reports, stt, users, plan
+from app.routers import audio, report_files, stt, users, plan
 from app.services.audio import download_and_process_file
 
 # 로그 설정
@@ -58,7 +58,7 @@ app.add_middleware(
 app.include_router(audio.router, prefix="/audio")
 app.include_router(users.router)
 app.include_router(stt.router, prefix="/stt")
-app.include_router(reports.router)
+app.include_router(report_files.router)
 app.include_router(plan.router)
 
 # depends api key
