@@ -62,11 +62,11 @@ async def download_and_process_file():
         for file_record in ready_files:
             file_path = file_record.file_path
             local_path = f"./{file_path}"
-            file_id = str(file_record.id)
+            audio_files_id = str(file_record.id)
             # S3에서 파일 다운로드
             s3.download_file(settings.bucket_name, file_path, local_path)
-            m4a_path = await convert_file_update_record_time(local_path, file_id)
-            await process_stt(file_id, m4a_path)
+            m4a_path = await convert_file_update_record_time(local_path, audio_files_id)
+            await process_stt(audio_files_id, m4a_path)
             await delete_file(m4a_path)
         logger.info("Completed download_and_process_file task")
     except Exception as e:
@@ -79,27 +79,27 @@ def select_audio_ready():
     return results
 
 
-async def convert_file_update_record_time(local_path: str, file_id):
+async def convert_file_update_record_time(local_path: str, audio_files_id):
     """오디오 파일 메타데이터 처리"""
     try:
         with open(local_path, "rb") as f:
             file_bytes = f.read()
         m4a_path = convert_to_m4a(file_bytes, local_path)
         record_time = get_record_time(m4a_path)
-        insert_record_time(record_time, file_id)
+        insert_record_time(record_time, audio_files_id)
         logger.info(f"Audio file metadata inserted: {m4a_path}")
         return m4a_path
     except Exception as e:
-        update_audio_status(file_id, "convert_error")
+        update_audio_status(audio_files_id, "convert_error")
         logger.error(f"Error processing metadata: {e}")
         raise e
 
 
-def insert_record_time(record_time, file_id):
+def insert_record_time(record_time, audio_files_id):
     """record_time update"""
     execute_insert_update_query(
         query=UPDATE_RECORD_TIME,
-        params={"record_time": record_time, "file_id": file_id},
+        params={"record_time": record_time, "audio_files_id": audio_files_id},
     )
 
 
@@ -131,32 +131,32 @@ def insert_audio_metadata(metadata: dict):
     )
 
 
-def update_audio_status(file_id, status):
+def update_audio_status(audio_files_id, status):
     execute_insert_update_query(
-        query=UPDATE_AUDIO_STATUS, params={"file_id": file_id, "status": status}
+        query=UPDATE_AUDIO_STATUS, params={"audio_files_id": audio_files_id, "status": status}
     )
 
 
-async def process_stt(file_id, m4a_path):
+async def process_stt(audio_files_id, m4a_path):
     """음성파일 STT"""
     try:
         segments = get_stt_results(m4a_path)
         if not segments:
-            logger.error(f"No segments found for file: {file_id}")
-            update_audio_status(file_id, "stt_error")
+            logger.error(f"No segments found for file: {audio_files_id}")
+            update_audio_status(audio_files_id, "stt_error")
             delete_file(m4a_path)
             return
 
         rename_segments = rename_keys(segments)
         explode_segments = explode(rename_segments, "textEdited")
-        insert_stt_segments(explode_segments, file_id)
-        update_audio_status(file_id, "done")
+        insert_stt_segments(explode_segments, audio_files_id)
+        update_audio_status(audio_files_id, "done")
     except Exception as e:
-        update_audio_status(file_id, "stt_error")
+        update_audio_status(audio_files_id, "stt_error")
         delete_file(m4a_path)
         raise e
     else:
-        logger.info(f"STT segments inserted: {file_id}")
+        logger.info(f"STT segments inserted: {audio_files_id}")
 
 
 async def upload_to_s3(audio: UploadFile, file_path):
@@ -226,12 +226,12 @@ def get_stt_results(file_path):
     return data["segments"]
 
 
-def insert_stt_segments(segments, file_id):
+def insert_stt_segments(segments, audio_files_id):
     """stt결과값 필요 세그먼츠 추출 밑 적재"""
     data_list = []
     for text_order, segment in enumerate(segments, start=1):
         segment_data = {
-            "file_id": file_id,
+            "audio_files_id": audio_files_id,
             "text_order": text_order,
             "start_time": segment["start_time"],
             "end_time": segment["end_time"],
@@ -439,7 +439,7 @@ async def get_audio(file_path: str, range_header: str = None):
 
 
 async def select_audio_info(id: str):
-    """file_id 별 audio_files 정보 가져오는 앤드포인트"""
+    """audio_files_id 별 audio_files 정보 가져오는 앤드포인트"""
     audio_file = execute_select_query(query=SELECT_AUDIO_FILE, params={"id": id})
     record_time = audio_file[0].record_time
     return record_time

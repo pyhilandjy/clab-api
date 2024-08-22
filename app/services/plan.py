@@ -28,30 +28,30 @@ def select_plans():
     return execute_select_query(query=SELECT_PLANS)
 
 
-def select_plan(plan_id):
+def select_plan(plans_id):
     return execute_select_query(
         query=SELECT_PLAN,
         params={
-            "plan_id": plan_id,
+            "plans_id": plans_id,
         },
     )
 
 
-def select_mission(plan_id):
+def select_mission(plans_id):
     return execute_select_query(
         query=SELECT_MISSION,
         params={
-            "plan_id": plan_id,
+            "plans_id": plans_id,
         },
     )
 
 
-def delete_plan(plan_id):
+def delete_plan(plans_id):
     # 미션이 있는지 확인하는 쿼리 실행
     mission = execute_select_query(
         query=SELECT_MISSION,
         params={
-            "plan_id": plan_id,
+            "plans_id": plans_id,
         },
     )
 
@@ -64,7 +64,7 @@ def delete_plan(plan_id):
         execute_insert_update_query(
             query=DELETE_PLAN,
             params={
-                "plan_id": plan_id,
+                "plans_id": plans_id,
             },
         )
         return generate_error_response("DELETE_SUCCESS")
@@ -137,7 +137,7 @@ def get_all_categories():
                 "id": row["id"],
                 "name": row["name"],
                 "created_at": row["created_at"],
-                "parent_id": None,
+                "parents_id": None,
                 "sub_categories": [],
             }
         else:  # 서브 카테고리
@@ -147,7 +147,7 @@ def get_all_categories():
                         "id": row["id"],
                         "name": row["name"],
                         "created_at": row["created_at"],
-                        "parent_id": row["parents_id"],
+                        "parents_id": row["parents_id"],
                     }
                 )
 
@@ -187,11 +187,11 @@ def plan_date(day: int):
     return start_at, end_at
 
 
-def update_user_plan(user_id, plan_id):
+def update_user_plan(user_id, plans_id):
     plan = execute_select_query(
         query=SELECT_PLAN,
         params={
-            "plan_id": plan_id,
+            "plans_id": plans_id,
         },
     )
     day = plan[0].day
@@ -199,7 +199,7 @@ def update_user_plan(user_id, plan_id):
     execute_insert_update_query(
         query=INSERT_USER_PLAN,
         params={
-            "plan_id": plan_id,
+            "plans_id": plans_id,
             "user_id": user_id,
             "start_at": start_at,
             "end_at": end_at,
@@ -237,7 +237,7 @@ def insert_mission(payload: dict):
     return execute_insert_update_query(
         query=INSERT_MISSION,
         params={
-            "plan_id": payload["plan_id"],
+            "plans_id": payload["plans_id"],
             "title": payload["title"],
             "day": payload["day"],
             "message": payload["message"],

@@ -31,40 +31,40 @@ async def get_plans():
     """
     plan 데이터를 가져오는 엔드포인트
     """
-    file_ids = select_plans()
-    if not file_ids:
+    plans = select_plans()
+    if not plans:
         raise HTTPException(status_code=404, detail="Files not found")
-    return file_ids
+    return plans
 
 
-@router.get("/missions/{plan_id}", tags=["Mission"])
-async def get_missions(plan_id: str):
+@router.get("/missions/{plans_id}", tags=["Mission"])
+async def get_missions(plans_id: str):
     """
-    plan_id 별 mission 데이터를 가져오는 엔드포인트
+    plans_id 별 mission 데이터를 가져오는 엔드포인트
     """
-    mission = select_mission(plan_id)
+    mission = select_mission(plans_id)
     if not mission:
         return []
     return mission
 
 
-@router.get("/plans/{plan_id}", tags=["Plans"])
-async def get_plans(plan_id: str):
+@router.get("/plans/{plans_id}", tags=["Plans"])
+async def get_plans(plans_id: str):
     """
-    plan_id 별 plan 데이터를 가져오는 엔드포인트
+    plans_id 별 plan 데이터를 가져오는 엔드포인트
     """
-    file_ids = select_plan(plan_id)
-    if not file_ids:
+    plan = select_plan(plans_id)
+    if not plan:
         raise HTTPException(status_code=404, detail="Files not found")
-    return file_ids
+    return plan
 
 
-@router.delete("/plans/{plan_id}", tags=["Plan"])
-async def gdel_plans(plan_id: str):
+@router.delete("/plans/{plans_id}", tags=["Plan"])
+async def gdel_plans(plans_id: str):
     """
-    plan_id 별 plan을 삭제 (mission이 존재할 경우 삭제 불가능)
+    plans_id 별 plan을 삭제 (mission이 존재할 경우 삭제 불가능)
     """
-    response_json = delete_plan(plan_id)
+    response_json = delete_plan(plans_id)
     response = json.loads(response_json)
 
     if response["Code"] == "1001":
@@ -100,12 +100,12 @@ def insert_plan(payload: PlanPayload):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.get("/plans/{plan_id}", tags=["Plan"])
-async def get_plans(plan_id):
+@router.get("/plans/{plans_id}", tags=["Plan"])
+async def get_plans(plans_id):
     """
     plan 데이터를 가져오는 엔드포인트
     """
-    file_ids = select_plan(plan_id)
+    file_ids = select_plan(plans_id)
     if not file_ids:
         raise HTTPException(status_code=404, detail="Files not found")
     return file_ids
@@ -124,8 +124,8 @@ class UpdatePlanPayload(BaseModel):
     category_id: Optional[str] = None
 
 
-@router.put("/plans/{plan_id}", tags=["Plan"])
-def insert_plan(plan_id: str, payload: UpdatePlanPayload):
+@router.put("/plans/{plans_id}", tags=["Plan"])
+def insert_plan(plans_id: str, payload: UpdatePlanPayload):
     try:
         update_plans(payload.model_dump())
         return {"message": "Plan successfully updated"}
@@ -198,13 +198,13 @@ class InsertMission(BaseModel):
     message: str
 
 
-@router.post("/missions/{plan_id}", tags=["Mission"])
-async def post_missions(plan_id: str, payload: InsertMission):
+@router.post("/missions/{plans_id}", tags=["Mission"])
+async def post_missions(plans_id: str, payload: InsertMission):
     """
-    plan_id 별 mission 데이터를 추가하는 엔드포인트
+    plans_id 별 mission 데이터를 추가하는 엔드포인트
     """
     mission_data = payload.model_dump()
-    mission_data["plan_id"] = plan_id
+    mission_data["plans_id"] = plans_id
     insert_mission(mission_data)
     return {"message": "success"}
 
@@ -220,20 +220,20 @@ class UpdateMission(BaseModel):
 @router.patch("/missions/", tags=["Mission"])
 async def patch_missions(payload: UpdateMission):
     """
-    plan_id 별 mission 데이터를 추가하는 엔드포인트
+    plans_id 별 mission 데이터를 추가하는 엔드포인트
     """
     update_mission(payload.model_dump())
     return {"message": "success"}
 
 
-# @router.post("/user/plans/{plan_id}", tags=["Plan"])
-# # async def post_user_plan(plan_id: str, user_id: str):
-# async def post_user_plan(plan_id: str, current_user=Depends(get_current_user)):
+# @router.post("/user/plans/{plans_id}", tags=["Plan"])
+# # async def post_user_plan(plans_id: str, user_id: str):
+# async def post_user_plan(plans_id: str, current_user=Depends(get_current_user)):
 #     try:
 #         user_id = current_user.get("sub")
 #         if not user_id:
 #             raise HTTPException(status_code=400, detail="Invalid user ID")
-#         update_user_plan(user_id, plan_id)
+#         update_user_plan(user_id, plans_id)
 #         return {"message": "User plan updated successfully"}
 #     except Exception as e:
 #         raise HTTPException(status_code=500, detail=str(e))

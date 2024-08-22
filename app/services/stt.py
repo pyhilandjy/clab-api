@@ -16,54 +16,54 @@ from app.db.query import (
 from app.db.worker import execute_insert_update_query, execute_select_query
 
 
-def select_stt_data_by_file_id(file_id):
+def select_stt_data_by_audio_files_id(audio_files_id):
     return execute_select_query(
         query=SELECT_STT_DATA,
         params={
-            "file_id": file_id,
+            "audio_files_id": audio_files_id,
         },
     )
 
 
-def update_text_edit(id, file_id, new_text, new_speaker):
+def update_text_edit(id, audio_files_id, new_text, new_speaker):
     return execute_insert_update_query(
         query=UPDATE_TEXT_EDITED,
         params={
             "id": id,
-            "file_id": file_id,
+            "audio_files_id": audio_files_id,
             "new_text": new_text,
             "new_speaker": new_speaker,
         },
     )
 
 
-def update_replace_text_edit(file_id, old_text, new_text):
+def update_replace_text_edit(audio_files_id, old_text, new_text):
     execute_insert_update_query(
         query=UPDATE_REPLACE_TEXT_EDITED,
         params={
-            "file_id": file_id,
+            "audio_files_id": audio_files_id,
             "old_text": old_text,
             "new_text": new_text,
         },
     )
 
 
-def update_replace_speaker(file_id, old_speaker, new_speaker):
+def update_replace_speaker(audio_files_id, old_speaker, new_speaker):
     execute_insert_update_query(
         query=UPDATE_REPLACE_SPEAKER,
         params={
-            "file_id": file_id,
+            "audio_files_id": audio_files_id,
             "old_speaker": old_speaker,
             "new_speaker": new_speaker,
         },
     )
 
 
-def add_row_stt_data(file_id, selected_text_order):
+def add_row_stt_data(audio_files_id, selected_text_order):
     with postgresql_connection.get_db() as db:
         try:
             params = {
-                "file_id": file_id,
+                "audio_files_id": audio_files_id,
                 "selected_text_order": selected_text_order,
             }
             result = db.execute(UPDATE_INCREASE_TEXT_ORDER, params)
@@ -78,11 +78,11 @@ def add_row_stt_data(file_id, selected_text_order):
             db.commit()
 
 
-def delete_row_stt_data(file_id, selected_text_order):
+def delete_row_stt_data(audio_files_id, selected_text_order):
     with postgresql_connection.get_db() as db:
         try:
             params = {
-                "file_id": file_id,
+                "audio_files_id": audio_files_id,
                 "selected_text_order": selected_text_order,
             }
             result = db.execute(DELETE_ROW, params)

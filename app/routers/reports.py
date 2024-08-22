@@ -29,7 +29,7 @@ from app.services.report import (
     select_audio_id_stt_data,
     select_talk_more_count,
     update_file_path,
-    update_report_id,
+    update_report_files_id,
 )
 from app.services.users import get_current_user
 
@@ -178,10 +178,9 @@ async def upload_report_pdf(
         tmp_file_path = create_tmp_file_path(user_id)
         metadata = gen_report_file_metadata(user_id, title, tmp_file_path)
         id = insert_report_metadata(metadata)
-        # file_path temp->report_id update
         file_path = create_file_path(user_id, id)
         update_file_path(id, file_path)
-        update_report_id(id, user_id, start_date, end_date)
+        update_report_files_id(id, user_id, start_date, end_date)
         save_report_file_s3(file, file_path)
         return {"message": "success"}
     except Exception as e:
@@ -209,10 +208,10 @@ async def select_report_pdf(report: str):
 
 @router.post("/report/stt/data/between_date/", tags=["Report"])
 async def get_data(report_model: ReportModel):
-    """file_ids의 stt result를 가져오는 엔드포인트"""
+    """audio_files_id의 stt result를 가져오는 엔드포인트"""
     try:
-        file_ids, stt_data = select_audio_id_stt_data(**report_model.dict())
-        grouped_data = group_stt_data_by_file_name(file_ids, stt_data)
+        audio_files_id, stt_data = select_audio_id_stt_data(**report_model.dict())
+        grouped_data = group_stt_data_by_file_name(audio_files_id, stt_data)
         output = export_to_excel(grouped_data)
 
         headers = {"Content-Disposition": 'attachment; filename="stt_results.xlsx"'}

@@ -16,7 +16,7 @@ UPDATE_AUDIO_STATUS = text(
     """
     UPDATE audio_files
     SET status = :status
-    WHERE id = :file_id
+    WHERE id = :audio_files_id
     """
 )
 
@@ -24,7 +24,7 @@ UPDATE_RECORD_TIME = text(
     """
     UPDATE audio_files
     SET record_time = :record_time
-    WHERE id = :file_id
+    WHERE id = :audio_files_id
     """
 )
 
@@ -75,9 +75,9 @@ ORDER BY file_name DESC
 
 INSERT_STT_DATA = text(
     """
-INSERT INTO stt_data (file_id, text_order, start_time, end_time, text, confidence, speaker, text_edited, created_at) VALUES 
+INSERT INTO stt_data (audio_files_id, text_order, start_time, end_time, text, confidence, speaker, text_edited, created_at) VALUES 
 (
-    :file_id, 
+    :audio_files_id, 
     :text_order,
     :start_time,
     :end_time,
@@ -93,7 +93,7 @@ SELECT_STT_DATA = text(
     """
 SELECT *
 FROM stt_data sr
-WHERE sr.file_id = :file_id
+WHERE sr.audio_files_id = :audio_files_id
 ORDER BY sr.text_order asc
     """
 )
@@ -103,7 +103,7 @@ SELECT_STT_DATA_BETWEEN_DATE = text(
     """
     SELECT *
     FROM stt_data sd
-    JOIN audio_files af ON sd.file_id = af.id
+    JOIN audio_files af ON sd.audio_files_id = af.id
     WHERE af.user_id = :user_id
         AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
     ORDER BY sd.created_at ASC, sd.text_order ASC
@@ -147,14 +147,14 @@ UPDATE_REPLACE_TEXT_EDITED = text(
     """
     UPDATE stt_data
     SET text_edited = REPLACE(text_edited, :old_text, :new_text)
-    WHERE file_id = :file_id
+    WHERE audio_files_id = :audio_files_id
 """
 )
 UPDATE_REPLACE_SPEAKER = text(
     """
     UPDATE stt_data
     SET speaker = REPLACE(speaker, :old_speaker, :new_speaker)
-    WHERE file_id = :file_id
+    WHERE audio_files_id = :audio_files_id
 """
 )
 
@@ -162,7 +162,7 @@ UPDATE_TEXT_EDITED = text(
     """
     UPDATE stt_data
     SET text_edited = :new_text, speaker = :new_speaker
-    WHERE file_id = :file_id AND id = :id;
+    WHERE audio_files_id = :audio_files_id AND id = :id;
     """
 )
 
@@ -170,7 +170,7 @@ UPDATE_INCREASE_TEXT_ORDER = text(
     """
 UPDATE stt_data
 SET text_order = text_order + 1
-WHERE file_id = :file_id AND text_order > :selected_text_order
+WHERE audio_files_id = :audio_files_id AND text_order > :selected_text_order
 """
 )
 
@@ -178,7 +178,7 @@ WHERE file_id = :file_id AND text_order > :selected_text_order
 INSERT_COPIED_DATA = text(
     """
 INSERT INTO stt_data (
-    file_id, 
+    audio_files_id, 
     text_order, 
     start_time, 
     end_time, 
@@ -189,7 +189,7 @@ INSERT INTO stt_data (
     created_at
 )
 SELECT
-    file_id, 
+    audio_files_id, 
     :selected_text_order + 1 as text_order,
     start_time, 
     end_time, 
@@ -201,7 +201,7 @@ SELECT
 FROM
     stt_data
 WHERE
-    file_id = :file_id AND
+    audio_files_id = :audio_files_id AND
     text_order = :selected_text_order;
 """
 )
@@ -210,7 +210,7 @@ WHERE
 DELETE_ROW = text(
     """
     DELETE FROM stt_data
-    WHERE file_id = :file_id AND text_order = :selected_text_order;
+    WHERE audio_files_id = :audio_files_id AND text_order = :selected_text_order;
     """
 )
 
@@ -219,7 +219,7 @@ UPDATE_DECREASE_TEXT_ORDER = text(
     """
     UPDATE stt_data
     SET text_order = text_order - 1
-    WHERE file_id = :file_id AND text_order > :selected_text_order;
+    WHERE audio_files_id = :audio_files_id AND text_order > :selected_text_order;
     """
 )
 
@@ -262,7 +262,7 @@ WITH all_acts AS (
 all_speakers AS (
     SELECT DISTINCT speaker
     FROM stt_data sd
-    JOIN audio_files f ON sd.file_id = f.id
+    JOIN audio_files f ON sd.audio_files_id = f.id
     WHERE f.user_id = :user_id
     AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
 ),
@@ -292,7 +292,7 @@ LEFT JOIN (
     JOIN
         speech_acts sa ON sd.act_id = sa.id
     JOIN
-        audio_files f ON sd.file_id = f.id
+        audio_files f ON sd.audio_files_id = f.id
     WHERE
         f.user_id = :user_id
         AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
@@ -316,7 +316,7 @@ WITH all_talk_mores AS (
 all_speakers AS (
     SELECT DISTINCT speaker
     FROM stt_data sd
-    JOIN audio_files f ON sd.file_id = f.id
+    JOIN audio_files f ON sd.audio_files_id = f.id
     WHERE f.user_id = :user_id
     AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
 ),
@@ -346,7 +346,7 @@ LEFT JOIN (
     JOIN
         talk_more tm ON sd.talk_more_id = tm.id
     JOIN
-        audio_files f ON sd.file_id = f.id
+        audio_files f ON sd.audio_files_id = f.id
     WHERE
         f.user_id = :user_id
         AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
@@ -377,7 +377,7 @@ SELECT_SENTENCE_LEN = text(
         MAX(LENGTH(sd.text_edited)) as max_length,
         ROUND(AVG(LENGTH(sd.text_edited))) as avg_length
     FROM stt_data sd
-    JOIN audio_files af ON sd.file_id = af.id
+    JOIN audio_files af ON sd.audio_files_id = af.id
     WHERE af.user_id = :user_id
         AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
     GROUP BY sd.speaker
@@ -412,10 +412,10 @@ INSERT_REPORT_META_DATA = text(
     """
 )
 
-UPDATE_REPORT_ID = text(
+UPDATE_REPORTS_ID = text(
     """
     UPDATE audio_files
-    SET report_id = :new_report_id
+    SET reports_id = :new_reports_id
     WHERE user_id = :user_id
     AND created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day';
     """
@@ -438,7 +438,7 @@ SELECT_REPORT_FILE_PATH = text(
 )
 
 
-INSERT_FILE_PATH_REPORT_ID = text(
+INSERT_FILE_PATH_REPORTS_ID = text(
     """
     UPDATE report_files
     SET file_path = :file_path
@@ -456,22 +456,22 @@ SELECT_PLANS = text(
 SELECT_PLAN = text(
     """
     SELECT * FROM plans
-    WHERE id = :plan_id
+    WHERE id = :plans_id
     """
 )
 
 SELECT_MISSION = text(
     """
     SELECT * FROM missions
-    WHERE plan_id = :plan_id
+    WHERE plans_id = :plans_id
     ORDER BY day ASC;
     """
 )
 
 INSERT_MISSION = text(
     """
-    INSERT INTO missions (plan_id, title, day, message, summation)
-    VALUES (:plan_id, :title, :day, :message, :summation)
+    INSERT INTO missions (plans_id, title, day, message, summation)
+    VALUES (:plans_id, :title, :day, :message, :summation)
     """
 )
 
@@ -497,7 +497,7 @@ DELETE_MISSION_MESSAGE = text(
 DELETE_PLAN = text(
     """
     DELETE FROM plans
-    WHERE id = :plan_id
+    WHERE id = :plans_id
     """
 )
 
@@ -556,7 +556,7 @@ UPDATE_MISSION_STATUS = text(
 SELECT_PLAN = text(
     """
     SELECT * FROM plans
-    WHERE id = :plan_id
+    WHERE id = :plans_id
     """
 )
 
@@ -569,8 +569,8 @@ SELECT_PLANS_USER = text(
 
 INSERT_USER_PLAN = text(
     """
-    INSERT INTO user_plan (plan_id, user_id, start_at, end_at)
-    VALUES (:plan_id, :user_id, :start_at, :end_at)
+    INSERT INTO user_plan (plans_id, user_id, start_at, end_at)
+    VALUES (:plans_id, :user_id, :start_at, :end_at)
     """
 )
 

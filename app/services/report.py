@@ -15,13 +15,13 @@ from wordcloud import WordCloud
 
 from app.config import settings
 from app.db.query import (COUNT_ACT_ID, COUNT_TALK_MORE_ID,
-                          INSERT_FILE_PATH_REPORT_ID,
+                          INSERT_FILE_PATH_REPORTS_ID,
                           INSERT_IMAGE_FILES_META_DATA,
                           INSERT_REPORT_META_DATA,
                           SELECT_AUDIO_FILES_BETWEEN_DATE, SELECT_RECORD_TIME,
                           SELECT_REPORT_FILE_PATH, SELECT_REPORT_METADATA,
                           SELECT_SENTENCE_LEN, SELECT_STT_DATA_BETWEEN_DATE,
-                          UPDATE_REPORT_ID)
+                          UPDATE_REPORTS_ID)
 from app.db.worker import execute_insert_update_query, execute_select_query
 
 FONT_PATH = os.path.abspath("./NanumFontSetup_TTF_GOTHIC/NanumGothic.ttf")
@@ -141,7 +141,7 @@ def create_morphs_data(user_id, start_date, end_date):
 # 워드클라우드
 
 
-def gen_image_file_id(user_id: str, speaker: str, start_date: date, end_date: date, type: str) -> str:
+def gen_image_audio_files_id(user_id: str, speaker: str, start_date: date, end_date: date, type: str) -> str:
     """이미지 파일 아이디 생성"""
     return f"{user_id}_{speaker}_{start_date}_{end_date}_{type}.png"
 
@@ -262,7 +262,7 @@ def create_wordcloud_path(stt_data, user_id, start_date, end_date):
         mask = create_circle_mask()
         wordcloud = generate_wordcloud(word_counts, font_path, mask)
 
-        image_id = gen_image_file_id(user_id, speaker, f_start_date, f_end_date, type)
+        image_id = gen_image_audio_files_id(user_id, speaker, f_start_date, f_end_date, type)
         image_path = gen_image_file_path(image_id)
 
         # 워드클라우드 저장
@@ -302,7 +302,7 @@ def violin_chart(
     speaker = stt_data["speaker"].unique()
     speaker = ",".join(speaker)
 
-    image_id = gen_image_file_id(user_id, speaker, f_start_date, f_end_date, type)
+    image_id = gen_image_audio_files_id(user_id, speaker, f_start_date, f_end_date, type)
 
     image_path = gen_image_file_path(image_id)
 
@@ -507,7 +507,7 @@ def create_file_path(user_id, id):
 
 def update_file_path(id, file_path):
     return execute_insert_update_query(
-        query=INSERT_FILE_PATH_REPORT_ID,
+        query=INSERT_FILE_PATH_REPORTS_ID,
         params={"id": id, "file_path": file_path},
     )
 
@@ -530,12 +530,12 @@ def insert_report_metadata(metadata: dict):
     )
 
 
-def update_report_id(id, user_id, start_date, end_date):
+def update_report_files_id(id, user_id, start_date, end_date):
     """오디오 파일 메타데이터 db적재"""
     return execute_insert_update_query(
-        query=UPDATE_REPORT_ID,
+        query=UPDATE_REPORTS_ID,
         params={
-            "new_report_id": id,
+            "new_reports_id": id,
             "user_id": user_id,
             "start_date": start_date,
             "end_date": end_date,
@@ -593,25 +593,25 @@ def get_report(file_path: str):
 
 
 def select_audio_id_stt_data(user_id, start_date, end_date):
-    """file_id별로 stt result를 가져오는 엔드포인트"""
+    """audio_files_id별로 stt result를 가져오는 엔드포인트"""
     params = {
         "user_id": user_id,
         "start_date": start_date,
         "end_date": end_date,
     }
-    file_ids = execute_select_query(
+    audio_files_id = execute_select_query(
         query=SELECT_AUDIO_FILES_BETWEEN_DATE, params=params
     )
     stt_data = execute_select_query(query=SELECT_STT_DATA_BETWEEN_DATE, params=params)
-    return file_ids, stt_data
+    return audio_files_id, stt_data
 
 
-def group_stt_data_by_file_name(file_ids, stt_data):
+def group_stt_data_by_file_name(audio_files_id, stt_data):
     grouped_data = {}
-    for file in file_ids:
+    for file in audio_files_id:
         file_name = file["file_name"]
         grouped_data[file_name] = [
-            data for data in stt_data if data["file_id"] == file["id"]
+            data for data in stt_data if data["audio_files_id"] == file["id"]
         ]
     return grouped_data
 

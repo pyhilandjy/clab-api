@@ -7,7 +7,7 @@ from app.services.stt import (
     add_row_stt_data,
     delete_row_stt_data,
     select_speech_act,
-    select_stt_data_by_file_id,
+    select_stt_data_by_audio_files_id,
     select_talk_more,
     update_replace_speaker,
     update_replace_text_edit,
@@ -19,10 +19,10 @@ from app.services.stt import (
 router = APIRouter()
 
 
-@router.get("/data/{file_id}", tags=["STT"], response_model=list[dict])
-async def get_data(file_id: str):
-    """file_id별로 stt result를 가져오는 엔드포인트"""
-    results = select_stt_data_by_file_id(file_id)
+@router.get("/data/{audio_files_id}", tags=["STT"], response_model=list[dict])
+async def get_data(audio_files_id: str):
+    """audio_files_id별로 stt result를 가져오는 엔드포인트"""
+    results = select_stt_data_by_audio_files_id(audio_files_id)
     if not results:
         raise HTTPException(status_code=404, detail="STT result not found")
     return results
@@ -30,7 +30,7 @@ async def get_data(file_id: str):
 
 class EditTextModel(BaseModel):
     id: str
-    file_id: str
+    audio_files_id: str
     new_text: str
     new_speaker: str
 
@@ -59,7 +59,7 @@ async def batch_edit(text_edit_models: List[EditTextModel]):
 
 
 class ReplaceTextModel(BaseModel):
-    file_id: str
+    audio_files_id: str
     old_text: str
     new_text: str
 
@@ -71,7 +71,7 @@ async def replace_text(replace_text_model: ReplaceTextModel):
 
 
 class ReplaceSpeakerModel(BaseModel):
-    file_id: str
+    audio_files_id: str
     old_speaker: str
     new_speaker: str
 
@@ -85,7 +85,7 @@ async def update_stt_speaker(replace_speaker_model: ReplaceSpeakerModel):
 
 
 class AddSTTDataRowModel(BaseModel):
-    file_id: str
+    audio_files_id: str
     selected_text_order: int
 
 
@@ -98,7 +98,7 @@ async def add_row(add_stt_data_row_model: AddSTTDataRowModel):
 
 
 class DeleteSTTDataRowModel(BaseModel):
-    file_id: str
+    audio_files_id: str
     selected_text_order: int
 
 
