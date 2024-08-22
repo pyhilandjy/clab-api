@@ -42,21 +42,23 @@ class ReportModel(BaseModel):
     end_date: date
 
 
-@router.post("/report/wordcloud/", tags=["Report"])
+@router.post("/report/wordcloud/", tags=["Report_files"])
 async def generate_wordcloud(report_model: ReportModel):
     """워드클라우드를 생성하여 이미지패스를 반환하는 엔드포인트"""
     image_path = create_wordcoud(**report_model.model_dump())
     return image_path
 
 
-@router.post("/report/violinplot/", tags=["Report"])
+@router.post("/report/violinplot/", tags=["Report_files"])
 async def generate_violinplot(report_model: ReportModel):
     """바이올린플롯를 생성하여 이미지 반환하는 엔드포인트"""
     image_path = create_violinplot(**report_model.model_dump())
     return FileResponse(image_path)
 
 
-@router.get("/report/images/{image_path}", response_class=FileResponse, tags=["Report"])
+@router.get(
+    "/report/images/{image_path}", response_class=FileResponse, tags=["Report_files"]
+)
 def get_image(image_path: str):
     """이미지를 제공하는 엔드포인트"""
     file_path = os.path.join("./app/image/", image_path)
@@ -67,7 +69,7 @@ def get_image(image_path: str):
 
 @router.post(
     "/report/morphs-info/",
-    tags=["Report"],
+    tags=["Report_files"],
     response_model=dict,
 )
 async def create_morphs_info(report_model: ReportModel):
@@ -78,35 +80,35 @@ async def create_morphs_info(report_model: ReportModel):
     return morps_data
 
 
-@router.post("/report/sentence_len/", tags=["Report"])
+@router.post("/report/sentence_len/", tags=["Report_files"])
 async def sentence_len(report_model: ReportModel):
     """문장길이, 녹음시간 반환 앤드포인트"""
     sentence_len = create_sentence_len(**report_model.model_dump())
     return sentence_len
 
 
-@router.post("/report/act-count/", tags=["Report"])
+@router.post("/report/act-count/", tags=["Report_files"])
 async def act_count(report_model: ReportModel):
     """화행 갯수 반환 앤드포인트"""
     act_count_data = select_act_count(**report_model.model_dump())
     return act_count_data
 
 
-@router.post("/report/talk-more-count/", tags=["Report"])
+@router.post("/report/talk-more-count/", tags=["Report_files"])
 async def talk_more_count(report_model: ReportModel):
     """화행 갯수 반환 앤드포인트"""
     talk_more_count_data = select_talk_more_count(**report_model.model_dump())
     return talk_more_count_data
 
 
-@router.post("/report/audio_record_time/", tags=["Report"])
+@router.post("/report/audio_record_time/", tags=["Report_files"])
 async def record_time(report_model: ReportModel):
     """문장길이, 녹음시간 반환 앤드포인트"""
     audio_record_time = create_audio_record_time(**report_model.model_dump())
     return audio_record_time
 
 
-@router.post("/report/csv/", tags=["Report"])
+@router.post("/report/csv/", tags=["Report_files"])
 async def generate_csv(report_model: ReportModel):
     try:
         morps_data = create_morphs_data(**report_model.model_dump())
@@ -166,7 +168,7 @@ async def generate_csv(report_model: ReportModel):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.post("/report/", tags=["Report"])
+@router.post("/report/", tags=["Report_files"])
 async def upload_report_pdf(
     file: UploadFile = File(...),
     user_id: str = Form(...),
@@ -187,26 +189,26 @@ async def upload_report_pdf(
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/admin/reports/", tags=["Report"])
+@router.get("/admin/reports/", tags=["Report_files"])
 async def select_report_metadata(user_id: str):
     report_metadata = get_report_metadata(user_id)
     return report_metadata
 
 
-@router.get("/reports/", tags=["Report"])
+@router.get("/reports/", tags=["Report_files"])
 async def select_report_metadata(current_user=Depends(get_current_user)):
     user_id = current_user.get("sub")
     report_metadata = get_report_metadata(user_id)
     return report_metadata
 
 
-@router.get("/reports/{report}/", tags=["Report"])
+@router.get("/reports/{report}/", tags=["Report_files"])
 async def select_report_pdf(report: str):
     file_path = get_report_file_path(report)
     return get_report(file_path)
 
 
-@router.post("/report/stt/data/between_date/", tags=["Report"])
+@router.post("/report/stt/data/between_date/", tags=["Report_files"])
 async def get_data(report_model: ReportModel):
     """audio_files_id의 stt result를 가져오는 엔드포인트"""
     try:
