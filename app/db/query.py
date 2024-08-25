@@ -593,3 +593,10 @@ SELECT_ALL_CATEGORIES = text(
     select * from category
 """
 )
+
+SELECT_REPORTS = text(
+    """
+    SELECT * FROM reports
+    WHERE plans_id = :plans_id
+    """
+)

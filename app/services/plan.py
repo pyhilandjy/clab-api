@@ -19,6 +19,7 @@ from app.db.query import (
     SELECT_ALL_CATEGORIES,
     INSERT_MISSION,
     UPDATE_MISSION,
+    SELECT_REPORTS,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.error.utils import generate_error_response
@@ -255,5 +256,14 @@ def update_mission(payload: dict):
             "day": payload["day"],
             "message": payload["message"],
             "summation": payload["summation"],
+        },
+    )
+
+
+def select_reports(plans_id):
+    return execute_select_query(
+        query=SELECT_REPORTS,
+        params={
+            "plans_id": plans_id,
         },
     )

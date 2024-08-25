@@ -19,6 +19,7 @@ from app.services.plan import (
     get_all_categories,
     insert_mission,
     update_mission,
+    select_reports,
 )
 
 from app.services.users import get_current_user
@@ -174,7 +175,7 @@ class UpdatemissionStatus(BaseModel):
     status: str
 
 
-@router.patch("/missions/status/", tags=["mission"])
+@router.patch("/missions/status/", tags=["Mission"])
 def petch_mission_status(payload: UpdatemissionStatus):
     try:
         update_mission_status(payload.model_dump())
@@ -226,27 +227,12 @@ async def patch_missions(payload: UpdateMission):
     return {"message": "success"}
 
 
-# @router.post("/user/plans/{plans_id}", tags=["Plan"])
-# # async def post_user_plan(plans_id: str, user_id: str):
-# async def post_user_plan(plans_id: str, current_user=Depends(get_current_user)):
-#     try:
-#         user_id = current_user.get("sub")
-#         if not user_id:
-#             raise HTTPException(status_code=400, detail="Invalid user ID")
-#         update_user_plan(user_id, plans_id)
-#         return {"message": "User plan updated successfully"}
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
-
-
-# @router.get("/user/plan/", tags=["Plan"])
-# async def post_user_plan(current_user=Depends(get_current_user)):
-#     # async def get_user_plan(user_id):
-#     try:
-#         user_id = current_user.get("sub")
-#         if not user_id:
-#             raise HTTPException(status_code=400, detail="Invalid user ID")
-#         user_plan = select_plans_user(user_id)
-#         return user_plan
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
+@router.get("/reports/{plans_id}", tags=["Reports"])
+async def get_reports(plans_id: str):
+    """
+    plans_id 별 mission 데이터를 가져오는 엔드포인트
+    """
+    reports = select_reports(plans_id)
+    if not reports:
+        return []
+    return reports
