@@ -41,7 +41,10 @@ def create_file_name(user_name):
 
 def create_file_path(user_id):
     """파일 경로 생성"""
-    return f"./app/audio/{datetime.now().strftime("%y%m%d%H%M%S")}_{user_id}.webm"
+    timestamp = datetime.now().strftime("%y%m%d%H%M%S")
+    file_path = f"./app/audio/{timestamp}_{user_id}.webm"
+    m4a_path = f"./app/audio/{timestamp}_{user_id}.m4a"
+    return file_path, m4a_path
 
 
 def save_audio(file: UploadFile, file_path: str):
@@ -66,6 +69,9 @@ async def download_and_process_file():
             # S3에서 파일 다운로드
             s3.download_file(settings.bucket_name, file_path, local_path)
             m4a_path = await convert_file_update_record_time(local_path, audio_files_id)
+            # s3에 적재, 교체
+            s3.upload_file(m4a_path, settings.bucket_name, file_path.replace(".webm", ".m4a"))
+            s3.delete_object(Bucket=settings.bucket_name, Key=file_path)
             await process_stt(audio_files_id, m4a_path)
             await delete_file(m4a_path)
         logger.info("Completed download_and_process_file task")

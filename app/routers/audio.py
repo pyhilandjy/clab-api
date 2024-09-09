@@ -24,10 +24,10 @@ async def create_upload_file(
 ):
     try:
         user_id = current_user.get("sub")
-        file_path = create_file_path(user_id)
+        file_path, m4a_path = create_file_path(user_id)
         user_name = current_user.get("user_metadata")["full_name"]
         file_name = create_file_name(user_name)
-        metadata = create_audio_metadata(user_id, file_name, file_path[2:])
+        metadata = create_audio_metadata(user_id, file_name, m4a_path[2:])
         insert_audio_metadata(metadata)
         await upload_to_s3(audio, file_path[2:])
 
