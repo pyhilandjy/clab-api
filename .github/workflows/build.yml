@@ -87,6 +87,7 @@ jobs:
           chmod 600 SSH_PRIVATE_KEY.pem
           ssh -i SSH_PRIVATE_KEY.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
             # Docker Compose 배포 작업
+            cd clab
             docker compose down
             docker compose pull
             docker compose up -d
