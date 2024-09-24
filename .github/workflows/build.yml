@@ -89,7 +89,7 @@ jobs:
             # Docker Compose 배포 작업
             cd clab
             docker compose down
-            docker compose pull
+            docker compose pull 
             docker compose up -d
           EOF
 
@@ -105,3 +105,5 @@ jobs:
             --protocol tcp \
             --port 22 \
             --cidr $(curl -s https://checkip.amazonaws.com)/32
+
+# GitHub Actions을 통해 Docker 이미지를 빌드하고 EC2로 배포하는 워크플로우
