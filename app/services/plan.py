@@ -30,12 +30,16 @@ def select_plans():
 
 
 def select_plan(plans_id):
-    return execute_select_query(
+    results = execute_select_query(
         query=SELECT_PLAN,
         params={
             "plans_id": plans_id,
         },
     )
+    if results:
+        plan = results[0]
+        return plan
+    return None
 
 
 def select_mission(plans_id):
