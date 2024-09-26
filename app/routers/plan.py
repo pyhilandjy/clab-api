@@ -23,6 +23,7 @@ from app.services.plan import (
 )
 
 from app.services.users import get_current_user
+import requests
 
 router = APIRouter()
 
@@ -99,17 +100,6 @@ def insert_plan(payload: PlanPayload):
         return {"message": "Plan successfully inserted"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-
-
-@router.get("/plans/{plans_id}", tags=["Plan"])
-async def get_plans(plans_id):
-    """
-    plan 데이터를 가져오는 엔드포인트
-    """
-    file_ids = select_plan(plans_id)
-    if not file_ids:
-        raise HTTPException(status_code=404, detail="Files not found")
-    return file_ids
 
 
 class UpdatePlanPayload(BaseModel):
@@ -236,3 +226,18 @@ async def get_reports(plans_id: str):
     if not reports:
         return []
     return reports
+
+
+@router.get("/dl_server_test", tags=["Deep"])
+async def get_text(text: str):
+    """
+    test
+    """
+    url = "http://114.110.130.27:5000/predict"
+    headers = {"Content-Type": "application/json"}
+    data = {"input_text": text}
+    response = requests.post(url, headers=headers, json=data)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        return []
