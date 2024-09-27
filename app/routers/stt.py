@@ -1,4 +1,5 @@
 from typing import List
+import requests
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -14,6 +15,10 @@ from app.services.stt import (
     update_speech_act,
     update_talk_more,
     update_text_edit,
+    select_text_edited_data,
+    get_speech_act_ml,
+    select_act_types,
+    update_stt_data_act_type,
 )
 
 router = APIRouter()
@@ -152,3 +157,22 @@ async def edit_talk_more_id(talk_more_id_update: EditSpeechTalkMoresModel):
     return {
         "message": "STT data updated successfully",
     }
+
+
+@router.get("/speech_act_type/", tags=["DL"], response_model=dict)
+async def put_speech_act_type(audio_files_id: str):
+    """ML서버를 통해 act_name, act_type을 가져와서 stt_data테이블을 업데이트하는 엔드포인트"""
+    results = select_text_edited_data(audio_files_id)
+    if not results:
+        raise HTTPException(status_code=404, detail="STT result not found")
+
+    ml_response = get_speech_act_ml(results)
+
+    for item in ml_response:
+        update_stt_data_act_type(
+            id=item["id"],
+            act_id=item["act_id"],
+            act_type_id=item["act_type_id"],
+        )
+
+    return {"message": "STT data updated successfully"}

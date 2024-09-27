@@ -1,4 +1,7 @@
 from app.db.connection import postgresql_connection
+from uuid import UUID
+import requests
+from fastapi import HTTPException
 from app.db.query import (
     DELETE_ROW,
     INSERT_COPIED_DATA,
@@ -12,6 +15,9 @@ from app.db.query import (
     UPDATE_SPEECH_ACT,
     UPDATE_TALK_MORE,
     UPDATE_TEXT_EDITED,
+    SELECT_TEXT_EDITED_DATA,
+    SELECT_ACT_TYPES,
+    UPDATE_SPEECHACT_TYPE,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 
@@ -23,6 +29,36 @@ def select_stt_data_by_audio_files_id(audio_files_id):
             "audio_files_id": audio_files_id,
         },
     )
+
+
+# def select_text_edited_data(audio_files_id):
+#     return execute_select_query(
+#         query=SELECT_TEXT_EDITED_DATA,
+#         params={
+#             "audio_files_id": audio_files_id,
+#         },
+#     )
+
+
+def select_text_edited_data(audio_files_id):
+    # 쿼리 실행
+    results = execute_select_query(
+        query=SELECT_TEXT_EDITED_DATA,
+        params={"audio_files_id": audio_files_id},
+    )
+
+    modified_results = []
+    for result in results:
+        # Row 객체를 딕셔너리로 변환
+        result_dict = dict(result)
+
+        # UUID를 문자열로 변환
+        if "id" in result_dict and isinstance(result_dict["id"], UUID):
+            result_dict["id"] = str(result_dict["id"])
+
+        modified_results.append(result_dict)
+
+    return modified_results
 
 
 def update_text_edit(id, audio_files_id, new_text, new_speaker):
@@ -105,6 +141,10 @@ def select_talk_more():
     return execute_select_query(query=SELECT_TALK_MORE)
 
 
+def select_act_types():
+    return execute_select_query(query=SELECT_ACT_TYPES)
+
+
 def update_speech_act(id, act_id):
     return execute_insert_update_query(
         query=UPDATE_SPEECH_ACT,
@@ -121,5 +161,46 @@ def update_talk_more(id, talk_more_id):
         params={
             "id": id,
             "talk_more_id": talk_more_id,
+        },
+    )
+
+
+def get_speech_act_ml(stt_data: list[dict]):
+    """
+    ML 서버에 요청을 보내는 엔드포인트
+    """
+    url = "http://114.110.130.27:5000/predict"
+    headers = {"Content-Type": "application/json"}
+
+    # 요청 데이터를 JSON 형식으로 전송
+    response = requests.post(url, headers=headers, json=stt_data)
+
+    # 응답 처리
+    if response.status_code == 200:
+        return response.json()
+    else:
+        raise HTTPException(status_code=500, detail="ML server error")
+
+
+def get_act_id(act_name: str):
+    """
+    act_name에 해당하는 act_id를 가져오는 함수
+    """
+    speech_acts = select_speech_act()
+    for speech_act in speech_acts:
+        if speech_act["act_name"] == act_name:
+            return speech_act["id"]
+
+
+def update_stt_data_act_type(id: str, act_id: str, act_types_id: str):
+    """
+    stt_data 테이블의 act_id 및 act_type_id를 업데이트하는 함수
+    """
+    return execute_insert_update_query(
+        query=UPDATE_SPEECHACT_TYPE,
+        params={
+            "id": id,
+            "act_id": act_id,
+            "act_types_id": act_types_id,
         },
     )

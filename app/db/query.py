@@ -98,6 +98,14 @@ ORDER BY sr.text_order asc
     """
 )
 
+SELECT_TEXT_EDITED_DATA = text(
+    """
+SELECT text_edited, id
+FROM stt_data sr
+WHERE sr.audio_files_id = :audio_files_id
+ORDER BY sr.text_order asc
+    """
+)
 
 SELECT_STT_DATA_BETWEEN_DATE = text(
     """
@@ -230,6 +238,13 @@ FROM speech_acts
     """
 )
 
+SELECT_ACT_TYPES = text(
+    """
+    SELECT *
+    FROM act_types
+    """
+)
+
 SELECT_TALK_MORE = text(
     """
 SELECT talk_more, *
@@ -251,6 +266,13 @@ UPDATE stt_data
 SET talk_more_id = :talk_more_id
 WHERE id = :id;
 """
+)
+UPDATE_SPEECHACT_TYPE = text(
+    """
+    UPDATE stt_data
+    SET act_id = :act_id, act_types_id = :act_types_id
+    WHERE id = :id
+    """
 )
 
 
