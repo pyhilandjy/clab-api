@@ -18,6 +18,7 @@ from app.db.query import (
     SELECT_TEXT_EDITED_DATA,
     SELECT_ACT_TYPES,
     UPDATE_SPEECHACT_TYPE,
+    UPDATE_ACT_TYPE,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 
@@ -192,7 +193,7 @@ def get_act_id(act_name: str):
             return speech_act["id"]
 
 
-def update_stt_data_act_type(id: str, act_id: str, act_types_id: str):
+def update_ml_act_type(id: str, act_id: str, act_types_id: str):
     """
     stt_data 테이블의 act_id 및 act_type_id를 업데이트하는 함수
     """
@@ -201,6 +202,19 @@ def update_stt_data_act_type(id: str, act_id: str, act_types_id: str):
         params={
             "id": id,
             "act_id": act_id,
+            "act_types_id": act_types_id,
+        },
+    )
+
+
+def update_stt_data_act_type(id, act_types_id):
+    """
+    stt_data 테이블의 act_id 및 act_type_id를 업데이트하는 함수
+    """
+    return execute_insert_update_query(
+        query=UPDATE_ACT_TYPE,
+        params={
+            "id": id,
             "act_types_id": act_types_id,
         },
     )

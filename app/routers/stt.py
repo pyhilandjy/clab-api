@@ -18,6 +18,7 @@ from app.services.stt import (
     select_text_edited_data,
     get_speech_act_ml,
     select_act_types,
+    update_ml_act_type,
     update_stt_data_act_type,
 )
 
@@ -159,20 +160,72 @@ async def edit_talk_more_id(talk_more_id_update: EditSpeechTalkMoresModel):
     }
 
 
-@router.get("/speech_act_type/", tags=["DL"], response_model=dict)
+@router.get(
+    "/act_types/",
+    tags=["STT"],
+)
+async def get_act_types():
+    """act type의 목록을 가져오는 엔드포인트"""
+    act_types = select_act_types()
+    if not act_types:
+        raise HTTPException(status_code=404, detail="act_types not found")
+    return act_types
+
+
+@router.patch("/speech-act-type/", tags=["DL"], response_model=dict)
 async def put_speech_act_type(audio_files_id: str):
-    """ML서버를 통해 act_name, act_type을 가져와서 stt_data테이블을 업데이트하는 엔드포인트"""
+    """audio_files_id별로 text_edited, id를 가져오는 엔드포인트"""
     results = select_text_edited_data(audio_files_id)
     if not results:
         raise HTTPException(status_code=404, detail="STT result not found")
 
+    # ML 서버로부터 act_name과 act_type 정보를 가져옴
     ml_response = get_speech_act_ml(results)
 
+    # 미리 모든 act_types 및 speech_acts 데이터를 가져옴
+    speech_acts = select_speech_act()
+    act_types = select_act_types()
+
     for item in ml_response:
-        update_stt_data_act_type(
+        # 1. act_name으로 act_id 가져오기
+        act_id_result = next(
+            (act for act in speech_acts if act["act_name"] == item["act_name"]), None
+        )
+        if not act_id_result:
+            # act_name이 없을 경우 계속 다음으로 넘어감
+            continue
+
+        # 2. act_type으로 act_type_id 가져오기
+        act_type_id_result = next(
+            (
+                act_type
+                for act_type in act_types
+                if act_type["act_type"] == item["act_type"]
+            ),
+            None,
+        )
+        if not act_type_id_result:
+            # act_type이 없을 경우도 계속 다음으로 넘어감
+            continue
+
+        # 3. stt_data 테이블 업데이트
+        update_ml_act_type(
             id=item["id"],
-            act_id=item["act_id"],
-            act_type_id=item["act_type_id"],
+            act_id=act_id_result["id"],
+            act_types_id=act_type_id_result["id"],
         )
 
     return {"message": "STT data updated successfully"}
+
+
+class EditSpeechActTypeModel(BaseModel):
+    act_types_id: int
+    id: str
+
+
+@router.patch("/data/edit-act-type/", tags=["STT"])
+def edit_act_type(act_type_id_update: EditSpeechActTypeModel):
+    update_stt_data_act_type(**act_type_id_update.model_dump())
+    return {
+        "message": "STT data updated successfully",
+    }

@@ -267,6 +267,7 @@ SET talk_more_id = :talk_more_id
 WHERE id = :id;
 """
 )
+
 UPDATE_SPEECHACT_TYPE = text(
     """
     UPDATE stt_data
@@ -275,6 +276,13 @@ UPDATE_SPEECHACT_TYPE = text(
     """
 )
 
+UPDATE_ACT_TYPE = text(
+    """
+    UPDATE stt_data
+    SET act_types_id = :act_types_id
+    WHERE id = :id
+    """
+)
 
 COUNT_ACT_ID = text(
     """
