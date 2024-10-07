@@ -112,12 +112,12 @@ def update_plans(payload: dict):
     )
 
 
-def update_plan_status(playload: dict):
+def update_plan_status(plan_id, status):
     return execute_insert_update_query(
         query=UPDATE_PLAN_STATUS,
         params={
-            "id": playload["id"],
-            "status": playload["status"],
+            "id": plan_id,
+            "status": status,
         },
     )
 

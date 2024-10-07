@@ -28,7 +28,7 @@ import requests
 router = APIRouter()
 
 
-@router.get("/plans/", tags=["Plan"])
+@router.get("/plans/", tags=["Plans"])
 async def get_plans():
     """
     plan 데이터를 가져오는 엔드포인트
@@ -39,7 +39,7 @@ async def get_plans():
     return plans
 
 
-@router.get("/missions/{plans_id}", tags=["Mission"])
+@router.get("/missions/{plans_id}", tags=["Missions"])
 async def get_missions(plans_id: str):
     """
     plans_id 별 mission 데이터를 가져오는 엔드포인트
@@ -61,7 +61,7 @@ async def get_plans(plans_id: str):
     return plan
 
 
-@router.delete("/plans/{plans_id}", tags=["Plan"])
+@router.delete("/plans/{plans_id}", tags=["Plans"])
 async def gdel_plans(plans_id: str):
     """
     plans_id 별 plan을 삭제 (mission이 존재할 경우 삭제 불가능)
@@ -70,9 +70,9 @@ async def gdel_plans(plans_id: str):
     response = json.loads(response_json)
 
     if response["Code"] == "1001":
-        return JSONResponse(status_code=1001, content=response)
+        return JSONResponse(status_code=200, content=response)
     elif response["Code"] == "1002":
-        return JSONResponse(status_code=1002, content=response)
+        return JSONResponse(status_code=400, content=response)
     elif response["Code"] == "0":
         return response
     else:
@@ -93,7 +93,7 @@ class PlanPayload(BaseModel):
     category_id: Optional[str] = None
 
 
-@router.post("/plans/", tags=["Plan"])
+@router.post("/plans/", tags=["Plans"])
 def insert_plan(payload: PlanPayload):
     try:
         insert_plans(payload.model_dump())
@@ -115,7 +115,7 @@ class UpdatePlanPayload(BaseModel):
     category_id: Optional[str] = None
 
 
-@router.put("/plans/{plans_id}", tags=["Plan"])
+@router.put("/plans/{plans_id}", tags=["Plans"])
 def insert_plan(plans_id: str, payload: UpdatePlanPayload):
     try:
         update_plans(payload.model_dump())
@@ -125,36 +125,35 @@ def insert_plan(plans_id: str, payload: UpdatePlanPayload):
 
 
 class UpdatePlanStatus(BaseModel):
-    id: str
     status: str
 
 
-@router.patch("/plan/status/", tags=["Plan"])
-def insert_plan(payload: UpdatePlanStatus):
+@router.patch("/plans/{plan_id}/status/", tags=["Plans"])
+def insert_plan(plan_id: str, payload: UpdatePlanStatus):
     try:
-        update_plan_status(payload.model_dump())
+        update_plan_status(plan_id, payload.status)
         return {"message": "Plan successfully inserted"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.get("/category/sub/{parents_id}", tags=["Plan"])
+@router.get("/categories/sub/{parents_id}", tags=["Plans"])
 def get_sub_category(parents_id):
-    categorys = select_sub_category(parents_id)
-    if not categorys:
+    categories = select_sub_category(parents_id)
+    if not categories:
         raise HTTPException(status_code=404, detail="Files not found")
-    return categorys
+    return categories
 
 
-@router.get("/categorys/main/", tags=["Plan"])
+@router.get("/categories/main/", tags=["Plans"])
 def get_main_category():
-    categorys = select_main_category()
-    if not categorys:
+    categories = select_main_category()
+    if not categories:
         raise HTTPException(status_code=404, detail="Files not found")
-    return categorys
+    return categories
 
 
-@router.get("/categories/", tags=["Plan"])
+@router.get("/categories/", tags=["Plans"])
 def read_categories():
     categories = get_all_categories()
     return categories
@@ -165,7 +164,7 @@ class UpdatemissionStatus(BaseModel):
     status: str
 
 
-@router.patch("/missions/status/", tags=["Mission"])
+@router.patch("/missions/status/", tags=["Missions"])
 def petch_mission_status(payload: UpdatemissionStatus):
     try:
         update_mission_status(payload.model_dump())
@@ -174,7 +173,7 @@ def petch_mission_status(payload: UpdatemissionStatus):
         raise HTTPException(status_code=400, detail=str(e))
 
 
-@router.delete("/missions/{mission_id}", tags=["Mission"])
+@router.delete("/missions/{mission_id}", tags=["Missions"])
 async def gdel_plans(mission_id: str):
     """
     mission 삭제시 mission_message 내용도 삭제
@@ -189,7 +188,7 @@ class InsertMission(BaseModel):
     message: str
 
 
-@router.post("/missions/{plans_id}", tags=["Mission"])
+@router.post("/missions/{plans_id}", tags=["Missions"])
 async def post_missions(plans_id: str, payload: InsertMission):
     """
     plans_id 별 mission 데이터를 추가하는 엔드포인트
@@ -208,7 +207,7 @@ class UpdateMission(BaseModel):
     message: str
 
 
-@router.patch("/missions/", tags=["Mission"])
+@router.patch("/missions/", tags=["Missions"])
 async def patch_missions(payload: UpdateMission):
     """
     plans_id 별 mission 데이터를 추가하는 엔드포인트
@@ -226,18 +225,3 @@ async def get_reports(plans_id: str):
     if not reports:
         return []
     return reports
-
-
-@router.get("/dl_server_test", tags=["Deep"])
-async def get_text(text: str):
-    """
-    test
-    """
-    url = "http://114.110.130.27:5000/predict"
-    headers = {"Content-Type": "application/json"}
-    data = {"input_text": text}
-    response = requests.post(url, headers=headers, json=data)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return []
