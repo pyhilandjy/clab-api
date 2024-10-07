@@ -200,19 +200,20 @@ async def post_missions(plans_id: str, payload: InsertMission):
 
 
 class UpdateMission(BaseModel):
-    id: str
     title: str
     summation: str
     day: int
     message: str
 
 
-@router.patch("/missions/", tags=["Missions"])
-async def patch_missions(payload: UpdateMission):
+@router.patch("/missions/{mission_id}", tags=["Missions"])
+async def patch_missions(mission_id: str, payload: UpdateMission):
     """
     plans_id 별 mission 데이터를 추가하는 엔드포인트
     """
-    update_mission(payload.model_dump())
+    mission_data = payload.model_dump()
+    mission_data["id"] = mission_id
+    update_mission(mission_data)
     return {"message": "success"}
 
 
