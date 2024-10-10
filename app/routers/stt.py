@@ -20,6 +20,7 @@ from app.services.stt import (
     select_act_types,
     update_ml_act_type,
     update_stt_data_act_type,
+    update_is_turn,
 )
 
 router = APIRouter()
@@ -226,6 +227,19 @@ class EditSpeechActTypeModel(BaseModel):
 @router.patch("/data/edit-act-type/", tags=["STT"])
 def edit_act_type(act_type_id_update: EditSpeechActTypeModel):
     update_stt_data_act_type(**act_type_id_update.model_dump())
+    return {
+        "message": "STT data updated successfully",
+    }
+
+
+class EditTurnModel(BaseModel):
+    id: str
+    is_turn: bool
+
+
+@router.patch("/data/is-turn/", tags=["STT"])
+def edit_turn(is_turn_update: EditTurnModel):
+    update_is_turn(**is_turn_update.model_dump())
     return {
         "message": "STT data updated successfully",
     }

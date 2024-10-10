@@ -19,6 +19,7 @@ from app.db.query import (
     SELECT_ACT_TYPES,
     UPDATE_SPEECHACT_TYPE,
     UPDATE_ACT_TYPE,
+    UPDATE_IS_TURN,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 
@@ -216,5 +217,15 @@ def update_stt_data_act_type(id, act_types_id):
         params={
             "id": id,
             "act_types_id": act_types_id,
+        },
+    )
+
+
+def update_is_turn(id, is_turn):
+    return execute_insert_update_query(
+        query=UPDATE_IS_TURN,
+        params={
+            "id": id,
+            "is_turn": is_turn,
         },
     )

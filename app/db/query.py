@@ -655,3 +655,17 @@ INSERT_REPORT = text(
     VALUES (:plans_id, :title, :quant_analysis, :qual_analysis, :missions_id)
     """
 )
+
+SELECT_USER_REPORTS = text(
+    """
+    SELECT * FROM user_reports
+    """
+)
+
+UPDATE_IS_TURN = text(
+    """
+    UPDATE stt_data
+    SET is_turn = :is_turn
+    WHERE id = :id
+    """
+)
