@@ -20,6 +20,9 @@ from app.db.query import (
     INSERT_MISSION,
     UPDATE_MISSION,
     SELECT_REPORTS,
+    DELETE_REPORT,
+    UPDATE_REPORT,
+    INSERT_REPORT,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.error.utils import generate_error_response
@@ -269,5 +272,40 @@ def select_reports(plans_id):
         query=SELECT_REPORTS,
         params={
             "plans_id": plans_id,
+        },
+    )
+
+
+def delete_report(report_id):
+    return execute_insert_update_query(
+        query=DELETE_REPORT,
+        params={
+            "report_id": report_id,
+        },
+    )
+
+
+def update_report(report_data):
+    return execute_insert_update_query(
+        query=UPDATE_REPORT,
+        params={
+            "id": report_data["id"],
+            "title": report_data["title"],
+            "quant_analysis": report_data["quant_analysis"],
+            "qual_analysis": report_data["qual_analysis"],
+            "missions_id": report_data["missions_id"],
+        },
+    )
+
+
+def insert_report(report_data):
+    return execute_insert_update_query(
+        query=INSERT_REPORT,
+        params={
+            "plans_id": report_data["plans_id"],
+            "title": report_data["title"],
+            "quant_analysis": report_data["quant_analysis"],
+            "qual_analysis": report_data["qual_analysis"],
+            "missions_id": report_data["missions_id"],
         },
     )

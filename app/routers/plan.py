@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import json
@@ -20,10 +20,11 @@ from app.services.plan import (
     insert_mission,
     update_mission,
     select_reports,
+    delete_report,
+    update_report,
+    insert_report,
 )
 
-from app.services.users import get_current_user
-import requests
 
 router = APIRouter()
 
@@ -226,3 +227,47 @@ async def get_reports(plans_id: str):
     if not reports:
         return []
     return reports
+
+
+@router.delete("/reports/{report_id}", tags=["Reports"])
+async def delete_reports(report_id: str):
+    """
+    report 삭제
+    """
+    delete_report(report_id)
+
+
+class ReportUpdate(BaseModel):
+    title: str
+    quant_analysis: list[str]
+    qual_analysis: list[str]
+    missions_id: list[str]
+
+
+@router.put("/reports/{report_id}")
+async def put_reports(report_id: str, payload: ReportUpdate):
+    """
+    report 업데이트
+    """
+    report_data = payload.model_dump()
+    report_data["id"] = report_id
+    update_report(report_data)
+    return {"message": "success"}
+
+
+class ReportCreate(BaseModel):
+    title: str
+    quant_analysis: list[str]
+    qual_analysis: list[str]
+    missions_id: list[str]
+
+
+@router.post("/reports/{plans_id}")
+async def post_reports(plans_id: str, payload: ReportCreate):
+    """
+    report 추가
+    """
+    report_data = payload.model_dump()
+    report_data["plans_id"] = plans_id
+    insert_report(report_data)
+    return {"message": "success"}

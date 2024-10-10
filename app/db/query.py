@@ -630,3 +630,28 @@ SELECT_REPORTS = text(
     WHERE plans_id = :plans_id
     """
 )
+
+DELETE_REPORT = text(
+    """
+    DELETE FROM reports
+    WHERE id = :report_id
+    """
+)
+
+UPDATE_REPORT = text(
+    """
+    UPDATE reports
+    SET title = :title,
+        quant_analysis = :quant_analysis,
+        qual_analysis = :qual_analysis,
+        missions_id = :missions_id
+    WHERE id = :id
+    """
+)
+
+INSERT_REPORT = text(
+    """
+    INSERT INTO reports (plans_id, title, quant_analysis, qual_analysis, missions_id)
+    VALUES (:plans_id, :title, :quant_analysis, :qual_analysis, :missions_id)
+    """
+)
