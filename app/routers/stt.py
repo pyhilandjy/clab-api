@@ -21,6 +21,7 @@ from app.services.stt import (
     update_ml_act_type,
     update_stt_data_act_type,
     update_is_turn,
+    create_openai_data,
 )
 
 router = APIRouter()
@@ -225,8 +226,8 @@ class EditSpeechActTypeModel(BaseModel):
 
 
 @router.patch("/data/edit-act-type/", tags=["STT"])
-def edit_act_type(act_type_id_update: EditSpeechActTypeModel):
-    update_stt_data_act_type(**act_type_id_update.model_dump())
+def edit_act_type(edit_speech_act_type_model: EditSpeechActTypeModel):
+    update_stt_data_act_type(**edit_speech_act_type_model.model_dump())
     return {
         "message": "STT data updated successfully",
     }
@@ -238,8 +239,17 @@ class EditTurnModel(BaseModel):
 
 
 @router.patch("/data/is-turn/", tags=["STT"])
-def edit_turn(is_turn_update: EditTurnModel):
-    update_is_turn(**is_turn_update.model_dump())
+def edit_turn(edit_turn_model: EditTurnModel):
+    update_is_turn(**edit_turn_model.model_dump())
     return {
         "message": "STT data updated successfully",
     }
+
+
+@router.post("/data/{audio_files_id}/report/detail/", tags=["STT"])
+def report_detail(audio_files_id: str):
+    """
+    질적분석 불러오는 앤드포인트(앤드포인트 url 수정 필요)
+    """
+    result = create_openai_data(audio_files_id)
+    return result

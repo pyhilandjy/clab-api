@@ -1,5 +1,8 @@
 from app.db.connection import postgresql_connection
 from uuid import UUID
+from openai import OpenAI
+from enum import Enum
+import json
 import requests
 from fastapi import HTTPException
 from app.db.query import (
@@ -20,7 +23,10 @@ from app.db.query import (
     UPDATE_SPEECHACT_TYPE,
     UPDATE_ACT_TYPE,
     UPDATE_IS_TURN,
+    SELECT_PROMPT,
+    SELECT_LLM_DATA,
 )
+from app.config import settings
 from app.db.worker import execute_insert_update_query, execute_select_query
 
 
@@ -229,3 +235,75 @@ def update_is_turn(id, is_turn):
             "is_turn": is_turn,
         },
     )
+
+
+# openai api
+openai_client = OpenAI(
+    api_key=settings.openai_api_key,
+)
+
+
+class OpenAIModel(Enum):
+    GPT_4O = "chatgpt-4o-latest"
+    GPT_4O_MINI = "gpt-4o-mini"
+    GPT_4_TURBO = "gpt-4-turbo"
+    GPT_35_TURBO = "gpt-3.5-turbo"
+
+
+def openai_request(
+    user_input: str,
+    system_prompt: str | None = None,
+    model: str = OpenAIModel.GPT_4O,
+    temperature: float = 0.5,
+    max_tokens: int = 1000,
+):
+    user_input_str = f"{str(user_input)}"
+    # -- set messages
+    messages = []
+
+    if system_prompt:
+        messages.append({"role": "system", "content": system_prompt})
+
+    if user_input:
+        messages.append({"role": "user", "content": user_input_str})
+
+    completion = openai_client.chat.completions.create(
+        model=model.value,
+        messages=messages,
+        temperature=temperature,
+        max_tokens=max_tokens,
+    )
+    return completion.choices[0].message
+
+
+def select_llm_data(audio_files_id):
+    # 쿼리 실행
+    results = execute_select_query(
+        query=SELECT_LLM_DATA,
+        params={"audio_files_id": audio_files_id},
+    )
+
+    modified_results = []
+    for result in results:
+        # Row 객체를 딕셔너리로 변환
+        result_dict = dict(result)
+
+        # UUID를 문자열로 변환
+        if "id" in result_dict and isinstance(result_dict["id"], UUID):
+            result_dict["id"] = str(result_dict["id"])
+
+        modified_results.append(result_dict)
+
+    return modified_results
+
+
+def create_openai_data(audio_files_id):
+    system_prompt = execute_select_query(
+        query=SELECT_PROMPT,
+    )
+    user_input = select_llm_data(audio_files_id)
+    system_prompt = system_prompt[0]["prompt"]
+    result = openai_request(user_input, system_prompt)
+    content = result.content
+    content = json.loads(content)
+    return content

@@ -108,6 +108,15 @@ ORDER BY sr.text_order asc
     """
 )
 
+SELECT_LLM_DATA = text(
+    """
+SELECT text_edited, id, speaker
+FROM stt_data sr
+WHERE sr.audio_files_id = :audio_files_id
+ORDER BY sr.text_order asc
+    """
+)
+
 SELECT_STT_DATA_BETWEEN_DATE = text(
     """
     SELECT *
@@ -668,5 +677,10 @@ UPDATE_IS_TURN = text(
     UPDATE stt_data
     SET is_turn = :is_turn
     WHERE id = :id
+    """
+)
+SELECT_PROMPT = text(
+    """
+    SELECT prompt FROM openai
     """
 )
