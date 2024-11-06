@@ -246,10 +246,19 @@ def edit_turn(edit_turn_model: EditTurnModel):
     }
 
 
-@router.post("/data/{audio_files_id}/report/detail/", tags=["STT"])
+@router.get("/data/{audio_files_id}/report/quaritative/", tags=["STT"])
 def report_detail(audio_files_id: str):
     """
-    질적분석 불러오는 앤드포인트(앤드포인트 url 수정 필요)
+    질적분석 불러오는 앤드포인트
     """
     result = create_openai_data(audio_files_id)
     return result
+
+
+# @router.post("/data/{audio_files_id}/report/quaritative/", tags=["STT"])
+# def report_detail(audio_files_id: str):
+#     """
+#     질적분석 저장하는 앤드포인트
+#     """
+#     result = create_openai_data(audio_files_id)
+#     return result

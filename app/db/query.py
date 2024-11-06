@@ -681,6 +681,6 @@ UPDATE_IS_TURN = text(
 )
 SELECT_PROMPT = text(
     """
-    SELECT prompt FROM openai
+    SELECT prompt FROM prompts
     """
 )

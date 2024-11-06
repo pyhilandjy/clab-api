@@ -305,5 +305,6 @@ def create_openai_data(audio_files_id):
     system_prompt = system_prompt[0]["prompt"]
     result = openai_request(user_input, system_prompt)
     content = result.content
-    content = json.loads(content)
+    clean_content = content.strip("`").strip("json").strip()
+    content = json.loads(clean_content)
     return content
