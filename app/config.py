@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     supabase_service_key: str
     supabase_jwt_key: str
     model_config = SettingsConfigDict(env_file=".env")
+    openai_api_key: str
 
 
 settings = Settings()
