@@ -684,3 +684,16 @@ SELECT_PROMPT = text(
     SELECT prompt FROM prompts
     """
 )
+
+INSERT_QURITATIVE_DATA = text(
+    """
+    INSERT INTO user_report_quritative_data (alternative, description, expectation, mood, stt_data_id) VALUES 
+    (
+        :alternative,
+        :description,
+        :expectation,
+        :mood,
+        :stt_data_id
+    )
+    """
+)
