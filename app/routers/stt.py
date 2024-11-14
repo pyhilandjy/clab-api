@@ -1,5 +1,6 @@
 from typing import List
 import requests
+from datetime import datetime
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
@@ -21,7 +22,8 @@ from app.services.stt import (
     update_ml_act_type,
     update_stt_data_act_type,
     update_is_turn,
-    create_openai_data,
+    response_openai_data,
+    post_openai_data,
 )
 
 router = APIRouter()
@@ -251,14 +253,21 @@ def report_detail(audio_files_id: str):
     """
     질적분석 불러오는 앤드포인트
     """
-    result = create_openai_data(audio_files_id)
+    result = response_openai_data(audio_files_id)
     return result
 
 
-# @router.post("/data/{audio_files_id}/report/quaritative/", tags=["STT"])
-# def report_detail(audio_files_id: str):
-#     """
-#     질적분석 저장하는 앤드포인트
-#     """
-#     result = create_openai_data(audio_files_id)
-#     return result
+class OpenaiDataModel(BaseModel):
+    alternative: str
+    description: str
+    expectation: str
+    mood: str
+    stt_data_id: str
+
+
+@router.post("/data/report/quaritative/", tags=["STT"])
+def report_detail(openai_data_model: OpenaiDataModel):
+    """
+    질적분석 저장하는 앤드포인트
+    """
+    post_openai_data(openai_data_model.model_dump())

@@ -25,6 +25,7 @@ from app.db.query import (
     UPDATE_IS_TURN,
     SELECT_PROMPT,
     SELECT_LLM_DATA,
+    INSERT_QURITATIVE_DATA,
 )
 from app.config import settings
 from app.db.worker import execute_insert_update_query, execute_select_query
@@ -297,7 +298,7 @@ def select_llm_data(audio_files_id):
     return modified_results
 
 
-def create_openai_data(audio_files_id):
+def response_openai_data(audio_files_id):
     system_prompt = execute_select_query(
         query=SELECT_PROMPT,
     )
@@ -305,6 +306,25 @@ def create_openai_data(audio_files_id):
     system_prompt = system_prompt[0]["prompt"]
     result = openai_request(user_input, system_prompt)
     content = result.content
-    clean_content = content.strip("`").strip("json").strip()
+    clean_content = (
+        content.replace("```json", "")
+        .replace("```", "")
+        .replace("output =", "")
+        .strip()
+    )
+
     content = json.loads(clean_content)
     return content
+
+
+def post_openai_data(metadata: dict):
+    execute_insert_update_query(
+        query=INSERT_QURITATIVE_DATA,
+        params={
+            metadata["alternative"]: str,
+            metadata["description"]: str,
+            metadata["expectation"]: str,
+            metadata["mood"]: str,
+            metadata["stt_data_id"]: str,
+        },
+    )
