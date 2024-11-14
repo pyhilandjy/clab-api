@@ -23,6 +23,8 @@ from app.db.query import (
     DELETE_REPORT,
     UPDATE_REPORT,
     INSERT_REPORT,
+    UPDATE_REAPORTS_ID_MISSIONS,
+    SELECT_MISSIONS_TITLE,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.error.utils import generate_error_response
@@ -202,6 +204,7 @@ def update_user_plan(user_id, plans_id):
             "plans_id": plans_id,
         },
     )
+    # TODO: day 삭제한다면 start_at, end_at도 삭제 필요한 데이터인지 확인 필요
     day = plan[0].day
     start_at, end_at = plan_date(day)
     execute_insert_update_query(
@@ -291,21 +294,49 @@ def update_report(report_data):
         params={
             "id": report_data["id"],
             "title": report_data["title"],
-            "quant_analysis": report_data["quant_analysis"],
-            "qual_analysis": report_data["qual_analysis"],
-            "missions_id": report_data["missions_id"],
+            "wordcloud": report_data["wordcloud"],
+            "sentence_length": report_data["sentence_length"],
+            "pos_ratio": report_data["pos_ratio"],
+            "speech_act": report_data["speech_act"],
+            "insight": report_data["insight"],
         },
     )
 
 
 def insert_report(report_data):
-    return execute_insert_update_query(
+    reports_id = execute_insert_update_query(
         query=INSERT_REPORT,
         params={
             "plans_id": report_data["plans_id"],
             "title": report_data["title"],
-            "quant_analysis": report_data["quant_analysis"],
-            "qual_analysis": report_data["qual_analysis"],
-            "missions_id": report_data["missions_id"],
+            "wordcloud": report_data["wordcloud"],
+            "sentence_length": report_data["sentence_length"],
+            "pos_ratio": report_data["pos_ratio"],
+            "speech_act": report_data["speech_act"],
+            "insight": report_data["insight"],
         },
+        return_id=True,
     )
+    return str(reports_id)
+
+
+def insert_reports_id_missions(reports_id, missions_ids):
+    for missions_id in missions_ids:
+        execute_insert_update_query(
+            query=UPDATE_REAPORTS_ID_MISSIONS,
+            params={
+                "reports_id": reports_id,
+                "missions_id": missions_id,
+            },
+        )
+
+
+def slect_missions_title(reports):
+    reports_with_missions = []
+    for report in reports:
+        report_id = report["id"]
+        missions_data = execute_select_query(
+            query=SELECT_MISSIONS_TITLE, params={"reports_id": report_id}
+        )
+        reports_with_missions.append({"report": report, "missions": missions_data})
+    return reports_with_missions

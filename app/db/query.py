@@ -641,6 +641,13 @@ SELECT_REPORTS = text(
     """
 )
 
+SELECT_MISSIONS_TITLE = text(
+    """
+SELECT id, title from missions
+WHERE reports_id = :reports_id
+"""
+)
+
 DELETE_REPORT = text(
     """
     DELETE FROM reports
@@ -652,17 +659,21 @@ UPDATE_REPORT = text(
     """
     UPDATE reports
     SET title = :title,
-        quant_analysis = :quant_analysis,
-        qual_analysis = :qual_analysis,
-        missions_id = :missions_id
+        wordcloud = :wordcloud,
+        sentence_length = :sentence_length,
+        pos_ratio = :pos_ratio,
+        speech_act = :speech_act,
+        insight = :insight,
     WHERE id = :id
     """
 )
 
+
 INSERT_REPORT = text(
     """
-    INSERT INTO reports (plans_id, title, quant_analysis, qual_analysis, missions_id)
-    VALUES (:plans_id, :title, :quant_analysis, :qual_analysis, :missions_id)
+    INSERT INTO reports (plans_id, title, wordcloud, sentence_length, pos_ratio, speech_act, insight)
+    VALUES (:plans_id, :title, :wordcloud, :sentence_length, :pos_ratio, :speech_act, :insight)
+    RETURNING id
     """
 )
 
@@ -696,4 +707,13 @@ INSERT_QURITATIVE_DATA = text(
         :stt_data_id
     )
     """
+)
+
+
+UPDATE_REAPORTS_ID_MISSIONS = text(
+    """
+    UPDATE missions
+    SET reports_id = :reports_id
+    WHERE id = :missions_id
+"""
 )

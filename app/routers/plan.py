@@ -23,6 +23,8 @@ from app.services.plan import (
     delete_report,
     update_report,
     insert_report,
+    insert_reports_id_missions,
+    slect_missions_title,
 )
 
 
@@ -226,7 +228,8 @@ async def get_reports(plans_id: str):
     reports = select_reports(plans_id)
     if not reports:
         return []
-    return reports
+    reports_missions = slect_missions_title(reports)
+    return reports_missions
 
 
 @router.delete("/reports/{report_id}", tags=["Reports"])
@@ -239,8 +242,11 @@ async def delete_reports(report_id: str):
 
 class ReportUpdate(BaseModel):
     title: str
-    quant_analysis: list[str]
-    qual_analysis: list[str]
+    wordcloud: bool
+    sentence_length: bool
+    pos_ratio: bool
+    speech_act: bool
+    insight: bool
     missions_id: list[str]
 
 
@@ -257,9 +263,15 @@ async def put_reports(report_id: str, payload: ReportUpdate):
 
 class ReportCreate(BaseModel):
     title: str
-    quant_analysis: list[str]
-    qual_analysis: list[str]
+    wordcloud: bool
+    sentence_length: bool
+    pos_ratio: bool
+    speech_act: bool
+    insight: bool
     missions_id: list[str]
+
+
+# todo 리스트의 값들은 전부 다르게 처리해야함 각 컬럼이 생성이 되어야하고, analysis는 bools로 missions_id는 바뀌어서 missions 테이블에 reports_id 가 들어가야함
 
 
 @router.post("/reports/{plans_id}")
@@ -269,5 +281,7 @@ async def post_reports(plans_id: str, payload: ReportCreate):
     """
     report_data = payload.model_dump()
     report_data["plans_id"] = plans_id
-    insert_report(report_data)
+    reports_id = insert_report(report_data)
+    missions_ids = payload.missions_id
+    insert_reports_id_missions(reports_id, missions_ids)
     return {"message": "success"}
