@@ -663,7 +663,7 @@ UPDATE_REPORT = text(
         sentence_length = :sentence_length,
         pos_ratio = :pos_ratio,
         speech_act = :speech_act,
-        insight = :insight,
+        insight = :insight
     WHERE id = :id
     """
 )
@@ -714,6 +714,14 @@ UPDATE_REAPORTS_ID_MISSIONS = text(
     """
     UPDATE missions
     SET reports_id = :reports_id
+    WHERE id = :missions_id
+"""
+)
+
+DELETE_REAPORTS_ID_MISSIONS = text(
+    """
+    UPDATE missions
+    SET reports_id = null
     WHERE id = :missions_id
 """
 )
