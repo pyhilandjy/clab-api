@@ -25,6 +25,7 @@ from app.db.query import (
     INSERT_REPORT,
     UPDATE_REAPORTS_ID_MISSIONS,
     SELECT_MISSIONS_TITLE,
+    DELETE_REAPORTS_ID_MISSIONS,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.error.utils import generate_error_response
@@ -270,6 +271,7 @@ def update_mission(payload: dict):
     )
 
 
+# 애매한데 미션과 조인해서 sort를 해야하는지 고민중 미션이 등록이 안되어있을때는 sort의 의미가 없어짐 그렇다고 created_at으로 정렬하면 나중에 만들어질것은 정렬이 애매해짐
 def select_reports(plans_id):
     return execute_select_query(
         query=SELECT_REPORTS,
@@ -320,13 +322,36 @@ def insert_report(report_data):
     return str(reports_id)
 
 
+def update_reports_id_missions(reports_id, missions_ids, update_before_missions_id):
+    missions_ids = [str(mission["id"]) for mission in missions_ids]
+    if len(update_before_missions_id) > len(missions_ids):
+        for missions_id in update_before_missions_id:
+            if missions_id not in missions_ids:
+                execute_insert_update_query(
+                    query=DELETE_REAPORTS_ID_MISSIONS,
+                    params={
+                        "reports_id": reports_id,
+                        "missions_id": missions_id,
+                    },
+                )
+    else:
+        for missions_id in missions_ids:
+            execute_insert_update_query(
+                query=UPDATE_REAPORTS_ID_MISSIONS,
+                params={
+                    "reports_id": reports_id,
+                    "missions_id": missions_id,
+                },
+            )
+
+
 def insert_reports_id_missions(reports_id, missions_ids):
     for missions_id in missions_ids:
         execute_insert_update_query(
             query=UPDATE_REAPORTS_ID_MISSIONS,
             params={
                 "reports_id": reports_id,
-                "missions_id": missions_id,
+                "missions_id": missions_id["id"],
             },
         )
 
@@ -339,4 +364,13 @@ def slect_missions_title(reports):
             query=SELECT_MISSIONS_TITLE, params={"reports_id": report_id}
         )
         reports_with_missions.append({"report": report, "missions": missions_data})
+        if missions_data is None:
+            reports_with_missions.append({"report": report, "missions": []})
     return reports_with_missions
+
+
+def slect_missions_id(report_id):
+    missions_data = execute_select_query(
+        query=SELECT_MISSIONS_TITLE, params={"reports_id": report_id}
+    )
+    return missions_data

@@ -25,6 +25,8 @@ from app.services.plan import (
     insert_report,
     insert_reports_id_missions,
     slect_missions_title,
+    slect_missions_id,
+    update_reports_id_missions,
 )
 
 
@@ -247,17 +249,28 @@ class ReportUpdate(BaseModel):
     pos_ratio: bool
     speech_act: bool
     insight: bool
-    missions_id: list[str]
+    missions_id: list[dict]
 
 
+# todo 연결된 missions_id에서 삭제된 것들은 null로 처리해야함
+# 기존 데이터를 조회해서 missions_id를 가져와서 비교해서 삭제된 것들은 null로 처리해야함
+# 불러와야 하는 데이터는 missions_id 이고 missions테이블에 reports_id가 있는 것을 가져와서 비교해야함
+# if len(missions_id) > len(update_before_missions_id) => insert
+# else => update null로 처리
 @router.put("/reports/{report_id}")
 async def put_reports(report_id: str, payload: ReportUpdate):
     """
     report 업데이트
     """
+    update_before_missions = slect_missions_id(report_id)
+    update_before_missions_id = [
+        str(mission["id"]) for mission in update_before_missions
+    ]
     report_data = payload.model_dump()
     report_data["id"] = report_id
+    missions_ids = payload.missions_id
     update_report(report_data)
+    update_reports_id_missions(report_id, missions_ids, update_before_missions_id)
     return {"message": "success"}
 
 
@@ -268,7 +281,7 @@ class ReportCreate(BaseModel):
     pos_ratio: bool
     speech_act: bool
     insight: bool
-    missions_id: list[str]
+    missions_id: list[dict]
 
 
 # todo 리스트의 값들은 전부 다르게 처리해야함 각 컬럼이 생성이 되어야하고, analysis는 bools로 missions_id는 바뀌어서 missions 테이블에 reports_id 가 들어가야함
