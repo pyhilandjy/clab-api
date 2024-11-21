@@ -23,9 +23,9 @@ from app.db.query import (
     DELETE_REPORT,
     UPDATE_REPORT,
     INSERT_REPORT,
-    UPDATE_REAPORTS_ID_MISSIONS,
+    UPDATE_REPORTS_ID_MISSIONS,
     SELECT_MISSIONS_TITLE,
-    DELETE_REAPORTS_ID_MISSIONS,
+    DELETE_REPORTS_ID_MISSIONS,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.error.utils import generate_error_response
@@ -328,7 +328,7 @@ def update_reports_id_missions(reports_id, missions_ids, update_before_missions_
         for missions_id in update_before_missions_id:
             if missions_id not in missions_ids:
                 execute_insert_update_query(
-                    query=DELETE_REAPORTS_ID_MISSIONS,
+                    query=DELETE_REPORTS_ID_MISSIONS,
                     params={
                         "reports_id": reports_id,
                         "missions_id": missions_id,
@@ -337,7 +337,7 @@ def update_reports_id_missions(reports_id, missions_ids, update_before_missions_
     else:
         for missions_id in missions_ids:
             execute_insert_update_query(
-                query=UPDATE_REAPORTS_ID_MISSIONS,
+                query=UPDATE_REPORTS_ID_MISSIONS,
                 params={
                     "reports_id": reports_id,
                     "missions_id": missions_id,
@@ -348,7 +348,7 @@ def update_reports_id_missions(reports_id, missions_ids, update_before_missions_
 def insert_reports_id_missions(reports_id, missions_ids):
     for missions_id in missions_ids:
         execute_insert_update_query(
-            query=UPDATE_REAPORTS_ID_MISSIONS,
+            query=UPDATE_REPORTS_ID_MISSIONS,
             params={
                 "reports_id": reports_id,
                 "missions_id": missions_id["id"],
