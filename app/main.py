@@ -4,7 +4,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import audio, report_files, stt, users, plan
+from app.routers import audio, report_files, stt, users, plan, management
 from app.services.audio import download_and_process_file
 
 # 로그 설정
@@ -46,7 +46,7 @@ app.add_middleware(
     allow_origins=[
         "https://clab-admin.vercel.app",
         "https://clab-fe.vercel.app",
-        "http://localhost:3001",
+        "http://localhost:3002",
         "http://localhost:3100",
         "http://localhost:3000",
     ],
@@ -60,6 +60,7 @@ app.include_router(users.router)
 app.include_router(stt.router, prefix="/stt")
 app.include_router(report_files.router)
 app.include_router(plan.router)
+app.include_router(management.router)
 
 # depends api key
 # app.include_router(audio.router, prefix="/audio", dependencies=[Depends(get_api_key)])
