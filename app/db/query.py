@@ -710,7 +710,7 @@ INSERT_QURITATIVE_DATA = text(
 )
 
 
-UPDATE_REAPORTS_ID_MISSIONS = text(
+UPDATE_REPORTS_ID_MISSIONS = text(
     """
     UPDATE missions
     SET reports_id = :reports_id
@@ -718,10 +718,65 @@ UPDATE_REAPORTS_ID_MISSIONS = text(
 """
 )
 
-DELETE_REAPORTS_ID_MISSIONS = text(
+DELETE_REPORTS_ID_MISSIONS = text(
     """
     UPDATE missions
     SET reports_id = null
     WHERE id = :missions_id
+"""
+)
+
+SELECT_REPORTS_PAGINATED = text(
+    """
+SELECT DISTINCT ON (user_reports.id)
+    user_reports.id AS user_reports_id,
+    user_reports.user_id AS user_id,
+    user_reports.send_at AS send_at,
+    user_reports.inspection AS status,
+    CASE
+        WHEN user_reports.inspection = 'editing' AND user_reports.send_at > NOW() THEN '준비중'
+        WHEN user_reports.inspection = 'editing' AND user_reports.send_at < NOW() THEN '지연'
+        WHEN user_reports.inspection = 'completed' THEN '완료'
+        ELSE '대기'
+    END AS inspection,
+    NULL AS user_name,
+    user_childrens.first_name AS child_name,
+    reports.title AS report_title,
+    plans.plan_name AS plans_name
+FROM
+    user_reports
+LEFT JOIN (
+    SELECT DISTINCT ON (user_reports_id) *
+    FROM user_missions
+    ORDER BY user_reports_id, created_at DESC
+) user_missions ON user_missions.user_reports_id = user_reports.id
+LEFT JOIN user_plans ON user_missions.user_plans_id = user_plans.id
+LEFT JOIN plans ON user_plans.plans_id = plans.id
+LEFT JOIN user_childrens ON user_plans.user_childrens_id = user_childrens.id
+LEFT JOIN reports ON user_reports.reports_id = reports.id
+ORDER BY user_reports.id, user_reports.send_at DESC
+LIMIT :limit OFFSET :offset;
+"""
+)
+SELECT_TOTAL_COUNT = text(
+    """
+SELECT COUNT(*) AS total_count FROM user_reports;
+"""
+)
+
+SELECT_REPORTS_AUDIO_FILES = text(
+    """
+SELECT
+    audio_files.id AS audio_file_id,
+    audio_files.created_at AS record_date,
+    audio_files.record_time AS record_time,
+    missions.title AS mission_title,
+    audio_files.is_use AS is_use
+FROM
+    audio_files
+    JOIN user_missions ON audio_files.user_missions_id = user_missions.id
+    JOIN missions ON user_missions.missions_id = missions.id
+WHERE
+    user_missions.user_reports_id = :user_reports_id;
 """
 )
