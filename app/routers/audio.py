@@ -21,13 +21,16 @@ router = APIRouter()
 async def create_upload_file(
     current_user: dict = Depends(get_current_user),
     audio: UploadFile = File(...),
+    user_missions_id: str = None,
 ):
     try:
         user_id = current_user.get("sub")
         file_path, m4a_path = create_file_path(user_id)
         user_name = current_user.get("user_metadata")["full_name"]
         file_name = create_file_name(user_name)
-        metadata = create_audio_metadata(user_id, file_name, m4a_path[2:])
+        metadata = create_audio_metadata(
+            user_id, file_name, m4a_path[2:], user_missions_id
+        )
         insert_audio_metadata(metadata)
         await upload_to_s3(audio, file_path[2:])
 

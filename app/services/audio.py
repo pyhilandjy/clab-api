@@ -16,9 +16,15 @@ from loguru import logger
 from pydub import AudioSegment
 
 from app.config import settings
-from app.db.query import (INSERT_AUDIO_META_DATA, INSERT_STT_DATA,
-                          SELECT_AUDIO_FILES, SELECT_FILES,
-                          UPDATE_AUDIO_STATUS, UPDATE_RECORD_TIME, SELECT_AUDIO_FILE)
+from app.db.query import (
+    INSERT_AUDIO_META_DATA,
+    INSERT_STT_DATA,
+    SELECT_AUDIO_FILES,
+    SELECT_FILES,
+    UPDATE_AUDIO_STATUS,
+    UPDATE_RECORD_TIME,
+    SELECT_AUDIO_FILE,
+)
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.services.clova import ClovaApiClient
 
@@ -70,7 +76,9 @@ async def download_and_process_file():
             s3.download_file(settings.bucket_name, file_path, local_path)
             m4a_path = await convert_file_update_record_time(local_path, audio_files_id)
             # s3에 적재, 교체
-            s3.upload_file(m4a_path, settings.bucket_name, file_path.replace(".webm", ".m4a"))
+            s3.upload_file(
+                m4a_path, settings.bucket_name, file_path.replace(".webm", ".m4a")
+            )
             s3.delete_object(Bucket=settings.bucket_name, Key=file_path)
             await process_stt(audio_files_id, m4a_path)
             await delete_file(m4a_path)
@@ -120,12 +128,15 @@ def get_record_time(m4a_path: str):
         raise Exception("Failed to get record time")
 
 
-def create_audio_metadata(user_id: str, file_name: str, file_path: str):
+def create_audio_metadata(
+    user_id: str, file_name: str, file_path: str, user_mission_ids: str
+):
     """오디오 파일 메타데이터 생성"""
     return {
         "user_id": user_id,
         "file_name": file_name,
         "file_path": file_path,
+        "user_mission_ids": user_mission_ids,
     }
 
 
@@ -139,7 +150,8 @@ def insert_audio_metadata(metadata: dict):
 
 def update_audio_status(audio_files_id, status):
     execute_insert_update_query(
-        query=UPDATE_AUDIO_STATUS, params={"audio_files_id": audio_files_id, "status": status}
+        query=UPDATE_AUDIO_STATUS,
+        params={"audio_files_id": audio_files_id, "status": status},
     )
 
 
@@ -405,7 +417,6 @@ async def select_audio_file(id, range_header):
     return await get_audio(file_path, range_header)
 
 
-
 async def get_audio(file_path: str, range_header: str = None):
     try:
         # S3에서 오디오 파일 불러오기
@@ -422,13 +433,13 @@ async def get_audio(file_path: str, range_header: str = None):
                 end = int(match.group(2)) if match.group(2) else content_length - 1
 
         # 오디오 내용을 BytesIO 객체에 쓰기
-        buffer = io.BytesIO(audio_content[start:end+1])
+        buffer = io.BytesIO(audio_content[start : end + 1])
 
         headers = {
             "Content-Disposition": f"inline; filename={file_name}",
             "Content-Range": f"bytes {start}-{end}/{content_length}",
             "Accept-Ranges": "bytes",
-            "Content-Length": str(end - start + 1)
+            "Content-Length": str(end - start + 1),
         }
 
         # BytesIO 객체의 시작 위치를 0으로 되돌립니다.
@@ -436,12 +447,13 @@ async def get_audio(file_path: str, range_header: str = None):
 
         # 오디오 파일을 StreamingResponse로 반환
         return StreamingResponse(
-            content=buffer, headers=headers, media_type="audio/webm",
-            status_code=206 if range_header else 200
+            content=buffer,
+            headers=headers,
+            media_type="audio/webm",
+            status_code=206 if range_header else 200,
         )
     except Exception as e:
         logger.error(f"Error processing audio file: {e}")
-
 
 
 async def select_audio_info(id: str):
