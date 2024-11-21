@@ -1,5 +1,5 @@
 from typing import Dict
-from fastapi import Header, Security, APIRouter, HTTPException
+from fastapi import Header, Security, APIRouter
 from fastapi.security.api_key import APIKeyHeader
 import jwt
 from supabase import Client, create_client
@@ -30,6 +30,22 @@ def get_all_users():
             user_list.append(user_info)
 
         return user_list
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@router.get("/users/{user_id}", tags=["users"])
+def get_user(user_id: str):
+    try:
+        response = supabase.auth.admin.get_user_by_id(user_id)
+        user = response.user
+        user_info = {
+            "id": user.id,
+            "name": user.user_metadata.get("name", ""),
+            "email": user.email,
+        }
+
+        return user_info
     except Exception as e:
         return {"error": str(e)}
 
