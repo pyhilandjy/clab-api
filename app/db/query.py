@@ -780,3 +780,11 @@ WHERE
     user_missions.user_reports_id = :user_reports_id;
 """
 )
+
+UPDATE_AUDIO_FILE_IS_USED = text(
+    """
+    UPDATE audio_files
+    SET is_used = :is_used
+    WHERE id = :audio_file_id
+    """
+)

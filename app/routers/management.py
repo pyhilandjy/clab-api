@@ -2,6 +2,7 @@ from fastapi import APIRouter, Query
 from app.services.management import (
     get_reports_with_pagination,
     select_reports_audio_files,
+    update_audio_file_is_used,
 )
 
 router = APIRouter()
@@ -27,3 +28,12 @@ async def get_reports_audio_files(user_reports_id: str):
     if not audio_files:
         return []
     return audio_files
+
+
+@router.patch("/management/reports/audio_files/{audio_file_id}", tags=["Management"])
+async def patch_audio_file_is_used(audio_file_id: str, is_used: bool):
+    """
+    audio_file_id 별 is_used 업데이트
+    """
+    update_audio_file_is_used(audio_file_id, is_used)
+    return {"message": "success"}

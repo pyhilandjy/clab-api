@@ -6,6 +6,7 @@ from app.db.query import (
     SELECT_REPORTS_PAGINATED,
     SELECT_TOTAL_COUNT,
     SELECT_REPORTS_AUDIO_FILES,
+    UPDATE_AUDIO_FILE_IS_USED,
 )
 from app.config import settings
 import datetime
@@ -53,3 +54,10 @@ def select_reports_audio_files(user_reports_id):
     for d in datas:
         d["record_time"] = str(datetime.timedelta(seconds=d["record_time"]))
     return datas
+
+
+def update_audio_file_is_used(audio_file_id: str, is_used: bool):
+    execute_insert_update_query(
+        query=UPDATE_AUDIO_FILE_IS_USED,
+        params={"audio_file_id": audio_file_id, "is_used": is_used},
+    )
