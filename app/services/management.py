@@ -8,6 +8,7 @@ from app.db.query import (
     SELECT_REPORTS_AUDIO_FILES,
 )
 from app.config import settings
+import datetime
 
 supabase: Client = create_client(settings.supabase_url, settings.supabase_service_key)
 
@@ -42,9 +43,13 @@ async def get_reports_with_pagination(page: int, page_size: int):
 
 
 def select_reports_audio_files(user_reports_id):
-    return execute_select_query(
+    datas = execute_select_query(
         query=SELECT_REPORTS_AUDIO_FILES,
         params={
             "user_reports_id": user_reports_id,
         },
     )
+    datas = [dict(data) for data in datas]
+    for d in datas:
+        d["record_time"] = str(datetime.timedelta(seconds=d["record_time"]))
+    return datas
