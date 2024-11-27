@@ -54,7 +54,7 @@ async def edit_text(text_edit_model: EditTextModel):
     }
 
 
-@router.post("/data/batch-edit/", tags=["STT"])
+@router.patch("/data/batch-edit/", tags=["STT"])
 async def batch_edit(text_edit_models: List[EditTextModel]):
     for text_edit_model in text_edit_models:
         try:
@@ -177,8 +177,8 @@ async def get_act_types():
 
 
 @router.patch("/speech-act-type/", tags=["DL"], response_model=dict)
-async def put_speech_act_type(audio_files_id: str):
-    """audio_files_id별로 text_edited, id를 가져오는 엔드포인트"""
+async def patch_speech_act_type(audio_files_id: str):
+    """ml 을 사용하여 화행 수정 앤드포인트"""
     results = select_text_edited_data(audio_files_id)
     if not results:
         raise HTTPException(status_code=404, detail="STT result not found")
