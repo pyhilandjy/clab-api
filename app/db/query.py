@@ -183,6 +183,13 @@ UPDATE_TEXT_EDITED = text(
     WHERE audio_files_id = :audio_files_id AND id = :id;
     """
 )
+UPDATE_AUDIO_FILES_IS_EDIT = text(
+    """
+UPDATE audio_files
+SET is_edited = :is_edited
+WHERE id = :audio_files_id;
+"""
+)
 
 UPDATE_INCREASE_TEXT_ORDER = text(
     """
@@ -771,7 +778,8 @@ SELECT
     audio_files.created_at AS record_date,
     audio_files.record_time AS record_time,
     missions.title AS mission_title,
-    audio_files.is_use AS is_use
+    audio_files.is_used AS is_used,
+    audio_files.is_edited AS is_edited
 FROM
     audio_files
     JOIN user_missions ON audio_files.user_missions_id = user_missions.id

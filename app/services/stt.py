@@ -26,6 +26,7 @@ from app.db.query import (
     SELECT_PROMPT,
     SELECT_LLM_DATA,
     INSERT_QURITATIVE_DATA,
+    UPDATE_AUDIO_FILES_IS_EDIT,
 )
 from app.config import settings
 from app.db.worker import execute_insert_update_query, execute_select_query
@@ -71,13 +72,20 @@ def select_text_edited_data(audio_files_id):
 
 
 def update_text_edit(id, audio_files_id, new_text, new_speaker):
-    return execute_insert_update_query(
+    execute_insert_update_query(
         query=UPDATE_TEXT_EDITED,
         params={
             "id": id,
             "audio_files_id": audio_files_id,
             "new_text": new_text,
             "new_speaker": new_speaker,
+        },
+    )
+    execute_insert_update_query(
+        query=UPDATE_AUDIO_FILES_IS_EDIT,
+        params={
+            "audio_files_id": audio_files_id,
+            "is_edited": True,
         },
     )
 
