@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Query
+from pydantic import BaseModel
 from app.services.management import (
     get_reports_with_pagination,
     select_reports_audio_files,
@@ -30,10 +31,16 @@ async def get_reports_audio_files(user_reports_id: str):
     return audio_files
 
 
+class UpdateAudioFileIsUsedPayload(BaseModel):
+    is_used: bool
+
+
 @router.patch("/management/reports/audio_files/{audio_file_id}", tags=["Management"])
-async def patch_audio_file_is_used(audio_file_id: str, is_used: bool):
+async def patch_audio_file_is_used(
+    audio_file_id: str, payload: UpdateAudioFileIsUsedPayload
+):
     """
     audio_file_id 별 is_used 업데이트
     """
-    update_audio_file_is_used(audio_file_id, is_used)
+    update_audio_file_is_used(audio_file_id, payload.is_used)
     return {"message": "success"}
