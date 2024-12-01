@@ -29,8 +29,8 @@ async def get_reports_with_pagination(page: int, page_size: int):
     for report in reports:
         user_id = report["user_id"]
         report["user_name"] = user_data.get(user_id, "")
-        report["send_at"] = report["send_at"].strftime("%y-%m-%d %H:%M")
-        report["inspected_at"] = report["inspected_at"].strftime("%y-%m-%d %H:%M")
+        report["send_at"] = report["send_at"].strftime("%Y/%m/%d %H:%M")
+        report["inspected_at"] = report["inspected_at"].strftime("%Y/%m/%d %H:%M")
 
     total_count_result = execute_select_query(query=SELECT_TOTAL_COUNT, params={})
     total_count = total_count_result[0]["total_count"] if total_count_result else 0
