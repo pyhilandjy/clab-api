@@ -29,7 +29,8 @@ async def get_reports_with_pagination(page: int, page_size: int):
     for report in reports:
         user_id = report["user_id"]
         report["user_name"] = user_data.get(user_id, "")
-        report["send_at"] = report["send_at"].strftime("%Y-%m-%d %H:%M:%S")
+        report["send_at"] = report["send_at"].strftime("%y-%m-%d %H:%M")
+        report["inspected_at"] = report["inspected_at"].strftime("%y-%m-%d %H:%M")
 
     total_count_result = execute_select_query(query=SELECT_TOTAL_COUNT, params={})
     total_count = total_count_result[0]["total_count"] if total_count_result else 0
@@ -66,9 +67,14 @@ def update_audio_file_is_used(audio_file_id: str, is_used: bool):
 
 
 def update_user_reports_inspection(user_reports_id: str, inspection: str):
+    inspected_at = datetime.datetime.now() if inspection == "completed" else None
     execute_insert_update_query(
         query=UPDATE_USER_REPORTS_INSPECTION,
-        params={"inspection": inspection, "user_reports_id": user_reports_id},
+        params={
+            "inspection": inspection,
+            "inspected_at": inspected_at,
+            "user_reports_id": user_reports_id,
+        },
     )
 
 

@@ -740,6 +740,8 @@ SELECT DISTINCT ON (user_reports.id)
     user_reports.user_id AS user_id,
     user_reports.send_at AS send_at,
     user_reports.inspection AS inspection,
+    user_reports.inspector AS inspector,
+    user_reports.inspected_at AS inspected_at,
     CASE
         WHEN user_reports.inspection = 'editing' AND user_reports.send_at > NOW() THEN '준비중'
         WHEN user_reports.inspection = 'editing' AND user_reports.send_at < NOW() THEN '지연'
@@ -800,7 +802,8 @@ UPDATE_AUDIO_FILE_IS_USED = text(
 UPDATE_USER_REPORTS_INSPECTION = text(
     """
     UPDATE user_reports
-    SET inspection = :inspection
+    SET inspection = :inspection,
+        inspected_at = :inspected_at
     WHERE id = :user_reports_id
     """
 )
