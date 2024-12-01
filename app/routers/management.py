@@ -4,6 +4,7 @@ from app.services.management import (
     get_reports_with_pagination,
     select_reports_audio_files,
     update_audio_file_is_used,
+    update_user_reports_inspection,
 )
 
 router = APIRouter()
@@ -43,4 +44,21 @@ async def patch_audio_file_is_used(
     audio_file_id 별 is_used 업데이트
     """
     update_audio_file_is_used(audio_file_id, payload.is_used)
+    return {"message": "success"}
+
+
+class UpdateUserReportsInspection(BaseModel):
+    inspection: str
+
+
+@router.patch(
+    "/management/user/reports/inspection/{user_reports_id}", tags=["Management"]
+)
+async def patch_user_reports_inspection(
+    user_reports_id: str, payload: UpdateUserReportsInspection
+):
+    """
+    user_reports_id 별 inspection 업데이트
+    """
+    update_user_reports_inspection(user_reports_id, payload.inspection)
     return {"message": "success"}

@@ -739,13 +739,13 @@ SELECT DISTINCT ON (user_reports.id)
     user_reports.id AS user_reports_id,
     user_reports.user_id AS user_id,
     user_reports.send_at AS send_at,
-    user_reports.inspection AS status,
+    user_reports.inspection AS inspection,
     CASE
         WHEN user_reports.inspection = 'editing' AND user_reports.send_at > NOW() THEN '준비중'
         WHEN user_reports.inspection = 'editing' AND user_reports.send_at < NOW() THEN '지연'
         WHEN user_reports.inspection = 'completed' THEN '완료'
         ELSE '대기'
-    END AS inspection,
+    END AS status,
     NULL AS user_name,
     user_childrens.first_name AS child_name,
     reports.title AS report_title,
@@ -794,5 +794,13 @@ UPDATE_AUDIO_FILE_IS_USED = text(
     UPDATE audio_files
     SET is_used = :is_used
     WHERE id = :audio_file_id
+    """
+)
+
+UPDATE_USER_REPORTS_INSPECTION = text(
+    """
+    UPDATE user_reports
+    SET inspection = :inspection
+    WHERE id = :user_reports_id
     """
 )

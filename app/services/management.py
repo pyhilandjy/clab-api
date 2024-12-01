@@ -7,6 +7,7 @@ from app.db.query import (
     SELECT_TOTAL_COUNT,
     SELECT_REPORTS_AUDIO_FILES,
     UPDATE_AUDIO_FILE_IS_USED,
+    UPDATE_USER_REPORTS_INSPECTION,
 )
 from app.config import settings
 import datetime
@@ -60,4 +61,11 @@ def update_audio_file_is_used(audio_file_id: str, is_used: bool):
     execute_insert_update_query(
         query=UPDATE_AUDIO_FILE_IS_USED,
         params={"audio_file_id": audio_file_id, "is_used": is_used},
+    )
+
+
+def update_user_reports_inspection(user_reports_id: str, inspection: str):
+    execute_insert_update_query(
+        query=UPDATE_USER_REPORTS_INSPECTION,
+        params={"inspection": inspection, "user_reports_id": user_reports_id},
     )
