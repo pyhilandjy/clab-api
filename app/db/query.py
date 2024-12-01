@@ -804,3 +804,11 @@ UPDATE_USER_REPORTS_INSPECTION = text(
     WHERE id = :user_reports_id
     """
 )
+
+UPDATE_USER_REPORTS_INSPECTOR = text(
+    """
+    UPDATE user_reports
+    SET inspector = :inspector
+    WHERE id = :user_reports_id
+    """
+)
