@@ -84,7 +84,7 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache-dir --upgrade -r /src/requirements.txt
 
 # mecab-python3와 pandas 설치
-RUN pip install mecab-python3 pandas
+RUN pip install mecab-python3 pandas openai
 RUN mkdir -p /src/app/audio /src/app/image
 
 COPY ./NanumFontSetup_TTF_GOTHIC /src/NanumFontSetup_TTF_GOTHIC
