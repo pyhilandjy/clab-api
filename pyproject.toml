@@ -27,6 +27,7 @@ xlsxwriter = "^3.2.0"
 supabase = "^2.5.1"
 pyjwt = "^2.8.0"
 apscheduler = "^3.10.4"
+openai = "^1.53.0"
 
 
 [tool.poetry.group.dev.dependencies]
