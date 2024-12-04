@@ -57,7 +57,8 @@ async def get_files(user_id: str):
 @router.get("/webm/{id}", tags=["Audio"])
 async def get_audio_file(id: str, range: str = Header(None)):
     """file_id 별 audio_files 가져오는 앤드포인트"""
-    return await select_audio_file(id, range)
+    audio_url = await select_audio_file(id, range)
+    return audio_url
 
 
 @router.get("/webm/info/{id}", tags=["Audio"])
