@@ -9,6 +9,7 @@ from app.db.query import (
     UPDATE_AUDIO_FILE_IS_USED,
     UPDATE_USER_REPORTS_INSPECTION,
     UPDATE_USER_REPORTS_INSPECTOR,
+    SELECT_AUDIO_INFO,
 )
 from app.config import settings
 import datetime
@@ -83,3 +84,19 @@ def update_user_reports_inspector(user_reports_id: str, inspector: str):
         query=UPDATE_USER_REPORTS_INSPECTOR,
         params={"inspector": inspector, "user_reports_id": user_reports_id},
     )
+
+
+def get_audio_info(audio_files_id):
+    results = execute_select_query(
+        query=SELECT_AUDIO_INFO, params={"audio_files_id": audio_files_id}
+    )
+    if results:
+        results = [dict(data) for data in results]
+        for result in results:
+            result["created_at"] = result["created_at"].strftime("%Y/%m/%d %H:%M")
+            result["record_time"] = str(
+                datetime.timedelta(seconds=result["record_time"])
+            )
+        return results
+    else:
+        return []

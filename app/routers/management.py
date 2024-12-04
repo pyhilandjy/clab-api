@@ -6,6 +6,7 @@ from app.services.management import (
     update_audio_file_is_used,
     update_user_reports_inspection,
     update_user_reports_inspector,
+    get_audio_info,
 )
 
 router = APIRouter()
@@ -80,3 +81,8 @@ async def patch_user_reports_inspection(
     """
     update_user_reports_inspector(user_reports_id, payload.inspector)
     return {"message": "success"}
+
+
+@router.get("/stt/audio-info/{audio_files_id}", tags=["STT"])
+async def get_audio_infos(audio_files_id: str):
+    return get_audio_info(audio_files_id)

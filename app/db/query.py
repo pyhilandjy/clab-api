@@ -815,3 +815,29 @@ UPDATE_USER_REPORTS_INSPECTOR = text(
     WHERE id = :user_reports_id
     """
 )
+
+SELECT_AUDIO_INFO = text(
+    """
+    SELECT 
+        af.record_time, 
+        m.title AS mission_title,
+        af.created_at,
+        uc.first_name AS first_name
+    FROM 
+        audio_files af
+    INNER JOIN 
+        user_missions um 
+        ON af.user_missions_id = um.id
+    INNER JOIN 
+        missions m 
+        ON um.missions_id = m.id
+    INNER JOIN 
+        user_plans up
+        ON um.user_plans_id = up.id
+    INNER JOIN 
+        user_childrens uc
+        ON up.user_childrens_id = uc.id
+    WHERE 
+        af.id = :audio_files_id
+    """
+)
