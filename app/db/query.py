@@ -781,13 +781,16 @@ SELECT
     audio_files.record_time AS record_time,
     missions.title AS mission_title,
     audio_files.is_used AS is_used,
-    audio_files.is_edited AS is_edited
+    audio_files.is_edited AS is_edited,
+    audio_files.edited_at AS edited_at
 FROM
     audio_files
     JOIN user_missions ON audio_files.user_missions_id = user_missions.id
     JOIN missions ON user_missions.missions_id = missions.id
 WHERE
-    user_missions.user_reports_id = :user_reports_id;
+    user_missions.user_reports_id = :user_reports_id
+ORDER BY
+    audio_files.created_at DESC;
 """
 )
 
