@@ -186,7 +186,7 @@ UPDATE_TEXT_EDITED = text(
 UPDATE_AUDIO_FILES_IS_EDIT = text(
     """
 UPDATE audio_files
-SET is_edited = :is_edited
+SET is_edited = :is_edited, edited_at= :edited_at
 WHERE id = :audio_files_id;
 """
 )

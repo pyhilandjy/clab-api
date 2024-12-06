@@ -3,6 +3,7 @@ from uuid import UUID
 from openai import OpenAI
 from enum import Enum
 import json
+import datetime
 import requests
 from fastapi import HTTPException
 from app.db.query import (
@@ -81,11 +82,13 @@ def update_text_edit(id, audio_files_id, new_text, new_speaker):
             "new_speaker": new_speaker,
         },
     )
+    edited_at = datetime.datetime.now()
     execute_insert_update_query(
         query=UPDATE_AUDIO_FILES_IS_EDIT,
         params={
             "audio_files_id": audio_files_id,
             "is_edited": True,
+            "edited_at": edited_at,
         },
     )
 
@@ -99,6 +102,15 @@ def update_replace_text_edit(audio_files_id, old_text, new_text):
             "new_text": new_text,
         },
     )
+    edited_at = datetime.datetime.now()
+    execute_insert_update_query(
+        query=UPDATE_AUDIO_FILES_IS_EDIT,
+        params={
+            "audio_files_id": audio_files_id,
+            "is_edited": True,
+            "edited_at": edited_at,
+        },
+    )
 
 
 def update_replace_speaker(audio_files_id, old_speaker, new_speaker):
@@ -108,6 +120,15 @@ def update_replace_speaker(audio_files_id, old_speaker, new_speaker):
             "audio_files_id": audio_files_id,
             "old_speaker": old_speaker,
             "new_speaker": new_speaker,
+        },
+    )
+    edited_at = datetime.datetime.now()
+    execute_insert_update_query(
+        query=UPDATE_AUDIO_FILES_IS_EDIT,
+        params={
+            "audio_files_id": audio_files_id,
+            "is_edited": True,
+            "edited_at": edited_at,
         },
     )
 
