@@ -26,12 +26,13 @@ async def get_reports_with_pagination(page: int, page_size: int):
     reports = [dict(report) for report in reports]
     user_ids = [report["user_id"] for report in reports]
     user_data = await fetch_user_names(user_ids)
-
+    # send_at 포멧 삭제
     for report in reports:
         user_id = report["user_id"]
         report["user_name"] = user_data.get(user_id, "")
         report["send_at"] = report["send_at"].strftime("%Y/%m/%d %H:%M")
-        report["inspected_at"] = report["inspected_at"].strftime("%Y/%m/%d %H:%M")
+        if report["inspected_at"]:
+            report["inspected_at"] = report["inspected_at"].strftime("%Y/%m/%d %H:%M")
 
     total_count_result = execute_select_query(query=SELECT_TOTAL_COUNT, params={})
     total_count = total_count_result[0]["total_count"] if total_count_result else 0
@@ -54,9 +55,12 @@ def select_reports_audio_files(user_reports_id):
             "user_reports_id": user_reports_id,
         },
     )
+
     datas = [dict(data) for data in datas]
     for d in datas:
         d["record_time"] = str(datetime.timedelta(seconds=d["record_time"]))
+        if d["edited_at"]:
+            d["edited_at"] = d["edited_at"].strftime("%Y/%m/%d %H:%M")
     return datas
 
 
