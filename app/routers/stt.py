@@ -1,6 +1,4 @@
 from typing import List
-import requests
-from datetime import datetime
 
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
