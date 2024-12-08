@@ -1,8 +1,10 @@
 from typing import Dict
-from fastapi import Header, Security, APIRouter
+from fastapi import Security, APIRouter, HTTPException
 from fastapi.security.api_key import APIKeyHeader
 import jwt
 from supabase import Client, create_client
+
+from pydantic import BaseModel, EmailStr
 
 from app.config import settings
 
@@ -68,3 +70,40 @@ async def get_current_user(authorization: str = Security(api_key_header)):
         return payload
     except Exception as e:
         raise e
+
+
+# def create_admin_user(email: str, password: str, name: str, role: str):
+#     supabase.auth.admin.create_user(
+#         {
+#             "email": email,
+#             "password": password,
+#             "user_metadata": {
+#                 "name": name,
+#                 "role": role,
+#             },
+#         }
+#     )
+
+
+# class AdminUser(BaseModel):
+#     email: EmailStr
+#     password: str
+#     name: str
+#     role: str
+
+
+# @router.post("/admin", tags=["users"])
+# async def create_admin(user: AdminUser):
+#     """
+#     관리자 계정을 생성합니다.
+#     """
+#     try:
+#         admin_data = create_admin_user(
+#             email=user.email,
+#             password=user.password,
+#             name=user.name,
+#             role=user.role,
+#         )
+#         return {"message": "Admin user created successfully", "data": admin_data}
+#     except Exception as e:
+#         raise HTTPException(status_code=400, detail=str(e))
