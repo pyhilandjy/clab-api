@@ -30,7 +30,8 @@ async def get_reports_with_pagination(page: int, page_size: int):
     for report in reports:
         user_id = report["user_id"]
         report["user_name"] = user_data.get(user_id, "")
-        report["send_at"] = report["send_at"].strftime("%Y/%m/%d %H:%M")
+        if report["send_at"]:
+            report["send_at"] = report["send_at"].strftime("%Y/%m/%d %H:%M")
         if report["inspected_at"]:
             report["inspected_at"] = report["inspected_at"].strftime("%Y/%m/%d %H:%M")
 
