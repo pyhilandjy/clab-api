@@ -1,12 +1,13 @@
 from fastapi import APIRouter, Query
 from pydantic import BaseModel
+
 from app.services.management import (
+    get_audio_info,
     get_reports_with_pagination,
     select_reports_audio_files,
     update_audio_file_is_used,
     update_user_reports_inspection,
     update_user_reports_inspector,
-    get_audio_info,
 )
 
 router = APIRouter()

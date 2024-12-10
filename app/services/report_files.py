@@ -14,14 +14,20 @@ from matplotlib import font_manager
 from wordcloud import WordCloud
 
 from app.config import settings
-from app.db.query import (COUNT_ACT_ID, COUNT_TALK_MORE_ID,
-                          INSERT_FILE_PATH_REPORTS_ID,
-                          INSERT_IMAGE_FILES_META_DATA,
-                          INSERT_REPORT_META_DATA,
-                          SELECT_AUDIO_FILES_BETWEEN_DATE, SELECT_RECORD_TIME,
-                          SELECT_REPORT_FILE_PATH, SELECT_REPORT_METADATA,
-                          SELECT_SENTENCE_LEN, SELECT_STT_DATA_BETWEEN_DATE,
-                          UPDATE_REPORTS_ID)
+from app.db.query import (
+    COUNT_ACT_ID,
+    COUNT_TALK_MORE_ID,
+    INSERT_FILE_PATH_REPORTS_ID,
+    INSERT_IMAGE_FILES_META_DATA,
+    INSERT_REPORT_META_DATA,
+    SELECT_AUDIO_FILES_BETWEEN_DATE,
+    SELECT_RECORD_TIME,
+    SELECT_REPORT_FILE_PATH,
+    SELECT_REPORT_METADATA,
+    SELECT_SENTENCE_LEN,
+    SELECT_STT_DATA_BETWEEN_DATE,
+    UPDATE_REPORTS_ID,
+)
 from app.db.worker import execute_insert_update_query, execute_select_query
 
 FONT_PATH = os.path.abspath("./NanumFontSetup_TTF_GOTHIC/NanumGothic.ttf")
@@ -141,7 +147,9 @@ def create_morphs_data(user_id, start_date, end_date):
 # 워드클라우드
 
 
-def gen_image_audio_files_id(user_id: str, speaker: str, start_date: date, end_date: date, type: str) -> str:
+def gen_image_audio_files_id(
+    user_id: str, speaker: str, start_date: date, end_date: date, type: str
+) -> str:
     """이미지 파일 아이디 생성"""
     return f"{user_id}_{speaker}_{start_date}_{end_date}_{type}.png"
 
@@ -151,7 +159,15 @@ def gen_image_file_path(image_id):
     return f"./app/image/{image_id}"
 
 
-def create_image_metadata(image_id: str, speaker: str, user_id: str, start_date: date, end_date: date, type: str, image_path: str):
+def create_image_metadata(
+    image_id: str,
+    speaker: str,
+    user_id: str,
+    start_date: date,
+    end_date: date,
+    type: str,
+    image_path: str,
+):
     return {
         "image_id": image_id,
         "speaker": speaker,
@@ -254,15 +270,17 @@ def create_wordcloud_path(stt_data, user_id, start_date, end_date):
         speaker_data = stt_data[stt_data["speaker"] == speaker]
         text = " ".join(speaker_data["text_edited"].astype(str))
         nouns = extract_nouns_with_mecab(text)
-        
+
         if not nouns:
             continue
-        
+
         word_counts = count_words(nouns)
         mask = create_circle_mask()
         wordcloud = generate_wordcloud(word_counts, font_path, mask)
 
-        image_id = gen_image_audio_files_id(user_id, speaker, f_start_date, f_end_date, type)
+        image_id = gen_image_audio_files_id(
+            user_id, speaker, f_start_date, f_end_date, type
+        )
         image_path = gen_image_file_path(image_id)
 
         # 워드클라우드 저장
@@ -302,7 +320,9 @@ def violin_chart(
     speaker = stt_data["speaker"].unique()
     speaker = ",".join(speaker)
 
-    image_id = gen_image_audio_files_id(user_id, speaker, f_start_date, f_end_date, type)
+    image_id = gen_image_audio_files_id(
+        user_id, speaker, f_start_date, f_end_date, type
+    )
 
     image_path = gen_image_file_path(image_id)
 

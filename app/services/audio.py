@@ -19,11 +19,11 @@ from app.config import settings
 from app.db.query import (
     INSERT_AUDIO_META_DATA,
     INSERT_STT_DATA,
+    SELECT_AUDIO_FILE,
     SELECT_AUDIO_FILES,
     SELECT_FILES,
     UPDATE_AUDIO_STATUS,
     UPDATE_RECORD_TIME,
-    SELECT_AUDIO_FILE,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.services.clova import ClovaApiClient

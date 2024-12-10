@@ -1,18 +1,19 @@
+import datetime
+
 from supabase import Client, create_client
 
-from app.db.worker import execute_insert_update_query, execute_select_query
-from app.services.users import fetch_user_names
+from app.config import settings
 from app.db.query import (
+    SELECT_AUDIO_INFO,
+    SELECT_REPORTS_AUDIO_FILES,
     SELECT_REPORTS_PAGINATED,
     SELECT_TOTAL_COUNT,
-    SELECT_REPORTS_AUDIO_FILES,
     UPDATE_AUDIO_FILE_IS_USED,
     UPDATE_USER_REPORTS_INSPECTION,
     UPDATE_USER_REPORTS_INSPECTOR,
-    SELECT_AUDIO_INFO,
 )
-from app.config import settings
-import datetime
+from app.db.worker import execute_insert_update_query, execute_select_query
+from app.services.users import fetch_user_names
 
 supabase: Client = create_client(settings.supabase_url, settings.supabase_service_key)
 

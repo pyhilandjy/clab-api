@@ -1,14 +1,13 @@
 from typing import Dict
-from fastapi import Security, APIRouter, HTTPException
-from fastapi.security.api_key import APIKeyHeader
+
 import jwt
+from fastapi import APIRouter, HTTPException, Security
+from fastapi.security.api_key import APIKeyHeader
+from pydantic import BaseModel, EmailStr
 from supabase import Client, create_client
 
-from app.services.users import create_admin_user
-
-from pydantic import BaseModel, EmailStr
-
 from app.config import settings
+from app.services.users import create_admin_user
 
 api_key_header = APIKeyHeader(name="authorization", auto_error=False)
 
@@ -52,7 +51,6 @@ def get_user(user_id: str):
         return user_info
     except Exception as e:
         return {"error": str(e)}
-
 
 
 class AdminUser(BaseModel):

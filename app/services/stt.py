@@ -1,35 +1,37 @@
-from app.db.connection import postgresql_connection
-from uuid import UUID
-from openai import OpenAI
-from enum import Enum
-import json
 import datetime
+import json
+from enum import Enum
+from uuid import UUID
+
 import requests
 from fastapi import HTTPException
+from openai import OpenAI
+
+from app.config import settings
+from app.db.connection import postgresql_connection
 from app.db.query import (
     DELETE_ROW,
     INSERT_COPIED_DATA,
+    INSERT_QURITATIVE_DATA,
+    SELECT_ACT_TYPES,
+    SELECT_LLM_DATA,
+    SELECT_PROMPT,
     SELECT_SPEECH_ACTS,
     SELECT_STT_DATA,
     SELECT_TALK_MORE,
+    SELECT_TEXT_EDITED_DATA,
+    UPDATE_ACT_TYPE,
+    UPDATE_AUDIO_FILES_IS_EDIT,
     UPDATE_DECREASE_TEXT_ORDER,
     UPDATE_INCREASE_TEXT_ORDER,
+    UPDATE_IS_TURN,
     UPDATE_REPLACE_SPEAKER,
     UPDATE_REPLACE_TEXT_EDITED,
     UPDATE_SPEECH_ACT,
+    UPDATE_SPEECHACT_TYPE,
     UPDATE_TALK_MORE,
     UPDATE_TEXT_EDITED,
-    SELECT_TEXT_EDITED_DATA,
-    SELECT_ACT_TYPES,
-    UPDATE_SPEECHACT_TYPE,
-    UPDATE_ACT_TYPE,
-    UPDATE_IS_TURN,
-    SELECT_PROMPT,
-    SELECT_LLM_DATA,
-    INSERT_QURITATIVE_DATA,
-    UPDATE_AUDIO_FILES_IS_EDIT,
 )
-from app.config import settings
 from app.db.worker import execute_insert_update_query, execute_select_query
 
 
@@ -40,15 +42,6 @@ def select_stt_data_by_audio_files_id(audio_files_id):
             "audio_files_id": audio_files_id,
         },
     )
-
-
-# def select_text_edited_data(audio_files_id):
-#     return execute_select_query(
-#         query=SELECT_TEXT_EDITED_DATA,
-#         params={
-#             "audio_files_id": audio_files_id,
-#         },
-#     )
 
 
 def select_text_edited_data(audio_files_id):

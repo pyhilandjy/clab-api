@@ -1,9 +1,9 @@
-from typing import Dict
-from fastapi.security.api_key import APIKeyHeader
+from typing import Dict, List
+
 import jwt
 from fastapi import APIRouter, Header, Security
+from fastapi.security.api_key import APIKeyHeader
 from supabase import Client, create_client
-from typing import List, Dict
 
 from app.config import settings
 

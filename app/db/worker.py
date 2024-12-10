@@ -1,4 +1,5 @@
 from sqlalchemy import text
+
 from app.db.connection import postgresql_connection
 
 

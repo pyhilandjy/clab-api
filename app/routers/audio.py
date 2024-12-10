@@ -8,9 +8,9 @@ from app.services.audio import (
     create_file_path,
     get_files_by_user_id,
     insert_audio_metadata,
-    upload_to_s3,
     select_audio_file,
     select_audio_info,
+    upload_to_s3,
 )
 from app.services.users import get_current_user
 

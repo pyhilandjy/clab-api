@@ -4,7 +4,7 @@ from datetime import date
 from typing import List
 
 import pandas as pd
-from fastapi import APIRouter, File, Form, Header, HTTPException, UploadFile, Depends
+from fastapi import APIRouter, Depends, File, Form, Header, HTTPException, UploadFile
 from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 
