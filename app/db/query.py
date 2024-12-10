@@ -99,6 +99,7 @@ ORDER BY sr.text_order asc
     """
 )
 
+
 SELECT_TEXT_EDITED_DATA = text(
     """
 SELECT text_edited, id
@@ -119,13 +120,60 @@ ORDER BY sr.text_order asc
 
 SELECT_STT_DATA_BETWEEN_DATE = text(
     """
-    SELECT *
-    FROM stt_data sd
-    JOIN audio_files af ON sd.audio_files_id = af.id
-    WHERE af.user_id = :user_id
-        AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
-    ORDER BY sd.created_at ASC, sd.text_order ASC
+    SELECT 
+        stt_data.*
+    FROM 
+        stt_data
+    INNER JOIN audio_files ON stt_data.audio_files_id = audio_files.id
+    INNER JOIN user_missions ON audio_files.user_missions_id = user_missions.id
+    WHERE 
+        user_missions.user_reports_id = :user_reports_id and audio_files.is_used= true;
+"""
+)
 
+
+SELECT_STT_DATA_USER_REPORTS = text(
+    """
+    SELECT 
+        stt_data.*
+    FROM 
+        stt_data
+    INNER JOIN audio_files ON stt_data.audio_files_id = audio_files.id
+    INNER JOIN user_missions ON audio_files.user_missions_id = user_missions.id
+    WHERE 
+        user_missions.user_reports_id = :user_reports_id and audio_files.is_used= true;
+"""
+)
+
+INSERT_WORDCLOUD_DATA = text(
+    """
+    INSERT INTO user_wordcloud (user_reports_id, data) VALUES 
+    (
+        :user_reports_id,
+        :data
+    )
+    """
+)
+
+SELECT_WORDCLOUD_DATA = text(
+    """
+    SELECT data FROM user_wordcloud
+    WHERE user_reports_id = :user_reports_id
+    """
+)
+
+UPDATE_WORDCLOUD_DATA = text(
+    """
+    UPDATE user_wordcloud 
+    SET data = :data 
+    WHERE user_reports_id = :user_reports_id
+    """
+)
+
+DELETE_WORDCLOUD_DATA = text(
+    """
+    DELETE FROM user_wordcloud
+    WHERE user_reports_id = :user_reports_id
     """
 )
 
