@@ -4,7 +4,6 @@ import jwt
 from fastapi import APIRouter, Header, Security
 from supabase import Client, create_client
 from typing import List, Dict
-import asyncio
 
 from app.config import settings
 
@@ -51,3 +50,16 @@ async def fetch_user_names(user_ids: List[str]) -> Dict[str, str]:
             user_data[user_id] = ""
 
     return user_data
+
+
+async def create_admin_user(email: str, password: str, name: str, role: str):
+    supabase.auth.admin.create_user(
+        {
+            "email": email,
+            "password": password,
+            "user_metadata": {
+                "name": name,
+                "role": role,
+            },
+        }
+    )
