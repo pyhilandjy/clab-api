@@ -14,7 +14,7 @@ router = APIRouter()
 
 @router.get("/management/reports/list", tags=["Management"])
 async def get_user_reports(
-    page: int = Query(1, ge=1), page_size: int = Query(20, ge=1, le=100)
+    page: int = Query(..., ge=1), page_size: int = Query(..., ge=1, le=100)
 ):
     """
     user_reports 데이터를 가져오는 엔드포인트
