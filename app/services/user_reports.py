@@ -99,7 +99,12 @@ def select_wordcloud_data(user_reports_id):
         query=SELECT_WORDCLOUD_DATA, params={"user_reports_id": user_reports_id}
     )
     if results:
-        return results[0]["data"]
+        item = results[0]
+        combined = {
+            "data": item["data"],
+            "insights": item["insights"]
+        }
+        return combined
     else:
         return []
 
@@ -108,9 +113,12 @@ def update_wordcloud_data(wordcloud_data, user_reports_id):
     """
     주어진 user_reports_id에 대한 워드클라우드 데이터를 업데이트합니다.
     """
-    data = json.dumps(wordcloud_data)
     execute_insert_update_query(
         query=UPDATE_WORDCLOUD_DATA,
-        params={"user_reports_id": user_reports_id, "data": data},
+        params={
+            "user_reports_id": user_reports_id,
+            "data": wordcloud_data["data"],
+            "insights": wordcloud_data["insights"]
+        },
     )
     return {"message": "Wordcloud data updated successfully"}
