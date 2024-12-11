@@ -157,7 +157,7 @@ INSERT_WORDCLOUD_DATA = text(
 
 SELECT_WORDCLOUD_DATA = text(
     """
-    SELECT data FROM user_wordcloud
+    SELECT data, insights FROM user_wordcloud
     WHERE user_reports_id = :user_reports_id
     """
 )
@@ -165,7 +165,7 @@ SELECT_WORDCLOUD_DATA = text(
 UPDATE_WORDCLOUD_DATA = text(
     """
     UPDATE user_wordcloud 
-    SET data = :data 
+    SET data = :data , insights = :insights
     WHERE user_reports_id = :user_reports_id
     """
 )
@@ -718,7 +718,7 @@ UPDATE_REPORT = text(
         sentence_length = :sentence_length,
         pos_ratio = :pos_ratio,
         speech_act = :speech_act,
-        insight = :insight
+        insights = :insights
     WHERE id = :id
     """
 )
@@ -726,8 +726,8 @@ UPDATE_REPORT = text(
 
 INSERT_REPORT = text(
     """
-    INSERT INTO reports (plans_id, title, wordcloud, sentence_length, pos_ratio, speech_act, insight)
-    VALUES (:plans_id, :title, :wordcloud, :sentence_length, :pos_ratio, :speech_act, :insight)
+    INSERT INTO reports (plans_id, title, wordcloud, sentence_length, pos_ratio, speech_act, insights)
+    VALUES (:plans_id, :title, :wordcloud, :sentence_length, :pos_ratio, :speech_act, :insights)
     RETURNING id
     """
 )
