@@ -13,6 +13,8 @@ from app.db.query import (
     SELECT_WORDCLOUD_DATA,
     UPDATE_WORDCLOUD_DATA,
     SELECT_USER_REPORTS_INFO,
+    SELECT_VIOLINPLOT_DATA,
+    INSERT_VIOLINPLOT_DATA,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.services.users import fetch_user_names
@@ -110,7 +112,11 @@ def save_wordcloud_data(user_reports_id):
             query=INSERT_WORDCLOUD_DATA,
             params={"user_reports_id": user_reports_id, "data": data},
         )
-        return {"message": "Wordcloud data saved successfully"}
+        data = execute_select_query(
+        query=SELECT_WORDCLOUD_DATA, params={"user_reports_id": user_reports_id}
+    )
+    if data:
+        return data
     
     
 def reset_wordcloud_data(user_reports_id):
@@ -168,16 +174,48 @@ def update_wordcloud_data(wordcloud_data, user_reports_id):
     return {"message": "Wordcloud data updated successfully"}
 
 
-    
-
-async def test(user_reports_id):
-    """
-    주어진 user_reports_id에 대한 사용자 보고서 정보를 검색합니다.
-    """
-    reports = execute_select_query(
-        query=SELECT_USER_REPORTS_INFO, params={"user_reports_id": user_reports_id}
+def create_violin_plot(user_reports_id):
+    stt_data = execute_select_query(
+        query=SELECT_STT_DATA_USER_REPORTS, params={"user_reports_id": user_reports_id}
     )
-    if reports:
-        return reports
+    violin_plot_data = {}
+
+    for result in stt_data:
+        # Calculate character length of the edited text
+        char_length = len(result["text_edited"])
+        
+        # Group char_lengths by speaker
+        speaker = result["speaker"]
+        if speaker not in violin_plot_data:
+            violin_plot_data[speaker] = []
+        violin_plot_data[speaker].append(char_length)
+
+    # Format data as a list of dictionaries
+    formatted_data = [
+        {"speaker": speaker, "char_lengths": lengths}
+        for speaker, lengths in violin_plot_data.items()
+    ]
+
+    return formatted_data
+
+def save_violinplot_data(user_reports_id):
+    """
+    주어진 user_reports_id에 대한 워드클라우드 데이터를 생성하고 저장합니다.
+    """
+    # user_reports_id의 데이터가 존재한다면 기존 데이터를 삭제 추가
+    data = execute_select_query(
+        query=SELECT_VIOLINPLOT_DATA, params={"user_reports_id": user_reports_id}
+    )
+    if data:
+        return {"message": "violinplot data already exists"}
     else:
-        return []
+        wordcloud_data = create_violin_plot(user_reports_id)
+        data = json.dumps(wordcloud_data)
+        execute_insert_update_query(
+            query=INSERT_VIOLINPLOT_DATA,
+            params={"user_reports_id": user_reports_id, "data": data},
+        )
+        data = execute_select_query(
+            query=SELECT_VIOLINPLOT_DATA, 
+            params={"user_reports_id": user_reports_id})
+        return data
