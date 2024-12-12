@@ -32,8 +32,8 @@ def get_wordcloud_data(user_reports_id):
 
 
 @router.patch("/wordcloud/data", tags=["User_Report"])
-def patch_wordcloud_data(wordcloud_data, insight, user_reports_id):
-    return update_wordcloud_data(wordcloud_data, insight, user_reports_id)
+def patch_wordcloud_data(wordcloud_data, insights, user_reports_id):
+    return update_wordcloud_data(wordcloud_data, insights, user_reports_id)
 
 
 @router.get("/user_reports/info", tags=["User_Report"])
