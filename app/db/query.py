@@ -183,12 +183,6 @@ SELECT_WORDCLOUD_DATA = text(
     """
 )
 
-SELECT_VIOLINPLOT_DATA = text(
-    """
-    SELECT data, insights FROM user_violinplot
-    WHERE user_reports_id = :user_reports_id
-    """
-)
 
 UPDATE_WORDCLOUD_DATA = text(
     """
@@ -198,13 +192,7 @@ UPDATE_WORDCLOUD_DATA = text(
     """
 )
 
-INSERT_VIOLINPLOT_DATA = text(
-    """
-    UPDATE user_violinplot
-    SET data = :data , insights = :insights
-    WHERE user_reports_id = :user_reports_id
-    """
-)
+
 
 DELETE_WORDCLOUD_DATA = text(
     """
@@ -212,6 +200,31 @@ DELETE_WORDCLOUD_DATA = text(
     WHERE user_reports_id = :user_reports_id
     """
 )
+
+#violinplot
+
+
+INSERT_SENTENCE_LENGTH_DATA = text(
+    """
+    INSERT INTO user_sentence_length (user_reports_id, data) VALUES 
+    (
+        :user_reports_id,
+        :data
+    )
+    """
+)
+
+
+SELECT_SENTENCE_LENGTH_DATA = text(
+    """
+    SELECT data, insights FROM user_sentence_length
+    WHERE user_reports_id = :user_reports_id
+    """
+)
+
+###
+
+
 
 SELECT_AUDIO_FILES_BETWEEN_DATE = text(
     """

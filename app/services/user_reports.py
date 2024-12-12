@@ -1,10 +1,10 @@
 import json
 import os
-from collections import Counter, defaultdict
+from collections import Counter, defaultdict, OrderedDict
 
 import matplotlib.pyplot as plt
 from matplotlib import font_manager
-from wordcloud import WordCloud
+import pandas as pd
 
 from app.db.query import (
     DELETE_WORDCLOUD_DATA,
@@ -13,8 +13,8 @@ from app.db.query import (
     SELECT_WORDCLOUD_DATA,
     UPDATE_WORDCLOUD_DATA,
     SELECT_USER_REPORTS_INFO,
-    SELECT_VIOLINPLOT_DATA,
-    INSERT_VIOLINPLOT_DATA,
+    SELECT_SENTENCE_LENGTH_DATA,
+    INSERT_SENTENCE_LENGTH_DATA,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.services.users import fetch_user_names
@@ -33,6 +33,9 @@ POS_TAG_TO_KOREAN = {
     "VV": "동사",
     "VA": "형용사",
     "MAG": "부사",
+    "JKS": "전치사",
+    "JC": "접속사",
+    "IC": "감탄사",
 }
 
 # 워드클라우드
@@ -115,8 +118,13 @@ def save_wordcloud_data(user_reports_id):
         data = execute_select_query(
         query=SELECT_WORDCLOUD_DATA, params={"user_reports_id": user_reports_id}
     )
-    if data:
-        return data
+        if data:
+            item = data[0]
+        combined = {
+            "data": item["data"],
+            "insights": item["insights"]
+        }
+        return combined
     
     
 def reset_wordcloud_data(user_reports_id):
@@ -174,48 +182,150 @@ def update_wordcloud_data(wordcloud_data, user_reports_id):
     return {"message": "Wordcloud data updated successfully"}
 
 
-def create_violin_plot(user_reports_id):
+#sentence_length(SENTENCE_LENGTH)
+
+def create_sentence_length(user_reports_id):
     stt_data = execute_select_query(
         query=SELECT_STT_DATA_USER_REPORTS, params={"user_reports_id": user_reports_id}
     )
-    violin_plot_data = {}
+    sentence_length_data = {}
 
     for result in stt_data:
-        # Calculate character length of the edited text
         char_length = len(result["text_edited"])
         
-        # Group char_lengths by speaker
         speaker = result["speaker"]
-        if speaker not in violin_plot_data:
-            violin_plot_data[speaker] = []
-        violin_plot_data[speaker].append(char_length)
+        if speaker not in sentence_length_data:
+            sentence_length_data[speaker] = []
+        sentence_length_data[speaker].append(char_length)
 
-    # Format data as a list of dictionaries
     formatted_data = [
         {"speaker": speaker, "char_lengths": lengths}
-        for speaker, lengths in violin_plot_data.items()
+        for speaker, lengths in sentence_length_data.items()
     ]
 
     return formatted_data
 
-def save_violinplot_data(user_reports_id):
+def save_sentence_length_data(user_reports_id):
     """
-    주어진 user_reports_id에 대한 워드클라우드 데이터를 생성하고 저장합니다.
+    주어진 user_reports_id에 대한 바이올린플롯 데이터를 생성하고 저장합니다.
     """
-    # user_reports_id의 데이터가 존재한다면 기존 데이터를 삭제 추가
     data = execute_select_query(
-        query=SELECT_VIOLINPLOT_DATA, params={"user_reports_id": user_reports_id}
+        query=SELECT_SENTENCE_LENGTH_DATA, params={"user_reports_id": user_reports_id}
     )
     if data:
-        return {"message": "violinplot data already exists"}
+        return {"message": "sentence_length data already exists"}
     else:
-        wordcloud_data = create_violin_plot(user_reports_id)
-        data = json.dumps(wordcloud_data)
+        sentence_length_data = create_sentence_length(user_reports_id)
+        data = json.dumps(sentence_length_data)
         execute_insert_update_query(
-            query=INSERT_VIOLINPLOT_DATA,
-            params={"user_reports_id": user_reports_id, "data": data},
+            query=INSERT_SENTENCE_LENGTH_DATA,
+            params={"user_reports_id": user_reports_id, "data": sentence_length_data},
         )
         data = execute_select_query(
-            query=SELECT_VIOLINPLOT_DATA, 
+            query=SELECT_SENTENCE_LENGTH_DATA, 
             params={"user_reports_id": user_reports_id})
-        return data
+        if data:
+            item = data[0]
+        combined = {
+            "data": item["data"],
+            "insights": item["insights"]
+        }
+        return combined
+    
+def select_sentence_length_data(user_reports_id):
+    """
+    주어진 user_reports_id에 대한 바이올린플롯 데이터를 생성하고 저장합니다.
+    """
+    data = execute_select_query(
+        query=SELECT_SENTENCE_LENGTH_DATA, params={"user_reports_id": user_reports_id}
+    )
+    if data:
+        item = data[0]
+    combined = {
+        "data": item["data"],
+        "insights": item["insights"]
+    }
+    return combined
+    
+#tokenize data
+def parse_text(text):
+    kiwi = Kiwi()
+    tokens = kiwi.tokenize(text)
+    return tokens
+
+def analyze_speech_data(morphs_data):
+    """형태소분석"""
+    speaker_data = extract_speaker_data(morphs_data)
+    data= {
+        speaker: analyze_text_with_kiwi(text) for speaker, text in speaker_data.items()
+    }
+    formatted_data = [
+        {
+            "speaker": speaker,
+            "data": stats
+        } for speaker, stats in data.items()
+    ]
+
+    return formatted_data
+
+def extract_speaker_data(data):
+    """발화자별로 텍스트를 추출하여 하나의 문자열로 결합"""
+    if not isinstance(data, pd.DataFrame):
+        data = pd.DataFrame(data)
+    speaker_data = (
+        data.groupby("speaker")["text_edited"]
+        .apply(lambda texts: " ".join(texts.astype(str)))
+        .to_dict()
+    )
+    return speaker_data
+
+def analyze_text_with_kiwi(text):
+    """품사별로 단어를 분류"""
+    parsed_text = parse_text(text)
+    pos_lists, pos_unique_lists = classify_words_by_pos(parsed_text)
+    return build_pos_summary(pos_lists, pos_unique_lists)
+
+
+def classify_words_by_pos(parsed_text):
+    """파싱된 텍스트에서 품사별로 단어를 분류"""
+    pos_lists = {korean: [] for korean in POS_TAG_TO_KOREAN.values()}
+    pos_unique_lists = {korean: set() for korean in POS_TAG_TO_KOREAN.values()}
+
+    for token in parsed_text:
+        tag = token.tag
+        word = token.form
+        if tag in POS_TAG_TO_KOREAN:
+            korean_pos = POS_TAG_TO_KOREAN[tag]
+            pos_lists[korean_pos].append(word)
+            pos_unique_lists[korean_pos].add(word)
+
+    return pos_lists, pos_unique_lists
+
+
+def build_pos_summary(
+    pos_lists,
+    pos_unique_lists,
+):
+    """품사별 단어 리스트와 고유 단어 세트에서 요약 정보를 구성하여 반환"""
+    total_words = sum(len(words) for words in pos_lists.values())
+    # total_unique_words = sum(
+    #     len(unique_words) for unique_words in pos_unique_lists.values()
+    # )
+    summary = {
+        pos: f"{round(len(words) / total_words * 100, 1)}%({len(words)})"
+        for pos, words in pos_lists.items()
+    }
+    summary["총단어 수"] = total_words
+    summary = OrderedDict(
+        [("총단어 수", summary.pop("총단어 수"))] + list(summary.items())
+    )
+    return summary
+
+
+def save_tokenized_data(user_reports_id):
+    stt_data = execute_select_query(
+        query=SELECT_STT_DATA_USER_REPORTS, params={"user_reports_id": user_reports_id}
+    )
+
+    morps_data = analyze_speech_data(stt_data)
+    return morps_data

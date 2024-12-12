@@ -9,7 +9,9 @@ from app.services.user_reports import (
     select_wordcloud_data,
     update_wordcloud_data,
     select_user_reports_info,
-    create_violin_plot,
+    save_sentence_length_data,
+    select_sentence_length_data,
+    save_tokenized_data,
 )
 
 router = APIRouter()
@@ -29,8 +31,6 @@ def get_wordcloud_data(user_reports_id):
     return select_wordcloud_data(user_reports_id)
 
 
-
-
 @router.patch("/wordcloud/data", tags=["User_Report"])
 def patch_wordcloud_data(wordcloud_data, insight, user_reports_id):
     return update_wordcloud_data(wordcloud_data, insight, user_reports_id)
@@ -42,8 +42,19 @@ async def get_user_reports_info(user_reports_id: str):
     return result[0]
 
 #violinplot
-@router.post("/violinplot/data", tags=["User_Report"])
-def create_violinplot_data(user_reports_id: WordcloudData):
+@router.post("/sentence_length/data", tags=["User_Report"])
+def create_sentence_length_data(user_reports_id: WordcloudData):
     data = user_reports_id.model_dump()
     user_reports_id = data["user_reports_id"]
-    return create_violin_plot(user_reports_id)
+    return save_sentence_length_data(user_reports_id)
+
+@router.get("/sentence_length/data", tags=["User_Report"])
+def get_sentence_length_data(user_reports_id):
+    return select_sentence_length_data(user_reports_id)
+
+#tokenize
+@router.post("/tokenize/data", tags=["User_Report"])
+def create_tokenized_data(user_reports_id: WordcloudData):
+    data = user_reports_id.model_dump()
+    user_reports_id = data["user_reports_id"]
+    return save_tokenized_data(user_reports_id)
