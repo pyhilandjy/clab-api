@@ -112,6 +112,7 @@ def save_wordcloud_data(user_reports_id):
             "data": item["data"],
             "insights": item["insights"]
         }
+        return combined
     else:
         wordcloud_data = create_wordcloud_data(user_reports_id)
         data = json.dumps(wordcloud_data)
