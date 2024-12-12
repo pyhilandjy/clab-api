@@ -1,5 +1,5 @@
-from typing import List
-
+from typing import List, Dict
+import json
 from fastapi import APIRouter
 
 from pydantic import BaseModel
@@ -31,15 +31,31 @@ def get_wordcloud_data(user_reports_id):
     return select_wordcloud_data(user_reports_id)
 
 
-class PatchWordcloudData(BaseModel):
+class WordCounts(BaseModel):
+    # [word: string]: number 형식을 Dict[str, int]로 표현
+    __root__: Dict[str, int]
+
+class SpeakerData(BaseModel):
+    speaker: str
+    word_counts: Dict[str, int]  # WordCounts 타입
+
+class WordcloudData(BaseModel):
+    data: List[SpeakerData]
+    insights: str
+
+class WordcloudUpdateRequest(BaseModel):
     user_reports_id: str
-    wordcloud_data: str
+    wordcloud_data: WordcloudData
+
+
+
 @router.patch("/wordcloud/data", tags=["User_Report"])
-def patch_wordcloud_data(wordcloud_data: PatchWordcloudData):
-    data = wordcloud_data.model_dump()
+async def patch_wordcloud_data(request: WordcloudUpdateRequest):
+    data = request.model_dump()
     user_reports_id = data["user_reports_id"]
     wordcloud_data = data["wordcloud_data"]
-    return update_wordcloud_data(wordcloud_data, user_reports_id)
+    data = json.dumps(wordcloud_data)
+    return update_wordcloud_data(data, user_reports_id)
 
 
 @router.get("/user_reports/info", tags=["User_Report"])
