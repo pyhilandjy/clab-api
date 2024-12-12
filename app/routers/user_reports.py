@@ -9,6 +9,7 @@ from app.services.user_reports import (
     select_wordcloud_data,
     update_wordcloud_data,
     select_user_reports_info,
+    create_violin_plot,
 )
 
 router = APIRouter()
@@ -39,3 +40,10 @@ def patch_wordcloud_data(wordcloud_data, insight, user_reports_id):
 async def get_user_reports_info(user_reports_id: str):
     result = await select_user_reports_info(user_reports_id)
     return result[0]
+
+#violinplot
+@router.post("/violinplot/data", tags=["User_Report"])
+def create_violinplot_data(user_reports_id: WordcloudData):
+    data = user_reports_id.model_dump()
+    user_reports_id = data["user_reports_id"]
+    return create_violin_plot(user_reports_id)
