@@ -107,7 +107,11 @@ def save_wordcloud_data(user_reports_id):
         query=SELECT_WORDCLOUD_DATA, params={"user_reports_id": user_reports_id}
     )
     if data:
-        return {"message": "Wordcloud data already exists"}
+        item = data[0]
+        combined = {
+            "data": item["data"],
+            "insights": item["insights"]
+        }
     else:
         wordcloud_data = create_wordcloud_data(user_reports_id)
         data = json.dumps(wordcloud_data)
@@ -213,7 +217,13 @@ def save_sentence_length_data(user_reports_id):
         query=SELECT_SENTENCE_LENGTH_DATA, params={"user_reports_id": user_reports_id}
     )
     if data:
-        return {"message": "sentence_length data already exists"}
+        if data:
+            item = data[0]
+        combined = {
+            "data": item["data"],
+            "insights": item["insights"]
+        }
+        return combined
     else:
         sentence_length_data = create_sentence_length(user_reports_id)
         data = json.dumps(sentence_length_data)
@@ -262,7 +272,7 @@ def analyze_speech_data(morphs_data):
     formatted_data = [
         {
             "speaker": speaker,
-            "data": stats
+            "tokenize_data": stats
         } for speaker, stats in data.items()
     ]
 
@@ -329,3 +339,31 @@ def save_tokenized_data(user_reports_id):
 
     morps_data = analyze_speech_data(stt_data)
     return morps_data
+
+
+def save_sentence_length_data(user_reports_id):
+    """
+    주어진 user_reports_id에 대한 바이올린플롯 데이터를 생성하고 저장합니다.
+    """
+    data = execute_select_query(
+        query=SELECT_SENTENCE_LENGTH_DATA, params={"user_reports_id": user_reports_id}
+    )
+    if data:
+        return {"message": "sentence_length data already exists"}
+    else:
+        sentence_length_data = create_sentence_length(user_reports_id)
+        data = json.dumps(sentence_length_data)
+        execute_insert_update_query(
+            query=INSERT_SENTENCE_LENGTH_DATA,
+            params={"user_reports_id": user_reports_id, "data": sentence_length_data},
+        )
+        data = execute_select_query(
+            query=SELECT_SENTENCE_LENGTH_DATA, 
+            params={"user_reports_id": user_reports_id})
+        if data:
+            item = data[0]
+        combined = {
+            "data": item["data"],
+            "insights": item["insights"]
+        }
+        return combined
