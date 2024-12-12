@@ -31,9 +31,15 @@ def get_wordcloud_data(user_reports_id):
     return select_wordcloud_data(user_reports_id)
 
 
+class PatchWordcloudData(BaseModel):
+    user_reports_id: str
+    wordcloud_data: str
 @router.patch("/wordcloud/data", tags=["User_Report"])
-def patch_wordcloud_data(wordcloud_data, insights, user_reports_id):
-    return update_wordcloud_data(wordcloud_data, insights, user_reports_id)
+def patch_wordcloud_data(wordcloud_data: PatchWordcloudData):
+    data = wordcloud_data.model_dump()
+    user_reports_id = data["user_reports_id"]
+    wordcloud_data = data["wordcloud_data"]
+    return update_wordcloud_data(wordcloud_data, user_reports_id)
 
 
 @router.get("/user_reports/info", tags=["User_Report"])
