@@ -145,6 +145,27 @@ SELECT_STT_DATA_USER_REPORTS = text(
 """
 )
 
+
+#새로운 reports
+
+SELECT_USER_REPORTS_INFO = text(
+    """
+    SELECT DISTINCT
+    ur.user_id,
+    r.title,
+    p.plan_name,
+    c.first_name
+FROM user_reports ur
+JOIN reports r ON ur.reports_id = r.id
+JOIN plans p ON r.plans_id = p.id
+JOIN user_missions um ON ur.id = um.user_reports_id
+JOIN user_plans up ON um.user_plans_id = up.id
+JOIN user_childrens c ON up.user_childrens_id = c.id
+WHERE user_reports_id = :user_reports_id;
+    """
+)
+
+#Wordcloud
 INSERT_WORDCLOUD_DATA = text(
     """
     INSERT INTO user_wordcloud (user_reports_id, data) VALUES 
@@ -495,7 +516,7 @@ SELECT_USERS = text(
     FROM audio_files;
     """
 )
-
+#report_files 관련 쿼리 삭제 예정
 INSERT_REPORT_META_DATA = text(
     """
     INSERT INTO report_files (user_id, title, file_path) VALUES 

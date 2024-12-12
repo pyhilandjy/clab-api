@@ -12,8 +12,10 @@ from app.db.query import (
     SELECT_STT_DATA_USER_REPORTS,
     SELECT_WORDCLOUD_DATA,
     UPDATE_WORDCLOUD_DATA,
+    SELECT_USER_REPORTS_INFO,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
+from app.services.users import fetch_user_names
 
 FONT_PATH = os.path.abspath("./NanumFontSetup_TTF_GOTHIC/NanumGothic.ttf")
 font_prop = font_manager.FontProperties(fname=FONT_PATH)
@@ -34,6 +36,27 @@ POS_TAG_TO_KOREAN = {
 # 워드클라우드
 
 from kiwipiepy import Kiwi
+
+async def select_user_reports_info(user_reports_id: str):
+    """
+    주어진 user_reports_id에 대한 사용자 보고서 정보를 검색합니다.
+    """
+    reports = execute_select_query(
+        query=SELECT_USER_REPORTS_INFO, 
+        params={"user_reports_id": user_reports_id}
+    )
+    
+    if reports:
+        reports = [dict(report) for report in reports]
+        user_ids = [report["user_id"] for report in reports]
+        user_data = await fetch_user_names(user_ids)
+        for report in reports:
+            user_id = report["user_id"]
+            report["user_name"] = user_data.get(user_id, "")
+        return reports    
+    else:
+        return []
+
 
 
 def create_wordcloud_data(user_reports_id):
@@ -69,7 +92,28 @@ def create_wordcloud_data(user_reports_id):
     return result
 
 
+
 def save_wordcloud_data(user_reports_id):
+    """
+    주어진 user_reports_id에 대한 워드클라우드 데이터를 생성하고 저장합니다.
+    """
+    # user_reports_id의 데이터가 존재한다면 기존 데이터를 삭제 추가
+    data = execute_select_query(
+        query=SELECT_WORDCLOUD_DATA, params={"user_reports_id": user_reports_id}
+    )
+    if data:
+        return {"message": "Wordcloud data already exists"}
+    else:
+        wordcloud_data = create_wordcloud_data(user_reports_id)
+        data = json.dumps(wordcloud_data)
+        execute_insert_update_query(
+            query=INSERT_WORDCLOUD_DATA,
+            params={"user_reports_id": user_reports_id, "data": data},
+        )
+        return {"message": "Wordcloud data saved successfully"}
+    
+    
+def reset_wordcloud_data(user_reports_id):
     """
     주어진 user_reports_id에 대한 워드클라우드 데이터를 생성하고 저장합니다.
     """
@@ -122,3 +166,18 @@ def update_wordcloud_data(wordcloud_data, user_reports_id):
         },
     )
     return {"message": "Wordcloud data updated successfully"}
+
+
+    
+
+async def test(user_reports_id):
+    """
+    주어진 user_reports_id에 대한 사용자 보고서 정보를 검색합니다.
+    """
+    reports = execute_select_query(
+        query=SELECT_USER_REPORTS_INFO, params={"user_reports_id": user_reports_id}
+    )
+    if reports:
+        return reports
+    else:
+        return []
