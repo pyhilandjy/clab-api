@@ -183,9 +183,24 @@ SELECT_WORDCLOUD_DATA = text(
     """
 )
 
+SELECT_VIOLINPLOT_DATA = text(
+    """
+    SELECT data, insights FROM user_violinplot
+    WHERE user_reports_id = :user_reports_id
+    """
+)
+
 UPDATE_WORDCLOUD_DATA = text(
     """
     UPDATE user_wordcloud 
+    SET data = :data , insights = :insights
+    WHERE user_reports_id = :user_reports_id
+    """
+)
+
+INSERT_VIOLINPLOT_DATA = text(
+    """
+    UPDATE user_violinplot
     SET data = :data , insights = :insights
     WHERE user_reports_id = :user_reports_id
     """
