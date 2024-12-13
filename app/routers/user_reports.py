@@ -11,8 +11,9 @@ from app.services.user_reports import (
     select_user_reports_info,
     save_sentence_length_data,
     select_sentence_length_data,
-    save_tokenized_data,
+    save_pos_ratio_data,
     update_sentence_length_data,
+    update_pos_ratio_data,
 )
 
 router = APIRouter()
@@ -90,15 +91,27 @@ async def patch_sentence_length_data(request: SentenceLengthUpdateRequest):
     return update_sentence_length_data(sentence_length_data, user_reports_id)
 
 #tokenize
-@router.post("/tokenize/data", tags=["User_Report"])
-def create_tokenized_data(user_reports_id: UserReportsId):
+@router.post("/pos_ratio/data", tags=["User_Report"])
+def create_pos_ratio_data(user_reports_id: UserReportsId):
     data = user_reports_id.model_dump()
     user_reports_id = data["user_reports_id"]
-    return save_tokenized_data(user_reports_id)
+    return save_pos_ratio_data(user_reports_id)
 
-# @router.patch("/tokenize/data", tags=["User_Report"])
-# def patch_tokenized_data(request: SentenceLengthData):
-#     data = request.model_dump()
-#     user_reports_id = data["user_reports_id"]
-#     sentence_length_data = data["sentence_length_data"]
-#     return update_sentence_length_data(user_reports_id, sentence_length_data)
+class POSRatioSpeakerData(BaseModel):
+    speaker: str
+    pos_ratio_data: Dict[str, int]
+
+class POSRatioData(BaseModel):
+    data: List[POSRatioSpeakerData]
+    insights: str
+
+class POSRatioUpdateRequest(BaseModel):
+    user_reports_id: str
+    pos_ratio_data: POSRatioData
+
+@router.patch("/pos_ratio/data", tags=["User_Report"])
+def patch_pos_ratio_data(request: POSRatioUpdateRequest):
+    data = request.model_dump()
+    user_reports_id = data["user_reports_id"]
+    pos_ratio_data = data["pos_ratio_data"]
+    return update_pos_ratio_data(user_reports_id, pos_ratio_data)

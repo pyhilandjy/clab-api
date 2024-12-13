@@ -222,6 +222,8 @@ SELECT_SENTENCE_LENGTH_DATA = text(
     """
 )
 
+
+
 UPDATE_SENTENCE_LENGTH_DATA = text(
     """
     UPDATE user_sentence_length
@@ -231,10 +233,38 @@ UPDATE_SENTENCE_LENGTH_DATA = text(
 )
 
 
-###
+#품사 분류
+SELECT_POS_RATIO_DATA = text(
+    """
+    SELECT data, insights FROM user_pos_ratio
+    WHERE user_reports_id = :user_reports_id
+    """
+)
+
+INSERT_POS_RATIO_DATA = text(
+    """
+    INSERT INTO user_pos_ratio (user_reports_id, data) VALUES 
+    (
+        :user_reports_id,
+        :data
+    )
+    """
+)
+
+UPDATE_POS_RATIO_DATA = text(
+    """
+    UPDATE user_pos_ratio
+    SET insights = :insights
+    WHERE user_reports_id = :user_reports_id
+    """
+)
 
 
 
+
+
+
+####
 SELECT_AUDIO_FILES_BETWEEN_DATE = text(
     """
     SELECT file_name, id

@@ -15,7 +15,10 @@ from app.db.query import (
     SELECT_USER_REPORTS_INFO,
     SELECT_SENTENCE_LENGTH_DATA,
     INSERT_SENTENCE_LENGTH_DATA,
-    UPDATE_SENTENCE_LENGTH_DATA
+    UPDATE_SENTENCE_LENGTH_DATA,
+    SELECT_POS_RATIO_DATA,
+    INSERT_POS_RATIO_DATA,
+    UPDATE_POS_RATIO_DATA,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.services.users import fetch_user_names
@@ -283,7 +286,7 @@ def save_sentence_length_data(user_reports_id):
         
 def update_sentence_length_data(sentence_length_data, user_reports_id):
     """
-    주어진 user_reports_id에 대한 워드클라우드 데이터를 업데이트합니다.
+    주어진 user_reports_id에 대한 바이올린플롯 데이터를 업데이트합니다.
     """
     execute_insert_update_query(
         query=UPDATE_SENTENCE_LENGTH_DATA,
@@ -317,16 +320,20 @@ def parse_text(text):
     tokens = kiwi.tokenize(text)
     return tokens
 
-def analyze_speech_data(morphs_data):
+def create_pos_ratio(user_reports_id):
     """형태소분석"""
-    speaker_data = extract_speaker_data(morphs_data)
+    stt_data = execute_select_query(
+    query=SELECT_STT_DATA_USER_REPORTS, 
+    params={"user_reports_id": user_reports_id}
+)
+    speaker_data = extract_speaker_data(stt_data)
     data= {
         speaker: analyze_text_with_kiwi(text) for speaker, text in speaker_data.items()
     }
     formatted_data = [
         {
             "speaker": speaker,
-            "tokenize_data": stats
+            "pos_ratio_data": stats
         } for speaker, stats in data.items()
     ]
 
@@ -371,53 +378,67 @@ def build_pos_summary(
     pos_unique_lists,
 ):
     """품사별 단어 리스트와 고유 단어 세트에서 요약 정보를 구성하여 반환"""
-    total_words = sum(len(words) for words in pos_lists.values())
+    # total_words = sum(len(words) for words in pos_lists.values())
     # total_unique_words = sum(
     #     len(unique_words) for unique_words in pos_unique_lists.values()
     # )
     summary = {
-        pos: f"{round(len(words) / total_words * 100, 1)}%({len(words)})"
+        pos: len(words)
         for pos, words in pos_lists.items()
     }
-    summary["총단어 수"] = total_words
-    summary = OrderedDict(
-        [("총단어 수", summary.pop("총단어 수"))] + list(summary.items())
-    )
+    # summary["총단어 수"] = total_words
+    # summary = OrderedDict(
+    #     [("총단어 수", summary.pop("총단어 수"))] + list(summary.items())
+    # )
+    summary = OrderedDict(summary.items())
     return summary
 
 
-def save_tokenized_data(user_reports_id):
-    stt_data = execute_select_query(
-        query=SELECT_STT_DATA_USER_REPORTS, params={"user_reports_id": user_reports_id}
+def save_pos_ratio_data(user_reports_id):
+    """
+    주어진 user_reports_id에 대한 품사분류 데이터를 생성하고 저장합니다.
+    """
+    data = execute_select_query(
+        query=SELECT_POS_RATIO_DATA, params={"user_reports_id": user_reports_id}
     )
 
-    morps_data = analyze_speech_data(stt_data)
-    return morps_data
+    if data:
+        item = data[0]
+        return {
+            "data": item["data"],
+            "insights": item["insights"]
+        }
+    else:
+        pos_ratio_data = create_pos_ratio(user_reports_id)
+        pos_ratio_data_json = json.dumps(pos_ratio_data)
+        execute_insert_update_query(
+            query=INSERT_POS_RATIO_DATA,
+            params={"user_reports_id": user_reports_id, "data": pos_ratio_data_json},
+        )
 
+        saved_data = execute_select_query(
+            query=SELECT_POS_RATIO_DATA, 
+            params={"user_reports_id": user_reports_id}
+        )
+        if saved_data:
+            item = saved_data[0]
+            return {
+                "data": item["data"],
+                "insights": item["insights"]
+            }
+        else:
+            raise ValueError("Failed to save or retrieve POS ratio length data.")
 
-# def save_sentence_length_data(user_reports_id):
-#     """
-#     주어진 user_reports_id에 대한 바이올린플롯 데이터를 생성하고 저장합니다.
-#     """
-#     data = execute_select_query(
-#         query=SELECT_SENTENCE_LENGTH_DATA, params={"user_reports_id": user_reports_id}
-#     )
-#     if data:
-#         return {"message": "sentence_length data already exists"}
-#     else:
-#         sentence_length_data = create_sentence_length(user_reports_id)
-#         data = json.dumps(sentence_length_data)
-#         execute_insert_update_query(
-#             query=INSERT_SENTENCE_LENGTH_DATA,
-#             params={"user_reports_id": user_reports_id, "data": sentence_length_data},
-#         )
-#         data = execute_select_query(
-#             query=SELECT_SENTENCE_LENGTH_DATA, 
-#             params={"user_reports_id": user_reports_id})
-#         if data:
-#             item = data[0]
-#         combined = {
-#             "data": item["data"],
-#             "insights": item["insights"]
-#         }
-#         return combined
+def update_pos_ratio_data(user_reports_id, pos_ratio_data):
+    """
+    주어진 user_reports_id에 대한 품사 분류를 업데이트합니다.
+    """
+    execute_insert_update_query(
+        query=UPDATE_POS_RATIO_DATA,
+        params={
+            "user_reports_id": user_reports_id,
+            "insights": pos_ratio_data["insights"]
+        },
+    )
+    return {"message": "POS ratio data updated successfully"}
+
