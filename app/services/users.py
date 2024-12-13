@@ -46,7 +46,6 @@ async def fetch_user_names(user_ids: List[str]) -> Dict[str, str]:
             user_name = response.user.user_metadata.get("name", "")
             user_data[user_id] = user_name
         except Exception as e:
-            print(f"Failed to fetch user {user_id}: {e}")
             user_data[user_id] = ""
 
     return user_data
