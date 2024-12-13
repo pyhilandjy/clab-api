@@ -222,6 +222,15 @@ SELECT_SENTENCE_LENGTH_DATA = text(
     """
 )
 
+UPDATE_SENTENCE_LENGTH_DATA = text(
+    """
+    UPDATE user_sentence_length
+    SET insights = :insights
+    WHERE user_reports_id = :user_reports_id
+    """
+)
+
+
 ###
 
 
