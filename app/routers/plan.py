@@ -257,7 +257,7 @@ class ReportUpdate(BaseModel):
 # 불러와야 하는 데이터는 missions_id 이고 missions테이블에 reports_id가 있는 것을 가져와서 비교해야함
 # if len(missions_id) > len(update_before_missions_id) => insert
 # else => update null로 처리
-@router.put("/reports/{report_id}")
+@router.put("/reports/{report_id}", tags=["Reports"])
 async def put_reports(report_id: str, payload: ReportUpdate):
     """
     report 업데이트
@@ -287,7 +287,7 @@ class ReportCreate(BaseModel):
 # todo 리스트의 값들은 전부 다르게 처리해야함 각 컬럼이 생성이 되어야하고, analysis는 bools로 missions_id는 바뀌어서 missions 테이블에 reports_id 가 들어가야함
 
 
-@router.post("/reports/{plans_id}")
+@router.post("/reports/{plans_id}", tags=["Reports"])
 async def post_reports(plans_id: str, payload: ReportCreate):
     """
     report 추가
