@@ -347,8 +347,12 @@ INSERT_SPEECH_ACT_DATA = text(
 )
 
 
-
-
+#삭제해야함
+COUNT_ACT_ID = text(
+    """
+text
+"""
+)
 
 ####
 SELECT_AUDIO_FILES_BETWEEN_DATE = text(
