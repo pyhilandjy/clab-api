@@ -15,7 +15,7 @@ from wordcloud import WordCloud
 
 from app.config import settings
 from app.db.query import (
-    COUNT_ACT_ID,
+    SELECT_SPEECH_ACT_COUNT,
     COUNT_TALK_MORE_ID,
     INSERT_FILE_PATH_REPORTS_ID,
     INSERT_IMAGE_FILES_META_DATA,
@@ -457,7 +457,7 @@ def select_act_count(user_id, start_date, end_date):
         "end_date": end_date,
     }
 
-    count_act_name = execute_select_query(query=COUNT_ACT_ID, params=params)
+    count_act_name = execute_select_query(query=SELECT_SPEECH_ACT_COUNT, params=params)
     act_count_dict = process_act_count(count_act_name)
     return act_count_dict
 
