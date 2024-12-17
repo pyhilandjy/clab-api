@@ -306,7 +306,7 @@ def update_report(report_data):
     )
 
 
-def insert_report(report_data):
+def insert_report(report_data, reports_day):
     reports_id = execute_insert_update_query(
         query=INSERT_REPORT,
         params={
@@ -316,7 +316,8 @@ def insert_report(report_data):
             "sentence_length": report_data["sentence_length"],
             "pos_ratio": report_data["pos_ratio"],
             "speech_act": report_data["speech_act"],
-            "insight": report_data["insight"],
+            "insights": report_data["insight"],
+            "day": reports_day,
         },
         return_id=True,
     )
