@@ -19,6 +19,7 @@ from app.db.query import (
     SELECT_POS_RATIO_DATA,
     INSERT_POS_RATIO_DATA,
     UPDATE_POS_RATIO_DATA,
+    SELECT_TALK_MORE,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.services.users import fetch_user_names
@@ -442,3 +443,72 @@ def update_pos_ratio_data(user_reports_id, pos_ratio_data):
     )
     return {"message": "POS ratio data updated successfully"}
 
+
+## T3
+def save_talk_more(user_reports_id):
+    """화행 갯수 카운트"""
+
+    data = execute_select_query(
+        query=SELECT_POS_RATIO_DATA, params={"user_reports_id": user_reports_id}
+    )
+
+    if data:
+        item = data[0]
+        return {
+            "data": item["data"],
+            "insights": item["insights"]
+        }
+
+
+def select_stt_data(user_reports_id):
+    """
+    주어진 user_reports_id에 대한 STT 데이터를 검색합니다.
+    """
+    stt_data = execute_select_query(
+    query=SELECT_STT_DATA_USER_REPORTS, 
+    params={"user_reports_id": user_reports_id}
+)
+    stt_talk_more = aggregate_talk_more_by_speaker(stt_data)
+    format_stt_talk_more = format_talk_more_data(stt_talk_more)
+    talk_more = execute_select_query(
+    query=SELECT_TALK_MORE, 
+)
+    
+def aggregate_talk_more_by_speaker(stt_data):
+    # speaker별로 talk_more_id의 발생 횟수를 집계할 딕셔너리
+    speaker_talk_more_count = defaultdict(lambda: defaultdict(int))
+
+    for row in stt_data:
+        speaker = row["speaker"]
+        talk_more_id = row["talk_more_id"]
+
+        # speaker와 talk_more_id를 기준으로 카운트 증가
+        speaker_talk_more_count[speaker][talk_more_id] += 1
+
+    # 결과 반환
+    return speaker_talk_more_count
+
+def format_talk_more_data(stt_talk_more):
+    # speaker별로 데이터를 저장하기 위한 딕셔너리
+    speaker_dict = {}
+
+    for row in stt_talk_more:
+        speaker = row["speaker"]
+        talk_more_id = row["talk_more_id"]
+
+        # speaker가 처음 등장하면 초기화
+        if speaker not in speaker_dict:
+            speaker_dict[speaker] = {}
+
+        # talk_more_id를 카운트 증가
+        if talk_more_id not in speaker_dict[speaker]:
+            speaker_dict[speaker][talk_more_id] = 0
+        speaker_dict[speaker][talk_more_id] += 1
+
+    # 최종 결과를 리스트 형태로 변환
+    result = [
+        {"speaker": speaker, **talk_more_ids}
+        for speaker, talk_more_ids in speaker_dict.items()
+    ]
+
+    return result
