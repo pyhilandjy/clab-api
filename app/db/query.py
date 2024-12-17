@@ -347,11 +347,13 @@ INSERT_SPEECH_ACT_DATA = text(
 )
 
 
-#삭제해야함
-COUNT_ACT_ID = text(
+# 인사이트
+
+SELECT_INSIGHT_DATA = text(
     """
-text
-"""
+    SELECT * FROM user_insight
+    WHERE user_reports_id = :user_reports_id
+    """
 )
 
 ####

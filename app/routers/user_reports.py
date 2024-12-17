@@ -15,6 +15,7 @@ from app.services.user_reports import (
     update_sentence_length_data,
     update_pos_ratio_data,
     save_speech_act_data,
+    select_insight_data
 )
 
 router = APIRouter()
@@ -123,3 +124,17 @@ def create_speech_act_data(user_reports_id: UserReportsId):
     data = user_reports_id.model_dump()
     user_reports_id = data["user_reports_id"]
     return save_speech_act_data(user_reports_id)
+
+@router.patch("/insight/data", tags=["User_Report"])
+def patch_insight_data(request: dict):
+    data = request.model_dump()
+    pass
+    # user_reports_id = data["user_reports_id"]
+    # return update_insight_data(user_reports_id, insight_data)
+
+
+# insight
+
+@router.get("/insight/data", tags=["User_Report"])
+def get_insight_data(user_reports_id: str):
+    return select_insight_data(user_reports_id)

@@ -23,6 +23,7 @@ from app.db.query import (
     SELECT_SPEECH_ACT_COUNT,
     INSERT_SPEECH_ACT_DATA,
     SELECT_SPEECH_ACT_DATA,
+    SELECT_INSIGHT_DATA,
     
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
@@ -483,8 +484,6 @@ def format_speech_act_data(data):
 
     return formatted_data
 
-
-
 def save_speech_act_data(user_reports_id):
 
     data = execute_select_query(
@@ -509,10 +508,6 @@ def save_speech_act_data(user_reports_id):
         query=SELECT_SPEECH_ACT_DATA, params={"user_reports_id": user_reports_id}
     )
         return data
-
-
-
-
 
 
 
@@ -589,3 +584,15 @@ def format_talk_more_data(stt_talk_more):
 
     return result
 
+
+# 인사이트
+    
+def select_insight_data(user_reports_id):
+
+    data = execute_select_query(
+        query=SELECT_INSIGHT_DATA, params={"user_reports_id": user_reports_id}
+    )
+    if data:
+        return data
+    else:
+        return []
