@@ -398,12 +398,12 @@ SELECT_ACT_TYPES = text(
     """
 )
 
-SELECT_TALK_MORE = text(
-    """
-SELECT talk_more, *
-FROM talk_more
-    """
-)
+# SELECT_TALK_MORE = text(
+#     """
+# SELECT talk_more, *
+# FROM talk_more
+#     """
+# )
 
 UPDATE_SPEECH_ACT = text(
     """
@@ -814,8 +814,8 @@ UPDATE_REPORT = text(
 
 INSERT_REPORT = text(
     """
-    INSERT INTO reports (plans_id, title, wordcloud, sentence_length, pos_ratio, speech_act, insights)
-    VALUES (:plans_id, :title, :wordcloud, :sentence_length, :pos_ratio, :speech_act, :insights)
+    INSERT INTO reports (plans_id, title, wordcloud, sentence_length, pos_ratio, speech_act, insights, day)
+    VALUES (:plans_id, :title, :wordcloud, :sentence_length, :pos_ratio, :speech_act, :insights, :day)
     RETURNING id
     """
 )
@@ -979,4 +979,23 @@ SELECT_AUDIO_INFO = text(
     WHERE 
         af.id = :audio_files_id
     """
+)
+
+SELECT_TALK_MORE = text(
+    """
+WITH all_talk_mores AS (
+    SELECT 
+        talk_more, 
+        id AS talk_more_id 
+    FROM 
+        talk_more 
+    ORDER BY 
+        id
+)
+SELECT 
+    talk_more_id, 
+    talk_more
+FROM 
+    all_talk_mores;
+"""
 )
