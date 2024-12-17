@@ -260,6 +260,92 @@ UPDATE_POS_RATIO_DATA = text(
 )
 
 
+### 문장분류
+SELECT_SPEECH_ACT_COUNT = text(
+    """
+
+WITH all_acts AS (
+    SELECT act_name, mood, id as act_id 
+    FROM speech_acts 
+    ORDER BY id
+),
+relevant_audio_files AS (
+    SELECT 
+        af.id AS audio_files_id
+    FROM 
+        user_missions um
+    JOIN 
+        audio_files af ON af.user_missions_id = um.id
+    WHERE 
+        um.user_reports_id = :user_reports_id
+),
+all_speakers AS (
+    SELECT DISTINCT 
+        sd.speaker
+    FROM 
+        stt_data sd
+    JOIN 
+        relevant_audio_files raf ON sd.audio_files_id = raf.audio_files_id
+),
+all_combinations AS (
+    SELECT
+        a.act_name,
+        a.mood,
+        a.act_id,
+        s.speaker
+    FROM
+        all_acts a
+    CROSS JOIN
+        all_speakers s
+)
+SELECT
+    ac.act_name,
+    ac.mood,
+    ac.speaker,
+    COALESCE(cnt.count, 0) AS count
+FROM
+    all_combinations ac
+LEFT JOIN (
+    SELECT
+        sa.act_name,
+        sa.mood,
+        sd.speaker,
+        COUNT(sd.act_id) AS count
+    FROM
+        stt_data sd
+    JOIN 
+        speech_acts sa ON sd.act_id = sa.id
+    JOIN 
+        relevant_audio_files raf ON sd.audio_files_id = raf.audio_files_id
+    GROUP BY
+        sa.act_name,
+        sa.mood,
+        sd.speaker
+) cnt ON ac.act_name = cnt.act_name AND ac.speaker = cnt.speaker
+ORDER BY
+    ac.act_id,
+    ac.speaker;
+
+"""
+)
+
+SELECT_SPEECH_ACT_DATA = text(
+    """
+    SELECT data, insights FROM user_speech_act
+    WHERE user_reports_id = :user_reports_id
+    """
+)
+
+INSERT_SPEECH_ACT_DATA = text(
+    """
+    INSERT INTO user_speech_act (user_reports_id, data) VALUES 
+    (
+        :user_reports_id,
+        :data
+    )
+    """
+)
+
 
 
 
@@ -437,58 +523,7 @@ UPDATE_ACT_TYPE = text(
     """
 )
 
-COUNT_ACT_ID = text(
-    """
-WITH all_acts AS (
-    SELECT act_name, id as act_id FROM speech_acts ORDER BY id
-),
-all_speakers AS (
-    SELECT DISTINCT speaker
-    FROM stt_data sd
-    JOIN audio_files f ON sd.audio_files_id = f.id
-    WHERE f.user_id = :user_id
-    AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
-),
-all_combinations AS (
-    SELECT
-        a.act_name,
-        a.act_id,
-        s.speaker
-    FROM
-        all_acts a
-    CROSS JOIN
-        all_speakers s
-)
-SELECT
-    ac.act_name,
-    ac.speaker,
-    COALESCE(cnt.count, 0) AS count
-FROM
-    all_combinations ac
-LEFT JOIN (
-    SELECT
-        sa.act_name,
-        sd.speaker,
-        COUNT(sd.act_id) AS count
-    FROM
-        stt_data sd
-    JOIN
-        speech_acts sa ON sd.act_id = sa.id
-    JOIN
-        audio_files f ON sd.audio_files_id = f.id
-    WHERE
-        f.user_id = :user_id
-        AND sd.created_at BETWEEN :start_date AND :end_date + INTERVAL '1 day'
-    GROUP BY
-        sa.act_name,
-        sd.speaker
-) cnt ON ac.act_name = cnt.act_name AND ac.speaker = cnt.speaker
-ORDER BY
-    ac.act_id,
-    ac.speaker;
 
-"""
-)
 
 
 COUNT_TALK_MORE_ID = text(

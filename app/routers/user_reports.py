@@ -14,6 +14,7 @@ from app.services.user_reports import (
     save_pos_ratio_data,
     update_sentence_length_data,
     update_pos_ratio_data,
+    save_speech_act_data,
 )
 
 router = APIRouter()
@@ -115,3 +116,10 @@ def patch_pos_ratio_data(request: POSRatioUpdateRequest):
     user_reports_id = data["user_reports_id"]
     pos_ratio_data = data["pos_ratio_data"]
     return update_pos_ratio_data(user_reports_id, pos_ratio_data)
+
+# speech acts
+@router.post("/speech_act/data", tags=["User_Report"])
+def create_speech_act_data(user_reports_id: UserReportsId):
+    data = user_reports_id.model_dump()
+    user_reports_id = data["user_reports_id"]
+    return save_speech_act_data(user_reports_id)

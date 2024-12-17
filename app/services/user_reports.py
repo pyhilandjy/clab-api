@@ -20,6 +20,10 @@ from app.db.query import (
     INSERT_POS_RATIO_DATA,
     UPDATE_POS_RATIO_DATA,
     SELECT_TALK_MORE,
+    SELECT_SPEECH_ACT_COUNT,
+    INSERT_SPEECH_ACT_DATA,
+    SELECT_SPEECH_ACT_DATA,
+    
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.services.users import fetch_user_names
@@ -444,6 +448,70 @@ def update_pos_ratio_data(user_reports_id, pos_ratio_data):
     return {"message": "POS ratio data updated successfully"}
 
 
+# 문장분류
+
+def create_speech_act(user_reports_id):
+    data = execute_select_query(
+        query=SELECT_SPEECH_ACT_COUNT, params={"user_reports_id": user_reports_id}
+    )
+    return data
+
+def format_speech_act_data(data):
+    grouped = defaultdict(lambda: defaultdict(dict))
+
+    for entry in data:
+        speaker = entry['speaker']
+        mood = entry['mood']
+        act_name = entry['act_name']
+        count = entry['count']
+        
+        grouped[speaker][mood][act_name] = count
+
+    formatted_data = []
+    for speaker, moods in grouped.items():
+        formatted_entry = {"speaker": speaker}
+        for mood, acts in moods.items():
+            formatted_entry[mood] = acts
+        formatted_data.append(formatted_entry)
+    
+    return formatted_data
+
+
+def save_speech_act_data(user_reports_id):
+
+    data = execute_select_query(
+        query=SELECT_SPEECH_ACT_DATA, params={"user_reports_id": user_reports_id}
+    )
+
+    if data:
+        item = data[0]
+        return {
+            "data": item["data"],
+            "insights": item["insights"]
+        }
+    else:
+        speech_act_data = create_speech_act(user_reports_id)
+        formatted_speech_act_data = format_speech_act_data(speech_act_data)
+        speech_act_data_json = json.dumps(formatted_speech_act_data)
+        execute_insert_update_query(
+            query=INSERT_SPEECH_ACT_DATA,
+            params={"user_reports_id": user_reports_id, "data": speech_act_data_json},
+        )
+        data = execute_select_query(
+        query=SELECT_SPEECH_ACT_DATA, params={"user_reports_id": user_reports_id}
+    )
+        return data
+
+
+
+
+
+
+
+
+
+
+
 ## T3
 def save_talk_more(user_reports_id):
     """화행 갯수 카운트"""
@@ -512,3 +580,4 @@ def format_talk_more_data(stt_talk_more):
     ]
 
     return result
+
