@@ -457,8 +457,6 @@ def create_speech_act(user_reports_id):
     return data
 
 def format_speech_act_data(data):
-    from collections import defaultdict
-
     grouped = defaultdict(lambda: defaultdict(dict))
 
     for entry in data:
@@ -467,7 +465,7 @@ def format_speech_act_data(data):
         act_name = entry['act_name']
         count = entry['count']
 
-        # act_name 미설정 제외
+        # act_name이 '미설정'인 경우 제외
         if act_name == '미설정':
             continue
         
@@ -475,11 +473,14 @@ def format_speech_act_data(data):
 
     formatted_data = []
     for speaker, moods in grouped.items():
-        formatted_entry = {"speaker": speaker}
+        formatted_entry = {
+            "speaker": speaker,
+            "speech_act": []
+        }
         for mood, acts in moods.items():
-            formatted_entry[mood] = acts
+            formatted_entry["speech_act"].append({mood: acts})
         formatted_data.append(formatted_entry)
-    
+
     return formatted_data
 
 
