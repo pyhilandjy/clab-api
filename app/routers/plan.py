@@ -294,7 +294,8 @@ async def post_reports(plans_id: str, payload: ReportCreate):
     """
     report_data = payload.model_dump()
     report_data["plans_id"] = plans_id
-    reports_id = insert_report(report_data)
+    reports_day = len(report_data["missions_id"])
+    reports_id = insert_report(report_data, reports_day)
     missions_ids = payload.missions_id
     insert_reports_id_missions(reports_id, missions_ids)
     return {"message": "success"}
