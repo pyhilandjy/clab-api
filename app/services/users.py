@@ -50,6 +50,15 @@ async def fetch_user_names(user_ids: List[str]) -> Dict[str, str]:
 
     return user_data
 
+def fetch_user_name(user_id: str) -> Dict[str, str]:
+    """
+    Supabase를 통해 user_id에 해당하는 사용자 이름(user_name)을 비동기로 가져옵니다.
+    """
+    response = supabase.auth.admin.get_user_by_id(user_id)
+    user_name = response.user.user_metadata.get("name", "")
+
+    return user_name
+
 
 async def create_admin_user(email: str, password: str, name: str, role: str):
     supabase.auth.admin.create_user(

@@ -26,9 +26,10 @@ from app.db.query import (
     SELECT_INSIGHT_DATA,
     UPSERT_INSIGHT_DATA,
     UPDATE_SPEECH_ACT_DATA,
+    SELECT_COVER_DATA,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
-from app.services.users import fetch_user_names
+from app.services.users import fetch_user_names, fetch_user_name
 
 FONT_PATH = os.path.abspath("./NanumFontSetup_TTF_GOTHIC/NanumGothic.ttf")
 font_prop = font_manager.FontProperties(fname=FONT_PATH)
@@ -48,6 +49,25 @@ POS_TAG_TO_KOREAN = {
     "JC": "접속사",
     "IC": "감탄사",
 }
+
+def select_cover_data(user_reports_id):
+    """
+    주어진 user_reports_id에 대한 커버 데이터를 검색합니다.
+    """
+    data = execute_select_query(
+        query=SELECT_COVER_DATA, params={"user_reports_id": user_reports_id}
+    )
+    if data:
+        user_id = str(data[0].user_id)
+        user_name = fetch_user_name(user_id)
+        data = [dict(item) for item in data]
+        for item in data:
+            item.pop("user_id", None)
+            item["user_name"] = user_name
+
+        return data
+    else:
+        return []
 
 # 워드클라우드
 

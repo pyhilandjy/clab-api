@@ -18,10 +18,15 @@ from app.services.user_reports import (
     select_insight_data,
     upsert_insight_data,
     update_speech_act_data,
+    select_cover_data,
 )
 from app.db.worker import execute_insert_update_query
 
 router = APIRouter()
+
+@router.get("/cover/data", tags=["User_Report"])
+def get_cover_data(user_reports_id: str):
+    return select_cover_data(user_reports_id)
 
 class UserReportsId(BaseModel):
     user_reports_id: str
@@ -139,7 +144,7 @@ class SpeechActData(BaseModel):
 class SpeechActUpdateRequest(BaseModel):
     user_reports_id: str
     speech_act_data: SpeechActData
-    
+
 @router.patch("/speech_act/data", tags=["User_Report"])
 def patch_speech_act_data(request: SpeechActUpdateRequest):
     data = request.model_dump()
@@ -174,3 +179,5 @@ def put_insight_data(insight_data: InsightData):
 
     upsert_insight_data(data)
     return {"message": "Insight data upserted successfully"}
+
+
