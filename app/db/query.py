@@ -357,6 +357,41 @@ SELECT_INSIGHT_DATA = text(
     """
 )
 
+UPSERT_INSIGHT_DATA = text(
+    """
+    DO $$
+BEGIN
+    IF :id IS NULL OR :id = '' THEN
+        INSERT INTO user_insight (
+            user_reports_id,
+            reports_order,
+            title,
+            text,
+            insight,
+            example
+        ) VALUES (
+            :user_reports_id,
+            :reports_order,
+            :title,
+            :text,
+            :insight,
+            :example
+        );
+    ELSE
+        UPDATE user_insight
+        SET
+            user_reports_id = :user_reports_id,
+            reports_order = :reports_order,
+            title = :title,
+            text = :text,
+            insight = :insight,
+            example = :example
+        WHERE id = :id;
+    END IF;
+END $$;
+    """
+)
+
 ####
 SELECT_AUDIO_FILES_BETWEEN_DATE = text(
     """
