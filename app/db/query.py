@@ -346,6 +346,15 @@ INSERT_SPEECH_ACT_DATA = text(
     """
 )
 
+UPDATE_SPEECH_ACT_DATA = text(
+    """
+    UPDATE user_speech_act
+    SET insights = :insights
+    WHERE user_reports_id = :user_reports_id
+    """
+)
+
+
 
 # 인사이트
 

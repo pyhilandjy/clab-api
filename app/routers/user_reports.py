@@ -16,7 +16,8 @@ from app.services.user_reports import (
     update_pos_ratio_data,
     save_speech_act_data,
     select_insight_data,
-    upsert_insight_data
+    upsert_insight_data,
+    update_speech_act_data,
 )
 from app.db.worker import execute_insert_update_query
 
@@ -126,6 +127,26 @@ def create_speech_act_data(user_reports_id: UserReportsId):
     data = user_reports_id.model_dump()
     user_reports_id = data["user_reports_id"]
     return save_speech_act_data(user_reports_id)
+
+class SpeechActSpeakerData(BaseModel):
+    speaker: str
+    speech_act: List[Dict[str, Dict[str, int]]]
+
+class SpeechActData(BaseModel):
+    data: List[SpeechActSpeakerData]
+    insights: str = None
+
+class SpeechActUpdateRequest(BaseModel):
+    user_reports_id: str
+    speech_act_data: SpeechActData
+    
+@router.patch("/speech_act/data", tags=["User_Report"])
+def patch_speech_act_data(request: SpeechActUpdateRequest):
+    data = request.model_dump()
+    user_reports_id = data["user_reports_id"]
+    speech_act_data = data["speech_act_data"]
+    return update_speech_act_data(user_reports_id, speech_act_data)
+
 
 # insight
 

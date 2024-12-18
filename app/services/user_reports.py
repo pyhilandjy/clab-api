@@ -25,7 +25,7 @@ from app.db.query import (
     SELECT_SPEECH_ACT_DATA,
     SELECT_INSIGHT_DATA,
     UPSERT_INSIGHT_DATA,
-    
+    UPDATE_SPEECH_ACT_DATA,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.services.users import fetch_user_names
@@ -519,9 +519,18 @@ def save_speech_act_data(user_reports_id):
         return data
 
 
-
-
-
+def update_speech_act_data(user_reports_id, speech_act_data):
+    """
+    주어진 user_reports_id에 대한 품사 분류를 업데이트합니다.
+    """
+    execute_insert_update_query(
+        query=UPDATE_SPEECH_ACT_DATA,
+        params={
+            "user_reports_id": user_reports_id,
+            "insights": speech_act_data["insights"]
+        },
+    )
+    return {"message": "POS ratio data updated successfully"}
 
 
 ## T3
