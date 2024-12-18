@@ -353,6 +353,7 @@ SELECT_INSIGHT_DATA = text(
     """
     SELECT * FROM user_insight
     WHERE user_reports_id = :user_reports_id
+    ORDER BY reports_order ASC
     """
 )
 
