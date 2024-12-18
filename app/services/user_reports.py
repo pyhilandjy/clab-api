@@ -24,6 +24,7 @@ from app.db.query import (
     INSERT_SPEECH_ACT_DATA,
     SELECT_SPEECH_ACT_DATA,
     SELECT_INSIGHT_DATA,
+    UPSERT_INSIGHT_DATA,
     
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
@@ -225,7 +226,7 @@ def create_sentence_length(user_reports_id):
             sentence_statistics[speaker] = {
                 "max_length": result.get("max_length", 0),
                 "total_length": 0,
-                "sentence_count": 0
+                "sentence_count": 0,
             }
 
         # 통계 데이터 업데이트
@@ -235,20 +236,28 @@ def create_sentence_length(user_reports_id):
             sentence_statistics[speaker]["max_length"], char_length
         )
 
-    # 평균 계산 및 데이터 포맷팅
-    formatted_data = [
-        {
+    # 중위값 계산 및 데이터 포맷팅
+    formatted_data = []
+    for speaker, lengths in sentence_length_data.items():
+        stats = sentence_statistics[speaker]
+        
+        # 중위값 계산
+        sorted_lengths = sorted(lengths)
+        length_count = len(sorted_lengths)
+        if length_count % 2 == 1:  # 홀수 개
+            median = sorted_lengths[length_count // 2]
+        else:  # 짝수 개
+            median = (sorted_lengths[length_count // 2 - 1] + sorted_lengths[length_count // 2]) / 2
+
+        # 데이터 포맷팅
+        formatted_data.append({
             "speaker": speaker,
             "char_lengths": lengths,
             "statistical_data": {
                 "Max": stats["max_length"],
-                "Avg": int(stats["total_length"] / stats["sentence_count"])
-                if stats["sentence_count"] > 0 else 0
+                "Avg": median
             }
-        }
-        for speaker, lengths in sentence_length_data.items()
-        for stats in [sentence_statistics[speaker]]
-    ]
+        })
 
     return formatted_data
 
@@ -467,7 +476,7 @@ def format_speech_act_data(data):
         count = entry['count']
 
         # act_name이 '미설정'인 경우 제외
-        if act_name == '미설정':
+        if (act_name == '미설정'):
             continue
         
         grouped[speaker][mood][act_name] = count
@@ -596,3 +605,21 @@ def select_insight_data(user_reports_id):
         return data
     else:
         return []
+
+def upsert_insight_data(insight_data):
+    """
+    주어진 insight_data를 삽입하거나 업데이트합니다.
+    """
+    for key, value in insight_data.items():
+        if value == '':
+            insight_data[key] = None
+
+    try:
+        execute_insert_update_query(
+            query=UPSERT_INSIGHT_DATA,
+            params=insight_data
+        )
+        return {"message": "Insight data upserted successfully"}
+    except Exception as e:
+        return {"error": str(e)}
+
