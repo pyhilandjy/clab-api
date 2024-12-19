@@ -241,14 +241,13 @@ async def delete_reports(report_id: str):
     """
     delete_report(report_id)
 
-
 class ReportUpdate(BaseModel):
     title: str
-    wordcloud: bool
-    sentence_length: bool
-    pos_ratio: bool
-    speech_act: bool
-    insight: bool
+    wordcloud: Optional[bool] = False
+    sentence_length: Optional[bool] = False
+    pos_ratio: Optional[bool] = False
+    speech_act: Optional[bool] = False
+    insight: Optional[bool] = False
     missions_id: list[dict]
 
 
