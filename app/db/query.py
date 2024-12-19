@@ -953,7 +953,7 @@ UPDATE_REPORT = text(
         sentence_length = :sentence_length,
         pos_ratio = :pos_ratio,
         speech_act = :speech_act,
-        insights = :insights
+        insights = :insight
     WHERE id = :id
     """
 )
