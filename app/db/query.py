@@ -160,7 +160,7 @@ JOIN reports r ON ur.reports_id = r.id
 JOIN plans p ON r.plans_id = p.id
 JOIN user_missions um ON ur.id = um.user_reports_id
 JOIN user_plans up ON um.user_plans_id = up.id
-JOIN user_childrens c ON up.user_childrens_id = c.id
+JOIN user_children c ON up.user_childrens_id = c.id
 WHERE user_reports_id = :user_reports_id;
     """
 )
@@ -194,7 +194,7 @@ children_data AS (
     SELECT 
         DISTINCT uc.first_name,
         up.user_id
-    FROM user_childrens uc
+    FROM user_children uc
     INNER JOIN user_plans up
         ON uc.id = up.user_childrens_id
     INNER JOIN missions_data md
@@ -1032,7 +1032,7 @@ SELECT DISTINCT ON (user_reports.id)
         ELSE '대기'
     END AS status,
     NULL AS user_name,
-    user_childrens.first_name AS child_name,
+    user_children.first_name AS child_name,
     reports.title AS report_title,
     plans.plan_name AS plans_name
 FROM
@@ -1044,7 +1044,7 @@ LEFT JOIN (
 ) user_missions ON user_missions.user_reports_id = user_reports.id
 LEFT JOIN user_plans ON user_missions.user_plans_id = user_plans.id
 LEFT JOIN plans ON user_plans.plans_id = plans.id
-LEFT JOIN user_childrens ON user_plans.user_childrens_id = user_childrens.id
+LEFT JOIN user_children ON user_plans.user_childrens_id = user_children.id
 LEFT JOIN reports ON user_reports.reports_id = reports.id
 ORDER BY user_reports.id, user_reports.send_at DESC
 LIMIT :limit OFFSET :offset;
@@ -1089,7 +1089,8 @@ UPDATE_USER_REPORTS_INSPECTION = text(
     """
     UPDATE user_reports
     SET inspection = :inspection,
-        inspected_at = :inspected_at
+        inspected_at = :inspected_at,
+        status = :status
     WHERE id = :user_reports_id
     """
 )
@@ -1097,7 +1098,7 @@ UPDATE_USER_REPORTS_INSPECTION = text(
 UPDATE_USER_REPORTS_INSPECTOR = text(
     """
     UPDATE user_reports
-    SET inspector = :inspector
+    SET inspector = :inspector,
     WHERE id = :user_reports_id
     """
 )
@@ -1121,7 +1122,7 @@ SELECT_AUDIO_INFO = text(
         user_plans up
         ON um.user_plans_id = up.id
     INNER JOIN 
-        user_childrens uc
+        user_children uc
         ON up.user_childrens_id = uc.id
     WHERE 
         af.id = :audio_files_id
