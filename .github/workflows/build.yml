@@ -70,7 +70,7 @@ jobs:
           chmod 600 SSH_PRIVATE_KEY.pem
           ssh -i SSH_PRIVATE_KEY.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
             cd clab
-            docker pull ghcr.io/connects-lab/clab-api:latest
+            docker pull ghcr.io/connects-lab/talk.d_admin_api:latest
             docker compose down
             docker compose up -d
           EOF
