@@ -80,11 +80,11 @@ def update_audio_file_is_used(audio_file_id: str, is_used: bool):
         params={"audio_file_id": audio_file_id, "is_used": is_used},
     )
 
-# user_reports의 status도 DONE으로 업데이트
+
+# user_reports의 status도 COMPLETED로 업데이트
 def update_user_reports_inspection(user_reports_id: str, inspection: str):
-    inspected_at = datetime.datetime.now() if inspection == "completed" else None
-    status = "DONE" if inspection == "completed" else "IN_PROGRESS"
-    is_open = False if inspection == "completed" else True
+    inspected_at = datetime.datetime.now() if inspection == "COMPLETED" else None
+    status = "COMPLETED" if inspection == "COMPLETED" else "IN_PROGRESS"
     execute_insert_update_query(
         query=UPDATE_USER_REPORTS_INSPECTION,
         params={
@@ -98,6 +98,7 @@ def update_user_reports_inspection(user_reports_id: str, inspection: str):
     #     query=UPDATE_USER_MISSIONS_IS_OPEN,
     #     params={"user_reports_id": user_reports_id, "is_open": is_open},
     # )
+
 
 # inspector를 업데이트할때 user_missions의 is_open값을 업데이트
 def update_user_reports_inspector(user_reports_id: str, inspector: str):
@@ -130,8 +131,12 @@ def update_user_missions_is_open(user_reports_id: str):
     user_plans_id = reports_id[0]["user_plans_id"]
     # reports_id에 해당하는 day 값을 가져오기
     current_day = next(
-        (item["report_day"] for item in all_reports_id_day if item["report_id"] == reports_id[0]["reports_id"]),
-        None
+        (
+            item["report_day"]
+            for item in all_reports_id_day
+            if item["report_id"] == reports_id[0]["reports_id"]
+        ),
+        None,
     )
 
     if current_day is None:
@@ -151,7 +156,7 @@ def update_user_missions_is_open(user_reports_id: str):
             for mission in all_missions_id_day
             if mission["day"] in day_range
         ]
-        
+
         for missions_id in missions_in_range:
             execute_insert_update_query(
                 query=UPDATE_USER_MISSIONS_IS_OPEN,

@@ -99,12 +99,12 @@ async def convert_file_update_record_time(local_path: str, audio_files_id):
         with open(local_path, "rb") as f:
             file_bytes = f.read()
         m4a_path = convert_to_m4a(file_bytes, local_path)
-        record_time = get_record_time(m4a_path)
-        insert_record_time(record_time, audio_files_id)
+        # record_time = get_record_time(m4a_path)
+        # insert_record_time(record_time, audio_files_id)
         logger.info(f"Audio file metadata inserted: {m4a_path}")
         return m4a_path
     except Exception as e:
-        update_audio_status(audio_files_id, "convert_error")
+        update_audio_status(audio_files_id, "COMVERT_ERROR")
         logger.error(f"Error processing metadata: {e}")
         raise e
 
@@ -161,16 +161,16 @@ async def process_stt(audio_files_id, m4a_path):
         segments = get_stt_results(m4a_path)
         if not segments:
             logger.error(f"No segments found for file: {audio_files_id}")
-            update_audio_status(audio_files_id, "stt_error")
+            update_audio_status(audio_files_id, "STT_ERROR")
             delete_file(m4a_path)
             return
 
         rename_segments = rename_keys(segments)
         explode_segments = explode(rename_segments, "textEdited")
         insert_stt_segments(explode_segments, audio_files_id)
-        update_audio_status(audio_files_id, "done")
+        update_audio_status(audio_files_id, "COMPLETED")
     except Exception as e:
-        update_audio_status(audio_files_id, "stt_error")
+        update_audio_status(audio_files_id, "STT_ERROR")
         delete_file(m4a_path)
         raise e
     else:
