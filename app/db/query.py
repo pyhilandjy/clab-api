@@ -32,7 +32,7 @@ UPDATE_RECORD_TIME = text(
 SELECT_AUDIO_FILES = text(
     """
     SELECT * FROM audio_files
-    WHERE audio_files.status = 'ready'
+    WHERE audio_files.status = 'READY'
 """
 )
 
@@ -146,7 +146,7 @@ SELECT_STT_DATA_USER_REPORTS = text(
 )
 
 
-#새로운 reports
+# 새로운 reports
 
 SELECT_USER_REPORTS_INFO = text(
     """
@@ -165,7 +165,7 @@ WHERE user_reports_id = :user_reports_id;
     """
 )
 
-#표지
+# 표지
 SELECT_COVER_DATA = text(
     """
 WITH 
@@ -196,7 +196,7 @@ children_data AS (
         up.user_id
     FROM user_children uc
     INNER JOIN user_plans up
-        ON uc.id = up.user_childrens_id
+        ON uc.id = up.user_children_id
     INNER JOIN missions_data md
         ON up.id = md.user_plans_id
 ),
@@ -228,7 +228,7 @@ INNER JOIN reports_data rd
     """
 )
 
-#Wordcloud
+# Wordcloud
 INSERT_WORDCLOUD_DATA = text(
     """
     INSERT INTO user_wordcloud (user_reports_id, data) VALUES 
@@ -256,7 +256,6 @@ UPDATE_WORDCLOUD_DATA = text(
 )
 
 
-
 DELETE_WORDCLOUD_DATA = text(
     """
     DELETE FROM user_wordcloud
@@ -264,7 +263,7 @@ DELETE_WORDCLOUD_DATA = text(
     """
 )
 
-#violinplot
+# violinplot
 
 
 INSERT_SENTENCE_LENGTH_DATA = text(
@@ -286,7 +285,6 @@ SELECT_SENTENCE_LENGTH_DATA = text(
 )
 
 
-
 UPDATE_SENTENCE_LENGTH_DATA = text(
     """
     UPDATE user_sentence_length
@@ -296,7 +294,7 @@ UPDATE_SENTENCE_LENGTH_DATA = text(
 )
 
 
-#품사 분류
+# 품사 분류
 SELECT_POS_RATIO_DATA = text(
     """
     SELECT data, insights FROM user_pos_ratio
@@ -636,8 +634,6 @@ UPDATE_ACT_TYPE = text(
 )
 
 
-
-
 COUNT_TALK_MORE_ID = text(
     """
 WITH all_talk_mores AS (
@@ -730,7 +726,7 @@ SELECT_USERS = text(
     FROM audio_files;
     """
 )
-#report_files 관련 쿼리 삭제 예정
+# report_files 관련 쿼리 삭제 예정
 INSERT_REPORT_META_DATA = text(
     """
     INSERT INTO report_files (user_id, title, file_path) VALUES 
