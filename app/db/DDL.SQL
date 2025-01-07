@@ -6,7 +6,7 @@ CREATE TABLE
     file_name VARCHAR(255) NOT NULL,
     record_time INT,
     reports_id UUID,
-    status VARCHAR(255) DEFAULT 'ready',
+    status VARCHAR(255) DEFAULT 'READY',
     created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
     PRIMARY KEY (id)
   );
@@ -88,7 +88,7 @@ CREATE TABLE
     id UUID DEFAULT gen_random_uuid () NOT NULL,
     user_id UUID NOT NULL,
     mission_id UUID NOT NULL,
-    status VARCHAR(255) NOT NULL DEFAULT 'ready',
+    status VARCHAR(255) NOT NULL DEFAULT 'READY',
     created_at TIMESTAMP NOT NULL DEFAULT current_timestamp,
     PRIMARY KEY (id)
   );
