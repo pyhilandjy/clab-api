@@ -160,7 +160,7 @@ JOIN reports r ON ur.reports_id = r.id
 JOIN plans p ON r.plans_id = p.id
 JOIN user_missions um ON ur.id = um.user_reports_id
 JOIN user_plans up ON um.user_plans_id = up.id
-JOIN user_children c ON up.user_childrens_id = c.id
+JOIN user_children c ON up.user_children_id = c.id
 WHERE user_reports_id = :user_reports_id;
     """
 )
@@ -957,8 +957,8 @@ UPDATE_REPORT = text(
 
 INSERT_REPORT = text(
     """
-    INSERT INTO reports (plans_id, title, wordcloud, sentence_length, pos_ratio, speech_act, insights, day)
-    VALUES (:plans_id, :title, :wordcloud, :sentence_length, :pos_ratio, :speech_act, :insights, :day)
+    INSERT INTO reports (plans_id, title, wordcloud, sentence_length, pos_ratio, speech_act, insights)
+    VALUES (:plans_id, :title, :wordcloud, :sentence_length, :pos_ratio, :speech_act, :insights)
     RETURNING id
     """
 )
@@ -1040,7 +1040,7 @@ LEFT JOIN (
 ) user_missions ON user_missions.user_reports_id = user_reports.id
 LEFT JOIN user_plans ON user_missions.user_plans_id = user_plans.id
 LEFT JOIN plans ON user_plans.plans_id = plans.id
-LEFT JOIN user_children ON user_plans.user_childrens_id = user_children.id
+LEFT JOIN user_children ON user_plans.user_children_id = user_children.id
 LEFT JOIN reports ON user_reports.reports_id = reports.id
 ORDER BY user_reports.id, user_reports.send_at DESC
 LIMIT :limit OFFSET :offset;
@@ -1094,7 +1094,7 @@ UPDATE_USER_REPORTS_INSPECTION = text(
 UPDATE_USER_REPORTS_INSPECTOR = text(
     """
     UPDATE user_reports
-    SET inspector = :inspector,
+    SET inspector = :inspector
     WHERE id = :user_reports_id
     """
 )
@@ -1119,7 +1119,7 @@ SELECT_AUDIO_INFO = text(
         ON um.user_plans_id = up.id
     INNER JOIN 
         user_children uc
-        ON up.user_childrens_id = uc.id
+        ON up.user_children_id = uc.id
     WHERE 
         af.id = :audio_files_id
     """
