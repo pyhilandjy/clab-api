@@ -8,7 +8,6 @@ from app.services.management import (
     update_audio_file_is_used,
     update_user_reports_inspection,
     update_user_reports_inspector,
-    update_user_missions_is_open,
 )
 
 router = APIRouter()
@@ -75,7 +74,7 @@ class UpdateUserReportsInspector(BaseModel):
 @router.patch(
     "/management/user/reports/inspector/{user_reports_id}", tags=["Management"]
 )
-async def patch_user_reports_inspection(
+async def patch_user_reports_inspector(
     user_reports_id: str, payload: UpdateUserReportsInspector
 ):
     """
@@ -88,7 +87,3 @@ async def patch_user_reports_inspection(
 @router.get("/stt/audio-info/{audio_files_id}", tags=["STT"])
 async def get_audio_infos(audio_files_id: str):
     return get_audio_info(audio_files_id)
-
-@router.get("/test", tags=["Test"])
-def test(user_reports_id: str):
-    return update_user_missions_is_open(user_reports_id)

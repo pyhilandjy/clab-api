@@ -106,62 +106,62 @@ def update_user_reports_inspector(user_reports_id: str, inspector: str):
         query=UPDATE_USER_REPORTS_INSPECTOR,
         params={"inspector": inspector, "user_reports_id": user_reports_id},
     )
-    update_user_missions_is_open(user_reports_id)
+    # update_user_missions_is_open(user_reports_id)
 
 
-# user_missions의 is_open값을 업데이트
-def update_user_missions_is_open(user_reports_id: str):
-    # reports_id를 가져오기
-    reports_id = execute_select_query(
-        query=USER_REPORT_REPORT_ID,
-        params={"user_reports_id": user_reports_id},
-    )
+# # TODO 수정필요 !!!!! 오픈은 user side에서 처리함
+# def update_user_missions_is_open(user_reports_id: str):
+#     # reports_id를 가져오기
+#     reports_id = execute_select_query(
+#         query=USER_REPORT_REPORT_ID,
+#         params={"user_reports_id": user_reports_id},
+#     )
 
-    # reports_id와 연결된 day 데이터 가져오기
-    all_reports_id_day = execute_select_query(
-        query=USER_REPORT_REPORT,
-        params={"user_reports_id": user_reports_id},
-    )
+#     # reports_id와 연결된 day 데이터 가져오기
+#     all_reports_id_day = execute_select_query(
+#         query=USER_REPORT_REPORT,
+#         params={"user_reports_id": user_reports_id},
+#     )
 
-    # 모든 missions의 day와 id 데이터 가져오기
-    all_missions_id_day = execute_select_query(
-        query=USER_REPORT_MISSIONS,
-        params={"user_reports_id": user_reports_id},
-    )
-    user_plans_id = reports_id[0]["user_plans_id"]
-    # reports_id에 해당하는 day 값을 가져오기
-    current_day = next(
-        (
-            item["report_day"]
-            for item in all_reports_id_day
-            if item["report_id"] == reports_id[0]["reports_id"]
-        ),
-        None,
-    )
+#     # 모든 missions의 day와 id 데이터 가져오기
+#     all_missions_id_day = execute_select_query(
+#         query=USER_REPORT_MISSIONS,
+#         params={"user_reports_id": user_reports_id},
+#     )
+#     user_plans_id = reports_id[0]["user_plans_id"]
+#     # reports_id에 해당하는 day 값을 가져오기
+#     current_day = next(
+#         (
+#             item["report_day"]
+#             for item in all_reports_id_day
+#             if item["report_id"] == reports_id[0]["reports_id"]
+#         ),
+#         None,
+#     )
 
-    if current_day is None:
-        raise ValueError("Current day not found for the given reports_id")
+#     if current_day is None:
+#         raise ValueError("Current day not found for the given reports_id")
 
-    # 다음으로 큰 day 값 찾기
-    sorted_days = sorted(item["report_day"] for item in all_reports_id_day)
-    next_day = next((day for day in sorted_days if day > current_day), None)
+#     # 다음으로 큰 day 값 찾기
+#     sorted_days = sorted(item["report_day"] for item in all_reports_id_day)
+#     next_day = next((day for day in sorted_days if day > current_day), None)
 
-    if next_day is None:
-        pass
-    else:
-        # current_day + 1부터 next_day까지 범위의 day를 포함하는 mission_id 추출
-        day_range = range(current_day + 1, next_day + 1)
-        missions_in_range = [
-            str(mission["mission_id"])
-            for mission in all_missions_id_day
-            if mission["day"] in day_range
-        ]
+#     if next_day is None:
+#         pass
+#     else:
+#         # current_day + 1부터 next_day까지 범위의 day를 포함하는 mission_id 추출
+#         day_range = range(current_day + 1, next_day + 1)
+#         missions_in_range = [
+#             str(mission["mission_id"])
+#             for mission in all_missions_id_day
+#             if mission["day"] in day_range
+#         ]
 
-        for missions_id in missions_in_range:
-            execute_insert_update_query(
-                query=UPDATE_USER_MISSIONS_IS_OPEN,
-                params={"user_plans_id": user_plans_id, "missions_id": missions_id},
-            )
+#         for missions_id in missions_in_range:
+#             execute_insert_update_query(
+#                 query=UPDATE_USER_MISSIONS_IS_OPEN,
+#                 params={"user_plans_id": user_plans_id, "missions_id": missions_id},
+#             )
 
 
 def get_audio_info(audio_files_id):
