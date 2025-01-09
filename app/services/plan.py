@@ -272,7 +272,6 @@ def update_mission(payload: dict):
     )
 
 
-# 애매한데 미션과 조인해서 sort를 해야하는지 고민중 미션이 등록이 안되어있을때는 sort의 의미가 없어짐 그렇다고 created_at으로 정렬하면 나중에 만들어질것은 정렬이 애매해짐
 def select_reports(plans_id):
     return execute_select_query(
         query=SELECT_REPORTS,
@@ -317,7 +316,6 @@ def insert_report(report_data, reports_day):
             "pos_ratio": report_data["pos_ratio"],
             "speech_act": report_data["speech_act"],
             "insights": report_data["insight"],
-            "day": reports_day,
         },
         return_id=True,
     )
