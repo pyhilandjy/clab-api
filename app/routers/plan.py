@@ -28,6 +28,9 @@ from app.services.plan import (
     update_plans,
     update_report,
     update_reports_id_missions,
+    update_description_image,
+    update_schedule_image,
+    update_thumbnail_image,
 )
 
 router = APIRouter()
@@ -318,12 +321,28 @@ async def patch_description_image(
     """
     plan description image 업데이트
     """
-    # 1-1. plans_id에 해당하는 plan의 description_image_name 확인
-
-    # 1-2. description_image_name이 존재하면 supabase storage에서 삭제
-
-    # 2. plans_id에 해당하는 plan의 description_image_name 업데이트, supabase storage에 업로드(bucket = plan-images)
-    return {"message": "success"}
+    return update_description_image(plans_id, description_image_name, image)
 
 
-# 위 description_image와 동일하게 schedule_image_name, thumbnail_image_name 라우터 추가
+@router.patch("/plans/{plans_id}/schedule/image/", tags=["Plans"])
+async def patch_schedule_image(
+    plans_id: str,
+    schedule_image_name: str,
+    image: UploadFile = File(...),
+):
+    """
+    plan schedule image 업데이트
+    """
+    return update_schedule_image(plans_id, schedule_image_name, image)
+
+
+@router.patch("/plans/{plans_id}/thumbnail/image/", tags=["Plans"])
+async def patch_thumbnail_image(
+    plans_id: str,
+    thumbnail_image_name: str,
+    image: UploadFile = File(...),
+):
+    """
+    plan thumbnail image 업데이트
+    """
+    return update_thumbnail_image(plans_id, thumbnail_image_name, image)

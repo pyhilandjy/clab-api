@@ -889,6 +889,30 @@ UPDATE_MISSION_STATUS = text(
     """
 )
 
+UPDATE_PLAN_DESCRIPTION_IMAGE = text(
+    """
+    UPDATE plans
+    SET description_image_name = :description_image_name
+    WHERE id = :plans_id
+    """
+)
+
+UPDATE_PLAN_SCHEDULE_IMAGE = text(
+    """
+    UPDATE plans
+    SET schedule_image_name = :schedule_image_name
+    WHERE id = :plans_id
+    """
+)
+
+UPDATE_PLAN_THUMBNAIL_IMAGE = text(
+    """
+    UPDATE plans
+    SET thumbnail_image_name = :thumbnail_image_name
+    WHERE id = :plans_id
+    """
+)
+
 SELECT_PLAN = text(
     """
     SELECT * FROM plans

@@ -29,6 +29,9 @@ from app.db.query import (
     UPDATE_PLANS,
     UPDATE_REPORT,
     UPDATE_REPORTS_ID_MISSIONS,
+    UPDATE_PLAN_DESCRIPTION_IMAGE,
+    UPDATE_PLAN_SCHEDULE_IMAGE,
+    UPDATE_PLAN_THUMBNAIL_IMAGE,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.error.utils import generate_error_response
@@ -404,3 +407,48 @@ def slect_missions_id(report_id):
         query=SELECT_MISSIONS_TITLE, params={"reports_id": report_id}
     )
     return missions_data
+
+
+def update_description_image(plans_id, description_image_name, image):
+    plan = execute_select_query(
+        query=SELECT_PLAN,
+        params={"plans_id": plans_id},
+    )
+    if plan and plan[0].get("description_image_name"):
+        supabase.storage.from_("plan-images").remove(plan[0]["description_image_name"])
+    supabase.storage.from_("plan-images").upload(description_image_name, image.file)
+    execute_insert_update_query(
+        query=UPDATE_PLAN_DESCRIPTION_IMAGE,
+        params={"plans_id": plans_id, "description_image_name": description_image_name},
+    )
+    return {"message": "success"}
+
+
+def update_schedule_image(plans_id, schedule_image_name, image):
+    plan = execute_select_query(
+        query=SELECT_PLAN,
+        params={"plans_id": plans_id},
+    )
+    if plan and plan[0].get("schedule_image_name"):
+        supabase.storage.from_("plan-images").remove(plan[0]["schedule_image_name"])
+    supabase.storage.from_("plan-images").upload(schedule_image_name, image.file)
+    execute_insert_update_query(
+        query=UPDATE_PLAN_SCHEDULE_IMAGE,
+        params={"plans_id": plans_id, "schedule_image_name": schedule_image_name},
+    )
+    return {"message": "success"}
+
+
+def update_thumbnail_image(plans_id, thumbnail_image_name, image):
+    plan = execute_select_query(
+        query=SELECT_PLAN,
+        params={"plans_id": plans_id},
+    )
+    if plan and plan[0].get("thumbnail_image_name"):
+        supabase.storage.from_("plan-images").remove(plan[0]["thumbnail_image_name"])
+    supabase.storage.from_("plan-images").upload(thumbnail_image_name, image.file)
+    execute_insert_update_query(
+        query=UPDATE_PLAN_THUMBNAIL_IMAGE,
+        params={"plans_id": plans_id, "thumbnail_image_name": thumbnail_image_name},
+    )
+    return {"message": "success"}
