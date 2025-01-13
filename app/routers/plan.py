@@ -312,7 +312,7 @@ async def post_reports(plans_id: str, payload: ReportCreate):
     return {"message": "success"}
 
 
-@router.patch("/plans/{plans_id}/description/image/", tags=["Plans"])
+@router.patch("/plans/{plans_id}/description/image", tags=["Plans"])
 async def patch_description_image(
     plans_id: str,
     description_image_name: str,
@@ -324,7 +324,7 @@ async def patch_description_image(
     return update_description_image(plans_id, description_image_name, image)
 
 
-@router.patch("/plans/{plans_id}/schedule/image/", tags=["Plans"])
+@router.patch("/plans/{plans_id}/schedule/image", tags=["Plans"])
 async def patch_schedule_image(
     plans_id: str,
     schedule_image_name: str,
@@ -336,7 +336,7 @@ async def patch_schedule_image(
     return update_schedule_image(plans_id, schedule_image_name, image)
 
 
-@router.patch("/plans/{plans_id}/thumbnail/image/", tags=["Plans"])
+@router.patch("/plans/{plans_id}/thumbnail/image", tags=["Plans"])
 async def patch_thumbnail_image(
     plans_id: str,
     thumbnail_image_name: str,
