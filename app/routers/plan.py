@@ -96,6 +96,10 @@ class PlanPayload(BaseModel):
     type: Optional[str] = None
     tags: Optional[list] = None
     category_id: Optional[str] = None
+    summation: Optional[str] = None
+    description_image_name: Optional[str] = None
+    schedule_image_name: Optional[str] = None
+    thumbnail_image_name: Optional[str] = None
 
 
 @router.post("/plans/", tags=["Plans"])
@@ -118,6 +122,10 @@ class UpdatePlanPayload(BaseModel):
     type: Optional[str] = None
     tags: Optional[list] = None
     category_id: Optional[str] = None
+    summation: Optional[str] = None
+    description_image_name: Optional[str] = None
+    schedule_image_name: Optional[str] = None
+    thumbnail_image_name: Optional[str] = None
 
 
 @router.put("/plans/{plans_id}", tags=["Plans"])
@@ -240,6 +248,7 @@ async def delete_reports(report_id: str):
     report 삭제
     """
     delete_report(report_id)
+
 
 class ReportUpdate(BaseModel):
     title: str

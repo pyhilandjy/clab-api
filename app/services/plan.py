@@ -1,7 +1,9 @@
 from datetime import datetime, timedelta
 
 import pytz
+from supabase import create_client
 
+from app.config import settings
 from app.db.query import (
     DELETE_MISSION,
     DELETE_MISSION_MESSAGE,
@@ -31,6 +33,8 @@ from app.db.query import (
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.error.utils import generate_error_response
 
+supabase = create_client(settings.supabase_url, settings.supabase_service_key)
+
 
 def select_plans():
     return execute_select_query(query=SELECT_PLANS)
@@ -44,7 +48,25 @@ def select_plan(plans_id):
         },
     )
     if results:
-        plan = results[0]
+        plan = dict(results[0])
+
+        image_fields = [
+            "description_image_name",
+            "schedule_image_name",
+            "thumbnail_image_name",
+        ]
+
+        for field in image_fields:
+            try:
+                if plan.get(field):
+                    plan[f"{field}_url"] = supabase.storage.from_(
+                        "plan-images"
+                    ).get_public_url(plan[field])
+                else:
+                    plan[f"{field}_url"] = None
+            except Exception as e:
+                plan[f"{field}_url"] = None
+
         return plan
     return None
 
@@ -97,6 +119,10 @@ def insert_plans(payload: dict):
             "type": payload.get("type"),
             "tags": payload.get("tags"),
             "category_id": payload.get("category_id"),
+            "summation": payload.get("summation"),
+            "description_image_name": payload.get("description_image_name"),
+            "schedule_image_name": payload.get("schedule_image_name"),
+            "thumbnail_image_name": payload.get("thumbnail_image_name"),
         },
     )
 
@@ -115,6 +141,10 @@ def update_plans(payload: dict):
             "type": payload.get("type"),
             "tags": payload.get("tags"),
             "category_id": payload.get("category_id"),
+            "summation": payload.get("summation"),
+            "description_image_name": payload.get("description_image_name"),
+            "schedule_image_name": payload.get("schedule_image_name"),
+            "thumbnail_image_name": payload.get("thumbnail_image_name"),
         },
     )
 
