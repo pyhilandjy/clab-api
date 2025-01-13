@@ -96,7 +96,7 @@ class PlanPayload(BaseModel):
     type: Optional[str] = None
     tags: Optional[list] = None
     category_id: Optional[str] = None
-    summation: Optional[str] = None
+    summary: Optional[str] = None
     description_image_name: Optional[str] = None
     schedule_image_name: Optional[str] = None
     thumbnail_image_name: Optional[str] = None
@@ -122,7 +122,7 @@ class UpdatePlanPayload(BaseModel):
     type: Optional[str] = None
     tags: Optional[list] = None
     category_id: Optional[str] = None
-    summation: Optional[str] = None
+    summary: Optional[str] = None
     description_image_name: Optional[str] = None
     schedule_image_name: Optional[str] = None
     thumbnail_image_name: Optional[str] = None
@@ -196,7 +196,7 @@ async def gdel_plans(mission_id: str):
 
 class InsertMission(BaseModel):
     title: str
-    summation: str
+    summary: str
     day: int
     message: str
 
@@ -214,7 +214,7 @@ async def post_missions(plans_id: str, payload: InsertMission):
 
 class UpdateMission(BaseModel):
     title: str
-    summation: str
+    summary: str
     day: int
     message: str
 
@@ -324,3 +324,6 @@ async def patch_description_image(
 
     # 2. plans_id에 해당하는 plan의 description_image_name 업데이트, supabase storage에 업로드(bucket = plan-images)
     return {"message": "success"}
+
+
+# 위 description_image와 동일하게 schedule_image_name, thumbnail_image_name 라우터 추가
