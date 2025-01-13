@@ -796,8 +796,8 @@ SELECT_MISSION = text(
 
 INSERT_MISSION = text(
     """
-    INSERT INTO missions (plans_id, title, day, message, summation)
-    VALUES (:plans_id, :title, :day, :message, :summation)
+    INSERT INTO missions (plans_id, title, day, message, summary)
+    VALUES (:plans_id, :title, :day, :message, :summary)
     """
 )
 
@@ -807,7 +807,7 @@ UPDATE_MISSION = text(
     SET title = :title,
         day = :day,
         message = :message,
-        summation = :summation
+        summary = :summary
     WHERE id = :id
     """
 )
@@ -838,11 +838,11 @@ INSERT_PLANS = text(
     """
     INSERT INTO plans (
         plan_name, price, day, start_age_month, end_age_month,
-        description, type, tags, category_id, summation,
+        description, type, tags, category_id, summary,
         description_image_name, schedule_image_name, thumbnail_image_name
     ) VALUES (
         :plan_name, :price, :day, :start_age_month, :end_age_month,
-        :description, :type, :tags, :category_id, :summation,
+        :description, :type, :tags, :category_id, :summary,
         :description_image_name, :schedule_image_name, :thumbnail_image_name
     )
     """
@@ -861,7 +861,7 @@ UPDATE_PLANS = text(
         type = :type,
         tags = :tags,
         category_id = :category_id,
-        summation = :summation,
+        summary = :summary,
         description_image_name = :description_image_name,
         schedule_image_name = :schedule_image_name,
         thumbnail_image_name = :thumbnail_image_name

@@ -119,7 +119,7 @@ def insert_plans(payload: dict):
             "type": payload.get("type"),
             "tags": payload.get("tags"),
             "category_id": payload.get("category_id"),
-            "summation": payload.get("summation"),
+            "summary": payload.get("summary"),
             "description_image_name": payload.get("description_image_name"),
             "schedule_image_name": payload.get("schedule_image_name"),
             "thumbnail_image_name": payload.get("thumbnail_image_name"),
@@ -141,7 +141,7 @@ def update_plans(payload: dict):
             "type": payload.get("type"),
             "tags": payload.get("tags"),
             "category_id": payload.get("category_id"),
-            "summation": payload.get("summation"),
+            "summary": payload.get("summary"),
             "description_image_name": payload.get("description_image_name"),
             "schedule_image_name": payload.get("schedule_image_name"),
             "thumbnail_image_name": payload.get("thumbnail_image_name"),
@@ -284,7 +284,7 @@ def insert_mission(payload: dict):
             "title": payload["title"],
             "day": payload["day"],
             "message": payload["message"],
-            "summation": payload["summation"],
+            "summary": payload["summary"],
         },
     )
 
@@ -297,7 +297,7 @@ def update_mission(payload: dict):
             "title": payload["title"],
             "day": payload["day"],
             "message": payload["message"],
-            "summation": payload["summation"],
+            "summary": payload["summary"],
         },
     )
 

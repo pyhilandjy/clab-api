@@ -1,7 +1,7 @@
 import json
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, UploadFile, File
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -306,4 +306,21 @@ async def post_reports(plans_id: str, payload: ReportCreate):
     reports_id = insert_report(report_data, reports_day)
     missions_ids = payload.missions_id
     insert_reports_id_missions(reports_id, missions_ids)
+    return {"message": "success"}
+
+
+@router.patch("/plans/{plans_id}/description/image/", tags=["Plans"])
+async def patch_description_image(
+    plans_id: str,
+    description_image_name: str,
+    image: UploadFile = File(...),
+):
+    """
+    plan description image 업데이트
+    """
+    # 1-1. plans_id에 해당하는 plan의 description_image_name 확인
+
+    # 1-2. description_image_name이 존재하면 supabase storage에서 삭제
+
+    # 2. plans_id에 해당하는 plan의 description_image_name 업데이트, supabase storage에 업로드(bucket = plan-images)
     return {"message": "success"}
