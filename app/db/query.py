@@ -838,13 +838,12 @@ INSERT_PLANS = text(
     """
     INSERT INTO plans (
         plan_name, price, day, start_age_month, end_age_month,
-        description, type, tags, category_id, summary,
-        description_image_name, schedule_image_name, thumbnail_image_name
+        description, type, tags, category_id, summary, schedule
     ) VALUES (
         :plan_name, :price, :day, :start_age_month, :end_age_month,
-        :description, :type, :tags, :category_id, :summary,
-        :description_image_name, :schedule_image_name, :thumbnail_image_name
+        :description, :type, :tags, :category_id, :summary, :schedule
     )
+    RETURNING id
     """
 )
 
@@ -862,9 +861,7 @@ UPDATE_PLANS = text(
         tags = :tags,
         category_id = :category_id,
         summary = :summary,
-        description_image_name = :description_image_name,
-        schedule_image_name = :schedule_image_name,
-        thumbnail_image_name = :thumbnail_image_name
+        schedule = :schedule
     WHERE id = :id
     """
 )
@@ -892,7 +889,7 @@ UPDATE_MISSION_STATUS = text(
 UPDATE_PLAN_DESCRIPTION_IMAGE = text(
     """
     UPDATE plans
-    SET description_image_name = :description_image_name
+    SET description_image_name = :description_image_name, "description_image_id" = :description_image_id
     WHERE id = :plans_id
     """
 )
@@ -900,7 +897,7 @@ UPDATE_PLAN_DESCRIPTION_IMAGE = text(
 UPDATE_PLAN_SCHEDULE_IMAGE = text(
     """
     UPDATE plans
-    SET schedule_image_name = :schedule_image_name
+    SET schedule_image_name = :schedule_image_name, "schedule_image_id" = :schedule_image_id
     WHERE id = :plans_id
     """
 )
@@ -908,7 +905,7 @@ UPDATE_PLAN_SCHEDULE_IMAGE = text(
 UPDATE_PLAN_THUMBNAIL_IMAGE = text(
     """
     UPDATE plans
-    SET thumbnail_image_name = :thumbnail_image_name
+    SET thumbnail_image_name = :thumbnail_image_name, "thumbnail_image_id" = :thumbnail_image_id
     WHERE id = :plans_id
     """
 )
