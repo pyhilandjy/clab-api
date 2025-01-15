@@ -119,12 +119,12 @@ def insert_plan(
     category_id: Optional[str] = Form(None),
     summary: Optional[str] = Form(None),
     schedule: Optional[str] = Form(None),
-    description_image: Optional[UploadFile] = File(...),
-    description_image_name: Optional[str] = Form(...),
-    thumbnail_image: Optional[UploadFile] = File(...),
-    thumbnail_image_name: Optional[str] = Form(...),
-    schedule_image: Optional[UploadFile] = File(...),
-    schedule_image_name: Optional[str] = Form(...),
+    description_image: Optional[UploadFile] = File(None),
+    description_image_name: Optional[str] = Form(None),
+    thumbnail_image: Optional[UploadFile] = File(None),
+    thumbnail_image_name: Optional[str] = Form(None),
+    schedule_image: Optional[UploadFile] = File(None),
+    schedule_image_name: Optional[str] = Form(None),
 ):
     payload = {
         "plan_name": plan_name,
