@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import uuid
 
 import pytz
 from supabase import create_client
@@ -54,9 +55,9 @@ def select_plan(plans_id):
         plan = dict(results[0])
 
         image_fields = [
-            "description_image_name",
-            "schedule_image_name",
-            "thumbnail_image_name",
+            "description_image_id",
+            "schedule_image_id",
+            "thumbnail_image_id",
         ]
 
         for field in image_fields:
@@ -109,6 +110,21 @@ def delete_plan(plans_id):
         return generate_error_response("DELETE_ERROR", str(e))
 
 
+def delete_plan_image(plans_id):
+    plan = execute_select_query(
+        query=SELECT_PLAN,
+        params={"plans_id": plans_id},
+    )
+    if plan:
+        for field in [
+            "description_image_id",
+            "schedule_image_id",
+            "thumbnail_image_id",
+        ]:
+            if plan[0].get(field):
+                supabase.storage.from_("plan-images").remove(plan[0][field])
+
+
 def insert_plans(payload: dict):
     return execute_insert_update_query(
         query=INSERT_PLANS,
@@ -123,10 +139,9 @@ def insert_plans(payload: dict):
             "tags": payload.get("tags"),
             "category_id": payload.get("category_id"),
             "summary": payload.get("summary"),
-            "description_image_name": payload.get("description_image_name"),
-            "schedule_image_name": payload.get("schedule_image_name"),
-            "thumbnail_image_name": payload.get("thumbnail_image_name"),
+            "schedule": payload.get("schedule"),
         },
+        return_id=True,
     )
 
 
@@ -145,9 +160,7 @@ def update_plans(payload: dict):
             "tags": payload.get("tags"),
             "category_id": payload.get("category_id"),
             "summary": payload.get("summary"),
-            "description_image_name": payload.get("description_image_name"),
-            "schedule_image_name": payload.get("schedule_image_name"),
-            "thumbnail_image_name": payload.get("thumbnail_image_name"),
+            "schedule": payload.get("schedule"),
         },
     )
 
@@ -414,12 +427,29 @@ def update_description_image(plans_id, description_image_name, image):
         query=SELECT_PLAN,
         params={"plans_id": plans_id},
     )
-    if plan and plan[0].get("description_image_name"):
-        supabase.storage.from_("plan-images").remove(plan[0]["description_image_name"])
-    supabase.storage.from_("plan-images").upload(description_image_name, image.file)
+    extension = image.filename.split(".")[-1]
+    image_id = generate_unique_filename(extension)
+    file_content = image.file.read()
+    if plan and plan[0].get("description_image_id"):
+        supabase.storage.from_("plan-images").remove(plan[0]["description_image_id"])
+        supabase.storage.from_("plan-images").upload(
+            image_id,
+            file_content,
+            file_options={"content-type": image.content_type},
+        )
+    else:
+        supabase.storage.from_("plan-images").upload(
+            image_id,
+            file_content,
+            file_options={"content-type": image.content_type},
+        )
     execute_insert_update_query(
         query=UPDATE_PLAN_DESCRIPTION_IMAGE,
-        params={"plans_id": plans_id, "description_image_name": description_image_name},
+        params={
+            "plans_id": plans_id,
+            "description_image_name": description_image_name,
+            "description_image_id": image_id,
+        },
     )
     return {"message": "success"}
 
@@ -429,12 +459,29 @@ def update_schedule_image(plans_id, schedule_image_name, image):
         query=SELECT_PLAN,
         params={"plans_id": plans_id},
     )
-    if plan and plan[0].get("schedule_image_name"):
-        supabase.storage.from_("plan-images").remove(plan[0]["schedule_image_name"])
-    supabase.storage.from_("plan-images").upload(schedule_image_name, image.file)
+    extension = image.filename.split(".")[-1]
+    image_id = generate_unique_filename(extension)
+    file_content = image.file.read()
+    if plan and plan[0].get("schedule_image_id"):
+        supabase.storage.from_("plan-images").remove(plan[0]["schedule_image_id"])
+        supabase.storage.from_("plan-images").upload(
+            image_id,
+            file_content,
+            file_options={"content-type": image.content_type},
+        )
+    else:
+        supabase.storage.from_("plan-images").upload(
+            image_id,
+            file_content,
+            file_options={"content-type": image.content_type},
+        )
     execute_insert_update_query(
         query=UPDATE_PLAN_SCHEDULE_IMAGE,
-        params={"plans_id": plans_id, "schedule_image_name": schedule_image_name},
+        params={
+            "plans_id": plans_id,
+            "schedule_image_name": schedule_image_name,
+            "schedule_image_id": image_id,
+        },
     )
     return {"message": "success"}
 
@@ -444,11 +491,32 @@ def update_thumbnail_image(plans_id, thumbnail_image_name, image):
         query=SELECT_PLAN,
         params={"plans_id": plans_id},
     )
-    if plan and plan[0].get("thumbnail_image_name"):
-        supabase.storage.from_("plan-images").remove(plan[0]["thumbnail_image_name"])
-    supabase.storage.from_("plan-images").upload(thumbnail_image_name, image.file)
+    extension = image.filename.split(".")[-1]
+    image_id = generate_unique_filename(extension)
+    file_content = image.file.read()
+    if plan and plan[0].get("thumbnail_image_id"):
+        supabase.storage.from_("plan-images").remove(plan[0]["thumbnail_image_id"])
+        supabase.storage.from_("plan-images").upload(
+            image_id,
+            file_content,
+            file_options={"content-type": image.content_type},
+        )
+    else:
+        supabase.storage.from_("plan-images").upload(
+            image_id,
+            file_content,
+            file_options={"content-type": image.content_type},
+        )
     execute_insert_update_query(
         query=UPDATE_PLAN_THUMBNAIL_IMAGE,
-        params={"plans_id": plans_id, "thumbnail_image_name": thumbnail_image_name},
+        params={
+            "plans_id": plans_id,
+            "thumbnail_image_name": thumbnail_image_name,
+            "thumbnail_image_id": image_id,
+        },
     )
     return {"message": "success"}
+
+
+def generate_unique_filename(extension: str) -> str:
+    return f"{uuid.uuid4().hex}.{extension}"
