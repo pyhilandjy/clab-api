@@ -1,7 +1,7 @@
 import json
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, UploadFile, File
+from fastapi import APIRouter, HTTPException, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
@@ -31,6 +31,7 @@ from app.services.plan import (
     update_description_image,
     update_schedule_image,
     update_thumbnail_image,
+    delete_plan_image,
 )
 
 router = APIRouter()
@@ -74,6 +75,8 @@ async def gdel_plans(plans_id: str):
     """
     plans_id 별 plan을 삭제 (mission이 존재할 경우 삭제 불가능)
     """
+    # 삭제시 이미지가 존재할 경우 스토리지에서 삭제 요구
+    delete_plan_image(plans_id)
     response_json = delete_plan(plans_id)
     response = json.loads(response_json)
 
@@ -100,16 +103,57 @@ class PlanPayload(BaseModel):
     tags: Optional[list] = None
     category_id: Optional[str] = None
     summary: Optional[str] = None
-    description_image_name: Optional[str] = None
-    schedule_image_name: Optional[str] = None
-    thumbnail_image_name: Optional[str] = None
+    schedule: Optional[str] = None
 
 
-@router.post("/plans/", tags=["Plans"])
-def insert_plan(payload: PlanPayload):
+@router.post("/plans", tags=["Plans"])
+def insert_plan(
+    plan_name: str = Form(...),
+    price: Optional[int] = Form(None),
+    day: Optional[int] = Form(None),
+    start_age_month: Optional[int] = Form(None),
+    end_age_month: Optional[int] = Form(None),
+    description: Optional[str] = Form(None),
+    type: Optional[str] = Form(None),
+    tags: Optional[str] = Form(None),
+    category_id: Optional[str] = Form(None),
+    summary: Optional[str] = Form(None),
+    schedule: Optional[str] = Form(None),
+    description_image: Optional[UploadFile] = File(...),
+    description_image_name: Optional[str] = Form(...),
+    thumbnail_image: Optional[UploadFile] = File(...),
+    thumbnail_image_name: Optional[str] = Form(...),
+    schedule_image: Optional[UploadFile] = File(...),
+    schedule_image_name: Optional[str] = Form(...),
+):
+    payload = {
+        "plan_name": plan_name,
+        "price": price,
+        "day": day,
+        "start_age_month": start_age_month,
+        "end_age_month": end_age_month,
+        "description": description,
+        "type": type,
+        "tags": eval(tags),
+        "category_id": category_id,
+        "summary": summary,
+        "schedule": schedule,
+    }
     try:
-        insert_plans(payload.model_dump())
-        return {"message": "Plan successfully inserted"}
+        # 플랜 데이터 삽입
+        plans_id = insert_plans(payload)
+        plans_id = str(plans_id)
+        # 이미지 업로드
+        if description_image:
+            update_description_image(
+                plans_id, description_image_name, description_image
+            )
+        if thumbnail_image:
+            update_thumbnail_image(plans_id, thumbnail_image_name, thumbnail_image)
+        if schedule_image:
+            update_schedule_image(plans_id, schedule_image_name, schedule_image)
+
+        return {"message": "Plan and images successfully created"}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 
@@ -126,9 +170,7 @@ class UpdatePlanPayload(BaseModel):
     tags: Optional[list] = None
     category_id: Optional[str] = None
     summary: Optional[str] = None
-    description_image_name: Optional[str] = None
-    schedule_image_name: Optional[str] = None
-    thumbnail_image_name: Optional[str] = None
+    schedule: Optional[str] = None
 
 
 @router.put("/plans/{plans_id}", tags=["Plans"])
@@ -315,7 +357,7 @@ async def post_reports(plans_id: str, payload: ReportCreate):
 @router.patch("/plans/{plans_id}/description/image", tags=["Plans"])
 async def patch_description_image(
     plans_id: str,
-    description_image_name: str,
+    description_image_name: str = Form(...),
     image: UploadFile = File(...),
 ):
     """
@@ -327,7 +369,7 @@ async def patch_description_image(
 @router.patch("/plans/{plans_id}/schedule/image", tags=["Plans"])
 async def patch_schedule_image(
     plans_id: str,
-    schedule_image_name: str,
+    schedule_image_name: str = Form(...),
     image: UploadFile = File(...),
 ):
     """
@@ -339,10 +381,10 @@ async def patch_schedule_image(
 @router.patch("/plans/{plans_id}/thumbnail/image", tags=["Plans"])
 async def patch_thumbnail_image(
     plans_id: str,
-    thumbnail_image_name: str,
+    thumbnail_image_name: str = Form(...),
     image: UploadFile = File(...),
 ):
     """
-    plan thumbnail image 업데이트
+    Plan의 썸네일 이미지 업데이트
     """
     return update_thumbnail_image(plans_id, thumbnail_image_name, image)
