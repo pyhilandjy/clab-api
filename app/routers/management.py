@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Query
+from typing import Optional
 from pydantic import BaseModel
 
 from app.services.management import (
@@ -15,12 +16,21 @@ router = APIRouter()
 
 @router.get("/management/reports/list", tags=["Management"])
 async def get_user_reports(
-    page: int = Query(..., ge=1), page_size: int = Query(..., ge=1, le=100)
+    page: int = Query(..., ge=1),
+    page_size: int = Query(..., ge=1, le=100),
+    inspection: Optional[str] = Query(None, description="Inspection filter"),
+    status: Optional[str] = Query(None, description="Status filter"),
 ):
     """
     user_reports 데이터를 가져오는 엔드포인트
     """
-    result = await get_reports_with_pagination(page=page, page_size=page_size)
+    # Pagination 함수에 필터 전달
+    result = await get_reports_with_pagination(
+        page=page,
+        page_size=page_size,
+        inspection_filter=inspection,
+        status_filter=status,
+    )
     return result
 
 

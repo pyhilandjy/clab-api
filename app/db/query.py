@@ -1043,40 +1043,48 @@ DELETE_REPORTS_ID_MISSIONS = text(
 """
 )
 
-SELECT_REPORTS_PAGINATED = text(
-    """
-SELECT DISTINCT ON (user_reports.id)
-    user_reports.id AS user_reports_id,
-    user_reports.user_id AS user_id,
-    user_reports.send_at AS send_at,
-    user_reports.inspection AS inspection,
-    user_reports.inspector AS inspector,
-    user_reports.inspected_at AS inspected_at,
-    CASE
-        WHEN user_reports.inspection = 'editing' AND user_reports.send_at > NOW() THEN '준비중'
-        WHEN user_reports.inspection = 'editing' AND user_reports.send_at < NOW() THEN '지연'
-        WHEN user_reports.inspection = 'completed' THEN '완료'
-        ELSE '대기'
-    END AS status,
-    NULL AS user_name,
-    user_children.first_name AS child_name,
-    reports.title AS report_title,
-    plans.plan_name AS plans_name
-FROM
-    user_reports
-LEFT JOIN (
-    SELECT DISTINCT ON (user_reports_id) *
-    FROM user_missions
-    ORDER BY user_reports_id, created_at DESC
-) user_missions ON user_missions.user_reports_id = user_reports.id
-LEFT JOIN user_plans ON user_missions.user_plans_id = user_plans.id
-LEFT JOIN plans ON user_plans.plans_id = plans.id
-LEFT JOIN user_children ON user_plans.user_children_id = user_children.id
-LEFT JOIN reports ON user_reports.reports_id = reports.id
-ORDER BY user_reports.id, user_reports.send_at DESC
-LIMIT :limit OFFSET :offset;
-"""
-)
+# SELECT_REPORTS_PAGINATED = text(
+#     """
+# SELECT DISTINCT ON (user_reports.id)
+#     user_reports.id AS user_reports_id,
+#     user_reports.user_id AS user_id,
+#     user_reports.send_at AS send_at,
+#     user_reports.inspection AS inspection,
+#     user_reports.inspector AS inspector,
+#     user_reports.inspected_at AS inspected_at,
+#     user_reports.status AS status,
+#     NULL AS user_name,
+#     user_children.first_name AS child_name,
+#     reports.title AS report_title,
+#     plans.plan_name AS plans_name,
+#     (SELECT ARRAY_AGG(user_missions.status)
+#      FROM user_missions
+#      WHERE user_missions.user_reports_id = user_reports.id) AS mission_statuses,
+#     (SELECT COUNT(audio_files.id)
+#      FROM user_missions
+#      JOIN audio_files ON audio_files.user_missions_id = user_missions.id
+#      WHERE user_missions.user_reports_id = user_reports.id) AS audio_file_count,
+#     (SELECT COALESCE(SUM(audio_files.record_time), 0)
+#      FROM user_missions
+#      JOIN audio_files ON audio_files.user_missions_id = user_missions.id
+#      WHERE user_missions.user_reports_id = user_reports.id) AS total_record_time
+# FROM
+#     user_reports
+# LEFT JOIN (
+#     SELECT DISTINCT ON (user_reports_id) *
+#     FROM user_missions
+#     ORDER BY user_reports_id, created_at DESC
+# ) user_missions ON user_missions.user_reports_id = user_reports.id
+# LEFT JOIN user_plans ON user_missions.user_plans_id = user_plans.id
+# LEFT JOIN plans ON user_plans.plans_id = plans.id
+# LEFT JOIN user_children ON user_plans.user_children_id = user_children.id
+# LEFT JOIN reports ON user_reports.reports_id = reports.id
+# WHERE
+#     {where_clause}
+# ORDER BY user_reports.id, user_reports.send_at DESC
+# LIMIT :limit OFFSET :offset;
+# """
+# )
 SELECT_TOTAL_COUNT = text(
     """
 SELECT COUNT(*) AS total_count FROM user_reports;
