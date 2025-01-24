@@ -115,7 +115,10 @@ async def get_reports_with_pagination(
 
         # mission_progress 계산 및 대체
         statuses = report.pop("mission_statuses", [])
-        report["mission_progress"] = calculate_progress(statuses)
+        if statuses:
+            report["mission_progress"] = calculate_progress(statuses)
+        else:
+            report["mission_progress"] = "0/0"
 
     # 총 보고서 수 계산
     total_count_result = execute_select_query(query=SELECT_TOTAL_COUNT, params={})
