@@ -76,7 +76,6 @@ async def gdel_plans(plans_id: str):
     plans_id 별 plan을 삭제 (mission이 존재할 경우 삭제 불가능)
     """
     # 삭제시 이미지가 존재할 경우 스토리지에서 삭제 요구
-    delete_plan_image(plans_id)
     response_json = delete_plan(plans_id)
     response = json.loads(response_json)
 

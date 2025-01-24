@@ -92,9 +92,15 @@ def delete_plan(plans_id):
             "plans_id": plans_id,
         },
     )
+    reports = execute_select_query(
+        query=SELECT_REPORTS,
+        params={
+            "plans_id": plans_id,
+        },
+    )
 
     # 미션이 있을 경우 삭제 불가
-    if mission:
+    if mission or reports:
         return generate_error_response("MISSION_EXISTS")
 
     # 미션이 없을 경우 계획 삭제
@@ -105,6 +111,7 @@ def delete_plan(plans_id):
                 "plans_id": plans_id,
             },
         )
+        delete_plan_image(plans_id)
         return generate_error_response("DELETE_SUCCESS")
     except Exception as e:
         return generate_error_response("DELETE_ERROR", str(e))
