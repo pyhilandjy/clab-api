@@ -361,7 +361,7 @@ def insert_report(report_data, reports_day):
             "sentence_length": report_data["sentence_length"],
             "pos_ratio": report_data["pos_ratio"],
             "speech_act": report_data["speech_act"],
-            "insights": report_data["insight"],
+            "insight": report_data["insight"],
         },
         return_id=True,
     )

@@ -988,8 +988,8 @@ UPDATE_REPORT = text(
 
 INSERT_REPORT = text(
     """
-    INSERT INTO reports (plans_id, title, wordcloud, sentence_length, pos_ratio, speech_act, insights)
-    VALUES (:plans_id, :title, :wordcloud, :sentence_length, :pos_ratio, :speech_act, :insights)
+    INSERT INTO reports (plans_id, title, wordcloud, sentence_length, pos_ratio, speech_act, insight)
+    VALUES (:plans_id, :title, :wordcloud, :sentence_length, :pos_ratio, :speech_act, :insight)
     RETURNING id
     """
 )
