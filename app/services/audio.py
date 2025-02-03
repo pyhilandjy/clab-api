@@ -63,6 +63,9 @@ def save_audio(file: UploadFile, file_path: str):
         raise e
 
 
+bucket_name = settings.bucket_name
+
+
 async def download_and_process_file():
     """S3에서 파일 다운로드 및 처리"""
     try:
@@ -76,9 +79,7 @@ async def download_and_process_file():
             s3.download_file(settings.bucket_name, file_path, local_path)
             m4a_path = await convert_file_update_record_time(local_path, audio_files_id)
             # s3에 적재, 교체
-            s3.upload_file(
-                m4a_path, settings.bucket_name, file_path.replace(".webm", ".m4a")
-            )
+            s3.upload_file(m4a_path, bucket_name, file_path.replace(".webm", ".m4a"))
             s3.delete_object(Bucket=settings.bucket_name, Key=file_path)
             await process_stt(audio_files_id, m4a_path)
             await delete_file(m4a_path)
@@ -99,12 +100,11 @@ async def convert_file_update_record_time(local_path: str, audio_files_id):
         with open(local_path, "rb") as f:
             file_bytes = f.read()
         m4a_path = convert_to_m4a(file_bytes, local_path)
-        # record_time = get_record_time(m4a_path)
-        # insert_record_time(record_time, audio_files_id)
         logger.info(f"Audio file metadata inserted: {m4a_path}")
         return m4a_path
     except Exception as e:
-        update_audio_status(audio_files_id, "COMVERT_ERROR")
+        update_audio_status(audio_files_id, "CONVERT_ERROR")
+        delete_file(local_path)
         logger.error(f"Error processing metadata: {e}")
         raise e
 
