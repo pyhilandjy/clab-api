@@ -1182,3 +1182,11 @@ FROM
     all_talk_mores;
 """
 )
+
+UPDATE_AUDIO_FILE_PATH = text(
+    """
+    UPDATE audio_files
+    SET file_path = :file_path
+    WHERE id = :audio_files_id
+    """
+)

@@ -24,6 +24,7 @@ from app.db.query import (
     SELECT_FILES,
     UPDATE_AUDIO_STATUS,
     UPDATE_RECORD_TIME,
+    UPDATE_AUDIO_FILE_PATH,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 from app.services.clova import ClovaApiClient
@@ -81,12 +82,20 @@ async def download_and_process_file():
             # s3에 적재, 교체
             s3.upload_file(m4a_path, bucket_name, file_path.replace(".webm", ".m4a"))
             s3.delete_object(Bucket=settings.bucket_name, Key=file_path)
+            update_audio_file_path(audio_files_id, file_path.replace(".webm", ".m4a"))
             await process_stt(audio_files_id, m4a_path)
             await delete_file(m4a_path)
         logger.info("Completed download_and_process_file task")
     except Exception as e:
         logger.error(f"Error during file processing: {e}")
         raise e
+
+
+def update_audio_file_path(audio_files_id, file_path):
+    execute_insert_update_query(
+        query=UPDATE_AUDIO_FILE_PATH,
+        params={"audio_files_id": audio_files_id, "file_path": file_path},
+    )
 
 
 def select_audio_ready():
@@ -156,7 +165,7 @@ def update_audio_status(audio_files_id, status):
 
 
 async def process_stt(audio_files_id, m4a_path):
-    """음성파일 STT"""
+    """음성파�� STT"""
     try:
         segments = get_stt_results(m4a_path)
         if not segments:
@@ -288,8 +297,6 @@ def splitter(text_list, punct):
                 # 주어진 특수문자가 단어에 있다면
                 if punct in word:
                     # 문장 양 끝의 공백 제거 후 texts 리스트에 추가
-                    texts.append(temp_sent.strip())
-                    # 임시 문장 초기화
                     temp_sent = ""
 
             # 문장의 마지막이 주어진 특수문자가 아닐 때, 최종 저장된 임시문장을 texts 리스트에 추가
@@ -449,7 +456,7 @@ async def get_audio(file_path: str, range_header: str = None):
         return StreamingResponse(
             content=buffer,
             headers=headers,
-            media_type="audio/webm",
+            media_type="audio/m4a",
             status_code=206 if range_header else 200,
         )
     except Exception as e:
