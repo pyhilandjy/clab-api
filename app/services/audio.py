@@ -113,7 +113,7 @@ async def convert_file_update_record_time(local_path: str, audio_files_id):
         return m4a_path
     except Exception as e:
         update_audio_status(audio_files_id, "CONVERT_ERROR")
-        delete_file(local_path)
+        await delete_file(local_path)
         logger.error(f"Error processing metadata: {e}")
         raise e
 
@@ -165,7 +165,7 @@ def update_audio_status(audio_files_id, status):
 
 
 async def process_stt(audio_files_id, m4a_path):
-    """음성파�� STT"""
+    """음성파일 STT"""
     try:
         segments = get_stt_results(m4a_path)
         if not segments:
@@ -175,8 +175,8 @@ async def process_stt(audio_files_id, m4a_path):
             return
 
         rename_segments = rename_keys(segments)
-        explode_segments = explode(rename_segments, "textEdited")
-        insert_stt_segments(explode_segments, audio_files_id)
+        # explode_segments = explode(rename_segments, "textEdited")
+        insert_stt_segments(rename_segments, audio_files_id)
         update_audio_status(audio_files_id, "COMPLETED")
     except Exception as e:
         update_audio_status(audio_files_id, "STT_ERROR")
@@ -300,10 +300,8 @@ def splitter(text_list, punct):
                     temp_sent = ""
 
             # 문장의 마지막이 주어진 특수문자가 아닐 때, 최종 저장된 임시문장을 texts 리스트에 추가
-            # 이걸 안해주면 특수문자 없는 마지막 문장이 최종 결과물에 포함되지 않음
-            if temp_sent != texts[-1]:
-                if temp_sent.strip() != "":
-                    texts.append(temp_sent.strip())
+            if temp_sent.strip():  # 🔹 마지막 문장 추가
+                texts.append(temp_sent.strip())
 
             # texts의 문장들을 최종 output 리스트에 추가
             for text in texts:
