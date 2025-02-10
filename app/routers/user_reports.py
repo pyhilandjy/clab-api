@@ -198,5 +198,5 @@ def put_insight_data(insight_data: InsightData):
         if value == "":
             data[key] = None
 
-    upsert_insight_data(data)
-    return {"message": "Insight data upserted successfully"}
+    insight_id = upsert_insight_data(data)
+    return insight_id

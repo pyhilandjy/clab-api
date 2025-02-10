@@ -618,9 +618,18 @@ def upsert_insight_data(insight_data):
     for key, value in insight_data.items():
         if value == "":
             insight_data[key] = None
-
+    # user_reports_id = insight_data["user_reports_id"]
+    # insight = execute_select_query(
+    #     query=SELECT_INSIGHT_DATA, params={"user_reports_id": user_reports_id}
+    # )
     try:
-        execute_insert_update_query(query=UPSERT_INSIGHT_DATA, params=insight_data)
-        return {"message": "Insight data upserted successfully"}
+        # returning id , FE에서 id 상태업데이트
+        insight_id = execute_insert_update_query(
+            query=UPSERT_INSIGHT_DATA,
+            params=insight_data,
+            return_id=True,
+        )
+        insight_id = str(insight_id)
+        return {"id": insight_id}
     except Exception as e:
         return {"error": str(e)}
