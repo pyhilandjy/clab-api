@@ -13,13 +13,16 @@ from app.db.query import (
     SELECT_WORDCLOUD_DATA,
     UPDATE_WORDCLOUD_DATA,
     SELECT_USER_REPORTS_INFO,
+    DELETE_SENTENCE_LENGTH_DATA,
     SELECT_SENTENCE_LENGTH_DATA,
     INSERT_SENTENCE_LENGTH_DATA,
     UPDATE_SENTENCE_LENGTH_DATA,
+    DELETE_POS_RATIO_DATA,
     SELECT_POS_RATIO_DATA,
     INSERT_POS_RATIO_DATA,
     UPDATE_POS_RATIO_DATA,
     SELECT_TALK_MORE,
+    DELETE_SPEECH_ACT_DATA,
     SELECT_SPEECH_ACT_COUNT,
     INSERT_SPEECH_ACT_DATA,
     SELECT_SPEECH_ACT_DATA,
@@ -633,3 +636,35 @@ def upsert_insight_data(insight_data):
         return {"id": insight_id}
     except Exception as e:
         return {"error": str(e)}
+
+
+def delete_reports_data(user_reports_id):
+    """
+    주어진 user_reports_id에 대한 데이터를 삭제합니다.
+    """
+    execute_insert_update_query(
+        query=DELETE_WORDCLOUD_DATA,
+        params={"user_reports_id": user_reports_id},
+    )
+    execute_insert_update_query(
+        query=DELETE_SENTENCE_LENGTH_DATA,
+        params={"user_reports_id": user_reports_id},
+    )
+    execute_insert_update_query(
+        query=DELETE_POS_RATIO_DATA,
+        params={"user_reports_id": user_reports_id},
+    )
+    execute_insert_update_query(
+        query=DELETE_SPEECH_ACT_DATA,
+        params={"user_reports_id": user_reports_id},
+    )
+
+    return {"message": "Data deleted successfully"}
+
+
+def generate_reports_data(user_reports_id):
+    save_wordcloud_data(user_reports_id)
+    save_sentence_length_data(user_reports_id)
+    save_pos_ratio_data(user_reports_id)
+    save_speech_act_data(user_reports_id)
+    return {"message": "Data regenerated successfully"}

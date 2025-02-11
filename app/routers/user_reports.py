@@ -18,6 +18,8 @@ from app.services.user_reports import (
     upsert_insight_data,
     update_speech_act_data,
     select_cover_data,
+    delete_reports_data,
+    generate_reports_data,
 )
 
 router = APIRouter()
@@ -200,3 +202,22 @@ def put_insight_data(insight_data: InsightData):
 
     insight_id = upsert_insight_data(data)
     return insight_id
+
+
+from fastapi import HTTPException
+
+
+class UserReportsId(BaseModel):
+    user_reports_id: str
+
+
+@router.post("/reports/regenerate/{user_reports_id}", tags=["User_Report"])
+async def regenerate_reports_data(user_reports_id: str):
+    try:
+
+        delete_reports_data(user_reports_id)
+        generate_reports_data(user_reports_id)
+
+        return {"status": "ok"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

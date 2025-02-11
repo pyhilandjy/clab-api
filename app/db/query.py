@@ -293,6 +293,13 @@ UPDATE_SENTENCE_LENGTH_DATA = text(
     """
 )
 
+DELETE_SENTENCE_LENGTH_DATA = text(
+    """
+    DELETE FROM user_sentence_length
+    WHERE user_reports_id = :user_reports_id
+    """
+)
+
 
 # 품사 분류
 SELECT_POS_RATIO_DATA = text(
@@ -316,6 +323,13 @@ UPDATE_POS_RATIO_DATA = text(
     """
     UPDATE user_pos_ratio
     SET insights = :insights
+    WHERE user_reports_id = :user_reports_id
+    """
+)
+
+DELETE_POS_RATIO_DATA = text(
+    """
+    DELETE FROM user_pos_ratio
     WHERE user_reports_id = :user_reports_id
     """
 )
@@ -414,6 +428,14 @@ UPDATE_SPEECH_ACT_DATA = text(
     WHERE user_reports_id = :user_reports_id
     """
 )
+
+DELETE_SPEECH_ACT_DATA = text(
+    """
+    DELETE FROM user_speech_act
+    WHERE user_reports_id = :user_reports_id
+    """
+)
+
 
 # 인사이트
 
