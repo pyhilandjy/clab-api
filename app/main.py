@@ -5,7 +5,16 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.routers import audio, management, plan, report_files, stt, user_reports, users
+from app.routers import (
+    audio,
+    management,
+    plan,
+    report_files,
+    stt,
+    user_reports,
+    users,
+    user_plans,
+)
 from app.services.audio import download_and_process_file
 from app.services.api_key import get_api_key
 
@@ -81,6 +90,7 @@ app.include_router(report_files.router)
 app.include_router(plan.router)
 app.include_router(management.router)
 app.include_router(user_reports.router)
+app.include_router(user_plans.router)
 
 # API 키 의존성 적용 예 (현재는 주석 처리됨)
 # app.include_router(audio.router, prefix="/audio", dependencies=[Depends(get_api_key)])
