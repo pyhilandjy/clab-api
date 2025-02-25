@@ -185,8 +185,8 @@ class UpdatePlanStatus(BaseModel):
     status: str
 
 
-@router.patch("/plans/{plan_id}/status/", tags=["Plans"])
-def insert_plan(plan_id: str, payload: UpdatePlanStatus):
+@router.patch("/plans/{plan_id}/status", tags=["Plans"])
+def patch_plan(plan_id: str, payload: UpdatePlanStatus):
     try:
         update_plan_status(plan_id, payload.status)
         return {"message": "Plan successfully inserted"}
@@ -221,7 +221,7 @@ class UpdatemissionStatus(BaseModel):
     status: str
 
 
-@router.patch("/missions/status/", tags=["Missions"])
+@router.patch("/missions/status", tags=["Missions"])
 def petch_mission_status(payload: UpdatemissionStatus):
     try:
         update_mission_status(payload.model_dump())
