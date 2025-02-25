@@ -939,8 +939,10 @@ SELECT_PLAN = text(
 
 SELECT_PLANS_USER = text(
     """
-    SELECT * FROM user_plan
-    WHERE user_id = :user_id
+    SELECT up.id, up.user_id, up.created_at, up.status, p.plan_name
+    FROM user_plan up
+    JOIN plans p ON up.plans_id = p.id
+    WHERE up.user_id = :user_id
     """
 )
 
