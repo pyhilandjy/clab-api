@@ -37,7 +37,7 @@ from app.services.plan import (
 router = APIRouter()
 
 
-@router.get("/plans/", tags=["Plans"])
+@router.get("/plans", tags=["Plans"])
 async def get_plans():
     """
     plan 데이터를 가져오는 엔드포인트
@@ -202,7 +202,7 @@ def get_sub_category(parents_id):
     return categories
 
 
-@router.get("/categories/main/", tags=["Plans"])
+@router.get("/categories/main", tags=["Plans"])
 def get_main_category():
     categories = select_main_category()
     if not categories:
@@ -210,7 +210,7 @@ def get_main_category():
     return categories
 
 
-@router.get("/categories/", tags=["Plans"])
+@router.get("/categories", tags=["Plans"])
 def read_categories():
     categories = get_all_categories()
     return categories
