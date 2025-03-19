@@ -154,7 +154,8 @@ SELECT_USER_REPORTS_INFO = text(
     ur.user_id,
     r.title,
     p.plan_name,
-    c.first_name
+    c.first_name,
+    c.birth_date
 FROM user_reports ur
 JOIN reports r ON ur.reports_id = r.id
 JOIN plans p ON r.plans_id = p.id

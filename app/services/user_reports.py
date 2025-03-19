@@ -77,6 +77,7 @@ def select_cover_data(user_reports_id):
 # 워드클라우드
 
 from kiwipiepy import Kiwi
+from datetime import datetime
 
 
 async def select_user_reports_info(user_reports_id: str):
@@ -89,6 +90,21 @@ async def select_user_reports_info(user_reports_id: str):
 
     if reports:
         reports = [dict(report) for report in reports]
+        # 아이 birth_date 나이 + 개월수로 치환
+        for report in reports:
+            birth_date = report.get("birth_date")
+            if birth_date:
+                today = datetime.today()
+                age_years = today.year - birth_date.year
+                age_months = today.month - birth_date.month
+                if age_months < 0:
+                    age_years -= 1
+                    age_months += 12
+                if age_years == 0:
+                    report["age"] = f"{age_months}개월"
+                else:
+                    report["age"] = f"{age_years}년 {age_months}개월"
+        # 유저이름 발취
         user_ids = [report["user_id"] for report in reports]
         user_data = await fetch_user_names(user_ids)
         for report in reports:
@@ -99,12 +115,15 @@ async def select_user_reports_info(user_reports_id: str):
         return []
 
 
+from collections import defaultdict, Counter
+from kiwipiepy import Kiwi
+
+
 def create_wordcloud_data(user_reports_id):
     """
     주어진 사용자 보고서에 대한 워드 클라우드 데이터를 생성합니다.
-    이 함수는 지정된 사용자 보고서에 대한 음성-텍스트(STT) 데이터를 검색하고,
-    텍스트를 토큰화하여 명사를 추출하고 각 화자의 명사 발생 빈도를 계산합니다.
-    결과는 화자와 해당 단어 빈도를 포함하는 사전 목록입니다.
+    - 1글자 단어 제외 (2글자 이상만 포함)
+    - 명사(NN), 부사(MAG), 형용사(VA), 동사(VV)도 포함
     """
     stt_data = execute_select_query(
         query=SELECT_STT_DATA_USER_REPORTS, params={"user_reports_id": user_reports_id}
@@ -117,16 +136,20 @@ def create_wordcloud_data(user_reports_id):
     for result in stt_result:
         speaker_texts[result["speaker"]] += " " + result["text_edited"]
 
-    speaker_noun_counts = {}
+    speaker_word_counts = {}
     for speaker, text in speaker_texts.items():
         tokens = kiwi.tokenize(text)
-        nouns = [token.form for token in tokens if token.tag.startswith("NN")]
-        noun_counts = Counter(nouns)
-        speaker_noun_counts[speaker] = dict(noun_counts)
+        words = [
+            token.form
+            for token in tokens
+            if token.tag.startswith(("NN", "MAG", "VA", "VV")) and len(token.form) > 1
+        ]
+        word_counts = Counter(words)
+        speaker_word_counts[speaker] = dict(word_counts)
 
     result = [
         {"speaker": speaker, "word_counts": word_counts}
-        for speaker, word_counts in speaker_noun_counts.items()
+        for speaker, word_counts in speaker_word_counts.items()
     ]
 
     return result
@@ -283,7 +306,7 @@ import json
 
 def save_sentence_length_data(user_reports_id):
     """
-    주어진 user_reports_id에 대한 바이올린플롯 데이터를 생성하고 저장합니다.
+    주어진 user_reports_id에 대��� 바이올린플롯 데이터를 생성하고 저장합니다.
     """
     data = execute_select_query(
         query=SELECT_SENTENCE_LENGTH_DATA, params={"user_reports_id": user_reports_id}
