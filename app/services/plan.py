@@ -259,7 +259,6 @@ def update_user_plan(user_id, plans_id):
             "plans_id": plans_id,
         },
     )
-    # TODO: day 삭제한다면 start_at, end_at도 삭제 필요한 데이터인지 확인 필요
     day = plan[0].day
     start_at, end_at = plan_date(day)
     execute_insert_update_query(

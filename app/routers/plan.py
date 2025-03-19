@@ -304,11 +304,6 @@ class ReportUpdate(BaseModel):
     missions_id: list[dict]
 
 
-# todo 연결된 missions_id에서 삭제된 것들은 null로 처리해야함
-# 기존 데이터를 조회해서 missions_id를 가져와서 비교해서 삭제된 것들은 null로 처리해야함
-# 불러와야 하는 데이터는 missions_id 이고 missions테이블에 reports_id가 있는 것을 가져와서 비교해야함
-# if len(missions_id) > len(update_before_missions_id) => insert
-# else => update null로 처리
 @router.put("/reports/{report_id}", tags=["Reports"])
 async def put_reports(report_id: str, payload: ReportUpdate):
     """
