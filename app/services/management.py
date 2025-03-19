@@ -240,6 +240,8 @@ def update_user_reports_inspector(user_reports_id: str, inspector: str):
 #                 params={"user_plans_id": user_plans_id, "missions_id": missions_id},
 #             )
 
+import datetime
+
 
 def get_audio_info(audio_files_id):
     results = execute_select_query(
@@ -247,7 +249,20 @@ def get_audio_info(audio_files_id):
     )
     if results:
         results = [dict(data) for data in results]
+
         for result in results:
+            birth_date = result.get("birth_date")
+            if birth_date:
+                today = datetime.date.today()
+                age_years = today.year - birth_date.year
+                age_months = today.month - birth_date.month
+                if age_months < 0:
+                    age_years -= 1
+                    age_months += 12
+                if age_years == 0:
+                    result["age"] = f"{age_months}개월"
+                else:
+                    result["age"] = f"{age_years}년 {age_months}개월"
             result["created_at"] = result["created_at"].strftime("%Y/%m/%d %H:%M")
             result["record_time"] = str(
                 datetime.timedelta(seconds=result["record_time"])

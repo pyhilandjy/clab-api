@@ -1167,7 +1167,8 @@ SELECT_AUDIO_INFO = text(
         af.record_time, 
         m.title AS mission_title,
         af.created_at,
-        uc.first_name AS first_name
+        uc.first_name AS first_name,
+        uc.birth_date
     FROM 
         audio_files af
     INNER JOIN 
