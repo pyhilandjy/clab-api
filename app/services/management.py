@@ -34,15 +34,26 @@ async def get_reports_with_pagination(
     page_size: int,
     inspection_filter: Optional[str] = None,
     status_filter: Optional[str] = None,
+    plan_name_filter: Optional[str] = None,
 ):
     offset = (page - 1) * page_size
     where_clauses = []
+    query_params = {
+        "limit": page_size,
+        "offset": offset,
+    }
 
     if inspection_filter:
-        where_clauses.append(f"user_reports.inspection = '{inspection_filter}'")
+        where_clauses.append("user_reports.inspection = :inspection_filter")
+        query_params["inspection_filter"] = inspection_filter
 
     if status_filter:
-        where_clauses.append(f"user_reports.status = '{status_filter}'")
+        where_clauses.append("user_reports.status = :status_filter")
+        query_params["status_filter"] = status_filter
+
+    if plan_name_filter:
+        where_clauses.append("plans.plan_name = :plan_name_filter")
+        query_params["plan_name_filter"] = plan_name_filter
 
     where_clause = " AND ".join(where_clauses) if where_clauses else "1=1"
 
@@ -88,10 +99,6 @@ async def get_reports_with_pagination(
     """
     )
 
-    query_params = {
-        "limit": page_size,
-        "offset": offset,
-    }
     # 보고서 데이터 가져오기
     reports = execute_select_query(query=sql_query, params=query_params)
     reports = [dict(report) for report in reports]
@@ -103,7 +110,7 @@ async def get_reports_with_pagination(
         user_id = report["user_id"]
         report["user_name"] = user_data.get(user_id, "")
 
-        # 날짜 포맷팅 TODO: 나중에 프론트에서 처리하도록 변경
+        # 날짜 포맷팅
         if report["send_at"]:
             report["send_at"] = report["send_at"].strftime("%Y/%m/%d %H:%M")
         if report["inspected_at"]:
@@ -115,15 +122,11 @@ async def get_reports_with_pagination(
 
         # mission_progress 계산 및 대체
         statuses = report.pop("mission_statuses", [])
-        if statuses:
-            report["mission_progress"] = calculate_progress(statuses)
-        else:
-            report["mission_progress"] = "0/0"
+        report["mission_progress"] = calculate_progress(statuses) if statuses else "0/0"
 
     # 총 보고서 수 계산
     total_count_result = execute_select_query(query=SELECT_TOTAL_COUNT, params={})
     total_count = total_count_result[0]["total_count"] if total_count_result else 0
-
     total_pages = (total_count + page_size - 1) // page_size
 
     return {

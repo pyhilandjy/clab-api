@@ -20,6 +20,7 @@ async def get_user_reports(
     page_size: int = Query(..., ge=1, le=100),
     inspection: Optional[str] = Query(None, description="Inspection filter"),
     status: Optional[str] = Query(None, description="Status filter"),
+    plan_name: Optional[str] = Query(None, description="plan filter"),
 ):
     """
     user_reports 데이터를 가져오는 엔드포인트
@@ -30,6 +31,7 @@ async def get_user_reports(
         page_size=page_size,
         inspection_filter=inspection,
         status_filter=status,
+        plan_name_filter=plan_name,
     )
     return result
 
