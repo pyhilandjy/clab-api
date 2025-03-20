@@ -140,9 +140,9 @@ def create_wordcloud_data(user_reports_id):
     for speaker, text in speaker_texts.items():
         tokens = kiwi.tokenize(text)
         words = [
-            token.form
+            token.lemma
             for token in tokens
-            if token.tag.startswith(("NN", "MAG", "VA", "VV")) and len(token.form) > 1
+            if token.tag.startswith(("N", "M", "VA", "V")) and len(token.form) > 1
         ]
         word_counts = Counter(words)
         speaker_word_counts[speaker] = dict(word_counts)
