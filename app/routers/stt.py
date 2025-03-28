@@ -6,16 +6,12 @@ from pydantic import BaseModel
 from app.services.stt import (
     add_row_stt_data,
     delete_row_stt_data,
-    get_speech_act_ml,
-    post_openai_data,
     response_openai_data,
     select_act_types,
     select_speech_act,
     select_stt_data_by_audio_files_id,
     select_talk_more,
-    select_text_edited_data,
     update_is_turn,
-    update_ml_act_type,
     update_replace_speaker,
     update_replace_text_edit,
     update_speech_act,
@@ -174,50 +170,13 @@ async def get_act_types():
     return act_types
 
 
-@router.patch("/speech-act-type", tags=["DL"], response_model=dict)
+@router.patch("/speech-act", tags=["LLM"])
 async def patch_speech_act_type(audio_files_id: str):
-    """ml 을 사용하여 화행 수정 앤드포인트"""
-    results = select_text_edited_data(audio_files_id)
-    if not results:
-        raise HTTPException(status_code=404, detail="STT result not found")
+    """llm 을 사용하여 화행 수정 앤드포인트"""
 
-    # ML 서버로부터 act_name과 act_type 정보를 가져옴
-    ml_response = get_speech_act_ml(results)
-
-    # 미리 모든 act_types 및 speech_acts 데이터를 가져옴
-    speech_acts = select_speech_act()
-    act_types = select_act_types()
-
-    for item in ml_response:
-        # 1. act_name으로 act_id 가져오기
-        act_id_result = next(
-            (act for act in speech_acts if act["act_name"] == item["act_name"]), None
-        )
-        if not act_id_result:
-            # act_name이 없을 경우 계속 다음으로 넘어감
-            continue
-
-        # 2. act_type으로 act_type_id 가져오기
-        act_type_id_result = next(
-            (
-                act_type
-                for act_type in act_types
-                if act_type["act_type"] == item["act_type"]
-            ),
-            None,
-        )
-        if not act_type_id_result:
-            # act_type이 없을 경우도 계속 다음으로 넘어감
-            continue
-
-        # 3. stt_data 테이블 업데이트
-        update_ml_act_type(
-            id=item["id"],
-            act_id=act_id_result["id"],
-            act_types_id=act_type_id_result["id"],
-        )
-
-    return {"message": "STT data updated successfully"}
+    response = response_openai_data(audio_files_id)
+    update_stt_data_act_type(response)
+    return "success"
 
 
 class EditSpeechActTypeModel(BaseModel):
@@ -263,9 +222,9 @@ class OpenaiDataModel(BaseModel):
     stt_data_id: str
 
 
-@router.post("/data/report/quaritative", tags=["STT"])
-def report_detail(openai_data_model: OpenaiDataModel):
-    """
-    질적분석 저장하는 앤드포인트
-    """
-    post_openai_data(openai_data_model.model_dump())
+# @router.post("/data/report/quaritative", tags=["STT"])
+# def report_detail(openai_data_model: OpenaiDataModel):
+#     """
+#     질적분석 저장하는 앤드포인트
+#     """
+#     post_openai_data(openai_data_model.model_dump())

@@ -1,10 +1,10 @@
 import datetime
 import json
+from typing import List
 from enum import Enum
 from uuid import UUID
+import re
 
-import requests
-from fastapi import HTTPException
 from openai import OpenAI
 
 from app.config import settings
@@ -12,7 +12,6 @@ from app.db.connection import postgresql_connection
 from app.db.query import (
     DELETE_ROW,
     INSERT_COPIED_DATA,
-    INSERT_QURITATIVE_DATA,
     SELECT_ACT_TYPES,
     SELECT_LLM_DATA,
     SELECT_PROMPT,
@@ -20,7 +19,7 @@ from app.db.query import (
     SELECT_STT_DATA,
     SELECT_TALK_MORE,
     SELECT_TEXT_EDITED_DATA,
-    UPDATE_ACT_TYPE,
+    UPDATE_ACT_ID,
     UPDATE_AUDIO_FILES_IS_EDIT,
     UPDATE_DECREASE_TEXT_ORDER,
     UPDATE_INCREASE_TEXT_ORDER,
@@ -28,7 +27,6 @@ from app.db.query import (
     UPDATE_REPLACE_SPEAKER,
     UPDATE_REPLACE_TEXT_EDITED,
     UPDATE_SPEECH_ACT,
-    UPDATE_SPEECHACT_TYPE,
     UPDATE_TALK_MORE,
     UPDATE_TEXT_EDITED,
 )
@@ -196,23 +194,6 @@ def update_talk_more(id, talk_more_id):
     )
 
 
-def get_speech_act_ml(stt_data: list[dict]):
-    """
-    ML 서버에 요청을 보내는 엔드포인트
-    """
-    url = "http://114.110.130.27:5000/predict"
-    headers = {"Content-Type": "application/json"}
-
-    # 요청 데이터를 JSON 형식으로 전송
-    response = requests.post(url, headers=headers, json=stt_data)
-
-    # 응답 처리
-    if response.status_code == 200:
-        return response.json()
-    else:
-        raise HTTPException(status_code=500, detail="ML server error")
-
-
 def get_act_id(act_name: str):
     """
     act_name에 해당하는 act_id를 가져오는 함수
@@ -221,33 +202,6 @@ def get_act_id(act_name: str):
     for speech_act in speech_acts:
         if speech_act["act_name"] == act_name:
             return speech_act["id"]
-
-
-def update_ml_act_type(id: str, act_id: str, act_types_id: str):
-    """
-    stt_data 테이블의 act_id 및 act_type_id를 업데이트하는 함수
-    """
-    return execute_insert_update_query(
-        query=UPDATE_SPEECHACT_TYPE,
-        params={
-            "id": id,
-            "act_id": act_id,
-            "act_types_id": act_types_id,
-        },
-    )
-
-
-def update_stt_data_act_type(id, act_types_id):
-    """
-    stt_data 테이블의 act_id 및 act_type_id를 업데이트하는 함수
-    """
-    return execute_insert_update_query(
-        query=UPDATE_ACT_TYPE,
-        params={
-            "id": id,
-            "act_types_id": act_types_id,
-        },
-    )
 
 
 def update_is_turn(id, is_turn):
@@ -274,29 +228,33 @@ class OpenAIModel(Enum):
 
 
 def openai_request(
-    user_input: str,
-    system_prompt: str | None = None,
-    model: str = OpenAIModel.GPT_4O,
-    temperature: float = 0.5,
-    max_tokens: int = 1000,
+    datas: List[dict],
+    prompts: List[dict],
 ):
-    user_input_str = f"{str(user_input)}"
+    # system_prompt, user_prompt를 문자열로 변환
+    system_prompt = prompts[0]["system_prompt"]
+    user_prompt = prompts[0]["user_prompt"]
+
+    for item in datas:
+        user_prompt += f"- ID {item['id']}: {item['text_edited']}\n"
+
     # -- set messages
     messages = []
 
     if system_prompt:
         messages.append({"role": "system", "content": system_prompt})
 
-    if user_input:
-        messages.append({"role": "user", "content": user_input_str})
+    if user_prompt:
+        messages.append({"role": "user", "content": user_prompt})
 
     completion = openai_client.chat.completions.create(
-        model=model.value,
+        model=OpenAIModel.GPT_4O.value,
         messages=messages,
-        temperature=temperature,
-        max_tokens=max_tokens,
+        temperature=0.0,
     )
-    return completion.choices[0].message
+    assistant_message = completion.choices[0].message
+
+    return assistant_message
 
 
 def select_llm_data(audio_files_id):
@@ -320,33 +278,54 @@ def select_llm_data(audio_files_id):
     return modified_results
 
 
+# 추후 purpose에 따라 다른 prompt를 가져오도록 수정
 def response_openai_data(audio_files_id):
-    system_prompt = execute_select_query(
-        query=SELECT_PROMPT,
+    prompts = execute_select_query(
+        query=SELECT_PROMPT, params={"purpose": "speech_acts"}
     )
-    user_input = select_llm_data(audio_files_id)
-    system_prompt = system_prompt[0]["prompt"]
-    result = openai_request(user_input, system_prompt)
-    content = result.content
-    clean_content = (
-        content.replace("```json", "")
-        .replace("```", "")
-        .replace("output =", "")
-        .strip()
-    )
+    datas = select_llm_data(audio_files_id)
+    response = openai_request(datas, prompts)
+    try:
+        content = response.content
+        clean_content = (
+            content.replace("```json", "")
+            .replace("```", "")
+            .replace("output =", "")
+            .strip()
+        )
+    except AttributeError:
+        return "No response from OpenAI"
 
-    content = json.loads(clean_content)
-    return content
+    result = json.loads(clean_content)
+    return result
 
 
-def post_openai_data(metadata: dict):
-    execute_insert_update_query(
-        query=INSERT_QURITATIVE_DATA,
-        params={
-            metadata["alternative"]: str,
-            metadata["description"]: str,
-            metadata["expectation"]: str,
-            metadata["mood"]: str,
-            metadata["stt_data_id"]: str,
-        },
-    )
+def update_stt_data_act_type(response: list[dict]):
+    """
+    stt_data 테이블의 act_id 및 act_type_id를 업데이트하는 함수
+    """
+    converted = replace_act_name_with_act_id(response)
+
+    for row in converted:
+        execute_insert_update_query(
+            query=UPDATE_ACT_ID, params={"id": row["id"], "act_id": row["act_id"]}
+        )
+
+
+def replace_act_name_with_act_id(response: list[dict]) -> list[dict]:
+    """
+    response에 있는 act_name을 DB에서 가져온 act_id로 변환하는 함수
+    """
+    act_types = select_speech_act()
+    mapping = {act["act_name"].lower(): act["id"] for act in act_types}
+
+    result = []
+    for item in response:
+        act_name = item.get("act_name", "").lower()
+        act_id = mapping.get(act_name)
+        if act_id:
+            result.append({"id": item["id"], "act_id": act_id})
+        else:
+            raise ValueError(f"Unknown act_name: {act_name}")
+
+    return result

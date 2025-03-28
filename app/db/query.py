@@ -111,10 +111,9 @@ ORDER BY sr.text_order asc
 
 SELECT_LLM_DATA = text(
     """
-SELECT text_edited, id, speaker
-FROM stt_data sr
-WHERE sr.audio_files_id = :audio_files_id
-ORDER BY sr.text_order asc
+SELECT text_edited, id
+FROM stt_data
+WHERE stt_data.audio_files_id = :audio_files_id
     """
 )
 
@@ -603,7 +602,7 @@ UPDATE_DECREASE_TEXT_ORDER = text(
 
 SELECT_SPEECH_ACTS = text(
     """
-SELECT act_name, *
+SELECT act_name, id
 FROM speech_acts
     """
 )
@@ -646,10 +645,10 @@ UPDATE_SPEECHACT_TYPE = text(
     """
 )
 
-UPDATE_ACT_TYPE = text(
+UPDATE_ACT_ID = text(
     """
     UPDATE stt_data
-    SET act_types_id = :act_types_id
+    SET act_id = :act_id
     WHERE id = :id
     """
 )
@@ -1032,7 +1031,8 @@ UPDATE_IS_TURN = text(
 )
 SELECT_PROMPT = text(
     """
-    SELECT prompt FROM prompts
+    SELECT system_prompt, user_prompt FROM prompts
+    where purpose = :purpose
     """
 )
 
