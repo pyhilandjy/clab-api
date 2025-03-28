@@ -170,10 +170,9 @@ async def get_act_types():
     return act_types
 
 
-@router.patch("/speech-act", tags=["LLM"])
+@router.patch("/speech-act/{audio_files_id}", tags=["LLM"])
 async def patch_speech_act_type(audio_files_id: str):
     """llm 을 사용하여 화행 수정 앤드포인트"""
-
     response = response_openai_data(audio_files_id)
     update_stt_data_act_type(response)
     return "success"
