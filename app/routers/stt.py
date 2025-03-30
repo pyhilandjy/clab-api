@@ -18,6 +18,8 @@ from app.services.stt import (
     update_stt_data_act_type,
     update_talk_more,
     update_text_edit,
+    select_speech_acts_llm_prompt,
+    update_speech_acts_llm_prompt,
 )
 
 router = APIRouter()
@@ -170,12 +172,23 @@ async def get_act_types():
     return act_types
 
 
-@router.patch("/speech-act/{audio_files_id}", tags=["LLM"])
-async def patch_speech_act_type(audio_files_id: str):
-    """llm 을 사용하여 화행 수정 앤드포인트"""
-    response = response_openai_data(audio_files_id)
-    update_stt_data_act_type(response)
-    return "success"
+@router.get("/speech-act/prompt", tags=["LLM"])
+async def get_llm_prompt():
+    return select_speech_acts_llm_prompt()
+
+
+class LLMPromptUpdate(BaseModel):
+    system_prompt: str
+    user_prompt: str
+
+
+@router.patch("/speech-act/prompt", tags=["LLM"])
+async def update_llm_prompt(llm_prompt_update: LLMPromptUpdate):
+    llm_prompt_update = llm_prompt_update.model_dump()
+    update_speech_acts_llm_prompt(
+        llm_prompt_update["system_prompt"], llm_prompt_update["user_prompt"]
+    )
+    return {"message": "Prompt updated successfully"}
 
 
 class EditSpeechActTypeModel(BaseModel):
@@ -204,21 +217,29 @@ def edit_turn(edit_turn_model: EditTurnModel):
     }
 
 
-@router.get("/data/{audio_files_id}/report/quaritative", tags=["STT"])
-def report_detail(audio_files_id: str):
-    """
-    질적분석 불러오는 앤드포인트
-    """
-    result = response_openai_data(audio_files_id)
-    return result
+@router.patch("/speech-act/{audio_files_id}", tags=["LLM"])
+async def patch_speech_act_type(audio_files_id: str):
+    """llm 을 사용하여 화행 수정 앤드포인트"""
+    response = response_openai_data(audio_files_id)
+    update_stt_data_act_type(response)
+    return "success"
 
 
-class OpenaiDataModel(BaseModel):
-    alternative: str
-    description: str
-    expectation: str
-    mood: str
-    stt_data_id: str
+# @router.get("/data/{audio_files_id}/report/quaritative", tags=["STT"])
+# def report_detail(audio_files_id: str):
+#     """
+#     질적분석 불러오는 앤드포인트
+#     """
+#     result = response_openai_data(audio_files_id)
+#     return result
+
+
+# class OpenaiDataModel(BaseModel):
+#     alternative: str
+#     description: str
+#     expectation: str
+#     mood: str
+#     stt_data_id: str
 
 
 # @router.post("/data/report/quaritative", tags=["STT"])

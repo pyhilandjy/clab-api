@@ -29,6 +29,7 @@ from app.db.query import (
     UPDATE_SPEECH_ACT,
     UPDATE_TALK_MORE,
     UPDATE_TEXT_EDITED,
+    UPDATE_PROMPT,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 
@@ -329,3 +330,20 @@ def replace_act_name_with_act_id(response: list[dict]) -> list[dict]:
             raise ValueError(f"Unknown act_name: {act_name}")
 
     return result
+
+
+def select_speech_acts_llm_prompt():
+    purpose = "speech_acts"
+    return execute_select_query(query=SELECT_PROMPT, params={"purpose": purpose})
+
+
+def update_speech_acts_llm_prompt(system_prompt, user_prompt):
+    purpose = "speech_acts"
+    execute_insert_update_query(
+        query=UPDATE_PROMPT,
+        params={
+            "purpose": purpose,
+            "system_prompt": system_prompt,
+            "user_prompt": user_prompt,
+        },
+    )

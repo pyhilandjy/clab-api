@@ -1036,6 +1036,14 @@ SELECT_PROMPT = text(
     """
 )
 
+UPDATE_PROMPT = text(
+    """
+    UPDATE prompts
+    SET system_prompt = :system_prompt, user_prompt = :user_prompt
+    WHERE purpose = :purpose
+    """
+)
+
 INSERT_QURITATIVE_DATA = text(
     """
     INSERT INTO user_report_quritative_data (alternative, description, expectation, mood, stt_data_id) VALUES 
