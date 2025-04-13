@@ -70,21 +70,21 @@ jobs:
             --cidr $(curl -s https://checkip.amazonaws.com)/32
 
       - name: Deploy to EC2
-        env:
-          EC2_HOST: ${{ env.EC2_HOST }}
-          EC2_USER: ubuntu
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          TAG: ${{ env.TAG }}
-          ENV: ${{ env.ENV }}
         run: |
           echo "${SSH_PRIVATE_KEY}" > SSH_PRIVATE_KEY.pem
           chmod 600 SSH_PRIVATE_KEY.pem
-          ssh -i SSH_PRIVATE_KEY.pem -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << EOF
+          echo "EC2_HOST=${EC2_HOST}"
+          echo "TAG=${TAG}"
+          echo "ENV=${ENV}"
+
+          ssh -i SSH_PRIVATE_KEY.pem -o StrictHostKeyChecking=no ubuntu@${EC2_HOST} << EOF
             cd clab
             docker pull ghcr.io/${{ env.IMAGE_NAME }}:${TAG}
             ENV=${ENV} docker compose down
             ENV=${ENV} docker compose up -d --build
           EOF
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Remove SSH inbound rule
         env:
