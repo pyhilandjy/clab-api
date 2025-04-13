@@ -48,17 +48,18 @@ jobs:
           docker push ghcr.io/${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
       - name: Add SSH inbound rule
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          SG_ID: ${{ env.SG_ID }}
         run: |
+          echo "Add SSH rule for SG_ID=${SG_ID}"
           aws ec2 authorize-security-group-ingress \
             --group-id ${SG_ID} \
             --protocol tcp \
             --port 22 \
             --cidr $(curl -s https://checkip.amazonaws.com)/32
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          SG_ID: ${{ env.SG_ID }}
 
       - name: Debug Print (Check EC2 Host)
         run: |
@@ -73,11 +74,6 @@ jobs:
           EC2_HOST: ${{ env.EC2_HOST }}
 
       - name: Deploy to EC2
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          EC2_HOST: ${{ env.EC2_HOST }}
-          TAG: ${{ env.TAG }}
-          ENV: ${{ env.ENV }}
         run: |
           echo "${SSH_PRIVATE_KEY}" > SSH_PRIVATE_KEY.pem
           chmod 600 SSH_PRIVATE_KEY.pem
@@ -91,16 +87,22 @@ jobs:
           EOF
 
           rm -f SSH_PRIVATE_KEY.pem
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          EC2_HOST: ${{ env.EC2_HOST }}
+          TAG: ${{ env.TAG }}
+          ENV: ${{ env.ENV }}
 
       - name: Remove SSH inbound rule
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
-          SG_ID: ${{ env.SG_ID }}
         run: |
+          echo "Remove SSH rule for SG_ID=${SG_ID}"
           aws ec2 revoke-security-group-ingress \
             --group-id ${SG_ID} \
             --protocol tcp \
             --port 22 \
             --cidr $(curl -s https://checkip.amazonaws.com)/32
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          SG_ID: ${{ env.SG_ID }}
