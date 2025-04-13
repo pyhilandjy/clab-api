@@ -57,9 +57,24 @@ jobs:
             --port 22 \
             --cidr $(curl -s https://checkip.amazonaws.com)/32
 
+      - name: Debug Print (Check EC2 Host)
+        run: |
+          echo "ENV: ${ENV}"
+          echo "TAG: ${TAG}"
+          echo "EC2_HOST: ${EC2_HOST}"
+          nslookup ${EC2_HOST} || true
+          ping -c 4 ${EC2_HOST} || true
+        env:
+          ENV: ${{ env.ENV }}
+          TAG: ${{ env.TAG }}
+          EC2_HOST: ${{ env.EC2_HOST }}
+
       - name: Deploy to EC2
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          EC2_HOST: ${{ env.EC2_HOST }}
+          TAG: ${{ env.TAG }}
+          ENV: ${{ env.ENV }}
         run: |
           echo "${SSH_PRIVATE_KEY}" > SSH_PRIVATE_KEY.pem
           chmod 600 SSH_PRIVATE_KEY.pem
