@@ -81,9 +81,10 @@ jobs:
           ssh -i SSH_PRIVATE_KEY.pem -o StrictHostKeyChecking=no ubuntu@${EC2_HOST} << EOF
             cd clab
             docker pull ghcr.io/${{ env.IMAGE_NAME }}:${TAG}
-            ENV=${ENV} docker compose down
-            ENV=${ENV} docker compose up -d --build
+            TAG=${TAG} ENV=${ENV} docker compose down
+            TAG=${TAG} ENV=${ENV} docker compose up -d --build
           EOF
+
 
           rm -f SSH_PRIVATE_KEY.pem
         env:
