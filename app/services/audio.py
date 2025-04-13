@@ -466,6 +466,3 @@ async def select_audio_info(id: str):
     audio_file = execute_select_query(query=SELECT_AUDIO_FILE, params={"id": id})
     record_time = audio_file[0].record_time
     return record_time
-
-
-# test
