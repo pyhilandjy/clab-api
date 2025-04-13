@@ -27,10 +27,12 @@ jobs:
             echo "ENV=prod" >> $GITHUB_ENV
             echo "TAG=latest" >> $GITHUB_ENV
             echo "EC2_HOST=${{ secrets.EC2_HOST_PROD }}" >> $GITHUB_ENV
+            echo "SG_ID=${{ secrets.SG_ID_PROD }}" >> $GITHUB_ENV
           else
             echo "ENV=dev" >> $GITHUB_ENV
             echo "TAG=dev" >> $GITHUB_ENV
             echo "EC2_HOST=${{ secrets.EC2_HOST_DEV }}" >> $GITHUB_ENV
+            echo "SG_ID=${{ secrets.SG_ID_DEV }}" >> $GITHUB_ENV
           fi
 
       - name: Login to Container registry
@@ -50,9 +52,10 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
+          SG_ID: ${{ env.SG_ID }}
         run: |
           aws ec2 authorize-security-group-ingress \
-            --group-id sg-00238cd34b57d6565 \
+            --group-id ${SG_ID} \
             --protocol tcp \
             --port 22 \
             --cidr $(curl -s https://checkip.amazonaws.com)/32
@@ -94,9 +97,10 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
+          SG_ID: ${{ env.SG_ID }}
         run: |
           aws ec2 revoke-security-group-ingress \
-            --group-id sg-00238cd34b57d6565 \
+            --group-id ${SG_ID} \
             --protocol tcp \
             --port 22 \
             --cidr $(curl -s https://checkip.amazonaws.com)/32
