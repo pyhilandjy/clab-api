@@ -35,6 +35,18 @@ jobs:
             echo "SG_ID=${{ secrets.SG_ID_DEV }}" >> $GITHUB_ENV
           fi
 
+      - name: Debug Print (Environment Check)
+        run: |
+          echo "ENV=${ENV}"
+          echo "TAG=${TAG}"
+          echo "EC2_HOST=${EC2_HOST}"
+          echo "SG_ID=${SG_ID}"
+        env:
+          ENV: ${{ env.ENV }}
+          TAG: ${{ env.TAG }}
+          EC2_HOST: ${{ env.EC2_HOST }}
+          SG_ID: ${{ env.SG_ID }}
+
       - name: Login to Container registry
         uses: docker/login-action@v1
         with:
@@ -59,19 +71,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-          SG_ID: ${{ env.SG_ID }}
-
-      - name: Debug Print (Check EC2 Host)
-        run: |
-          echo "ENV: ${ENV}"
-          echo "TAG: ${TAG}"
-          echo "EC2_HOST: ${EC2_HOST}"
-          nslookup ${EC2_HOST} || true
-          ping -c 4 ${EC2_HOST} || true
-        env:
-          ENV: ${{ env.ENV }}
-          TAG: ${{ env.TAG }}
-          EC2_HOST: ${{ env.EC2_HOST }}
 
       - name: Deploy to EC2
         run: |
@@ -105,4 +104,3 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ secrets.AWS_REGION }}
-          SG_ID: ${{ env.SG_ID }}
