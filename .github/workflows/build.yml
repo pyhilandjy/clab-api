@@ -35,12 +35,12 @@ jobs:
             echo "SG_ID=${{ secrets.SG_ID_DEV }}" >> $GITHUB_ENV
           fi
 
-      - name: Debug Print (Environment Check)
+      - name: Debug Print (Check ENV Values)
         run: |
           echo "ENV=${ENV}"
           echo "TAG=${TAG}"
           echo "EC2_HOST=${EC2_HOST}"
-          echo "SG_ID=${SG_ID}"
+          echo "SG_ID=${SG_ID}"   # 여기도 출력됨
         env:
           ENV: ${{ env.ENV }}
           TAG: ${{ env.TAG }}
@@ -61,7 +61,7 @@ jobs:
 
       - name: Add SSH inbound rule
         run: |
-          echo "Add SSH rule for SG_ID=${SG_ID}"
+          echo "Add SSH Rule for SG_ID=${SG_ID}"
           aws ec2 authorize-security-group-ingress \
             --group-id ${SG_ID} \
             --protocol tcp \
@@ -94,7 +94,7 @@ jobs:
 
       - name: Remove SSH inbound rule
         run: |
-          echo "Remove SSH rule for SG_ID=${SG_ID}"
+          echo "Remove SSH Rule for SG_ID=${SG_ID}"
           aws ec2 revoke-security-group-ingress \
             --group-id ${SG_ID} \
             --protocol tcp \
