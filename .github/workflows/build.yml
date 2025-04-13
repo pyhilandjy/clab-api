@@ -40,7 +40,7 @@ jobs:
           echo "ENV=${ENV}"
           echo "TAG=${TAG}"
           echo "EC2_HOST=${EC2_HOST}"
-          echo "SG_ID=${SG_ID}"   # 여기도 출력됨
+          echo "SG_ID=${SG_ID}"
         env:
           ENV: ${{ env.ENV }}
           TAG: ${{ env.TAG }}
