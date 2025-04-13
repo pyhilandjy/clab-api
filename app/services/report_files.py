@@ -510,7 +510,7 @@ def create_report_date(user_id, start_date, end_date):
     """녹음 기간 반환"""
     # 수정필요함
     start_date_str = start_date.strftime("%Y/%m/%d")
-    end_date_str = f"{end_date.strftime("%Y/%m/%d")}"  # MM/DD 형식으로 변환
+    end_date_str = end_date.strftime("%Y/%m/%d")
     report_date = {"녹음기간": f"{start_date_str} ~ {end_date_str}"}
     return report_date
 
