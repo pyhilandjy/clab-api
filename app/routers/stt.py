@@ -20,6 +20,7 @@ from app.services.stt import (
     update_text_edit,
     select_speech_acts_llm_prompt,
     update_speech_acts_llm_prompt,
+    update_is_qualitative,
 )
 
 router = APIRouter()
@@ -212,6 +213,19 @@ class EditTurnModel(BaseModel):
 @router.patch("/data/is-turn", tags=["STT"])
 def edit_turn(edit_turn_model: EditTurnModel):
     update_is_turn(**edit_turn_model.model_dump())
+    return {
+        "message": "STT data updated successfully",
+    }
+
+
+class EditQualitativeModel(BaseModel):
+    id: str
+    is_qualitative: bool
+
+
+@router.patch("/data/is-qualitative", tags=["STT"])
+def edit_qualitative(edit_qualitative_model: EditQualitativeModel):
+    update_is_qualitative(**edit_qualitative_model.model_dump())
     return {
         "message": "STT data updated successfully",
     }

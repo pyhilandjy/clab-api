@@ -1029,6 +1029,16 @@ UPDATE_IS_TURN = text(
     WHERE id = :id
     """
 )
+
+UPDATE_IS_QUALITATIVE = text(
+    """
+    UPDATE stt_data
+    SET is_qualitative = :is_qualitative
+    WHERE id = :id
+    """
+)
+
+
 SELECT_PROMPT = text(
     """
     SELECT system_prompt, user_prompt FROM prompts

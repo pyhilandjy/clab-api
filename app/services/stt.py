@@ -30,6 +30,7 @@ from app.db.query import (
     UPDATE_TALK_MORE,
     UPDATE_TEXT_EDITED,
     UPDATE_PROMPT,
+    UPDATE_IS_QUALITATIVE,
 )
 from app.db.worker import execute_insert_update_query, execute_select_query
 
@@ -211,6 +212,16 @@ def update_is_turn(id, is_turn):
         params={
             "id": id,
             "is_turn": is_turn,
+        },
+    )
+
+
+def update_is_qualitative(id, is_qualitative):
+    return execute_insert_update_query(
+        query=UPDATE_IS_QUALITATIVE,
+        params={
+            "id": id,
+            "is_qualitative": is_qualitative,
         },
     )
 
